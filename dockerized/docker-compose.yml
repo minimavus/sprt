@@ -58,6 +58,7 @@ services:
       - SPRT_USER_SUPER=0
       - SPRT_USER_SUPER_PASSWORD=password
       - SPRT_REAL_IP=<REAL_IP_ADDRESS_OF_MACHINE>
+      # - SPRT_AVAILABLE_IPS=<IP_ADDRESS_1>,<IP_ADDRESS_2>,... # List of available IP addresses
       - SPRT_DB_HOST=db.postgres.sprt
       - SPRT_DB_NAME=sprt
       - SPRT_DB_PORT=5432

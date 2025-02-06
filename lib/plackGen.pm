@@ -721,8 +721,36 @@ sub find_server_of_user {
 }
 
 sub collect_nad_ips {
-    my @all_ifs   = Net::Interface->interfaces();
     my $by_family = { IPv4 => [], IPv6 => [] };
+    if ( config->{nad}->{no_local_addr} ) {
+        my $idx = 0;
+        if ( is_ip4( config->{nad}->{ip} ) ) {
+            push @{ $by_family->{IPv4} },
+              { idx => $idx++, addr => config->{nad}->{ip} };
+        }
+        elsif ( is_ip6( config->{nad}->{ip} ) ) {
+            push @{ $by_family->{IPv6} },
+              { idx => $idx++, addr => config->{nad}->{ip} };
+        }
+
+        if ( exists config->{nad}->{allowed}
+            && scalar @{ config->{nad}->{allowed} } )
+        {
+            foreach my $ip ( @{ config->{nad}->{allowed} } ) {
+                if ( is_ip4($ip) ) {
+                    push @{ $by_family->{IPv4} },
+                      { idx => $idx++, addr => $ip };
+                }
+                elsif ( is_ip6($ip) ) {
+                    push @{ $by_family->{IPv6} },
+                      { idx => $idx++, addr => $ip };
+                }
+            }
+        }
+
+        return $by_family;
+    }
+    my @all_ifs = Net::Interface->interfaces();
     my $exclude =
       exists config->{nad}->{exclude} ? config->{nad}->{exclude} : undef;
     my $allowed =
@@ -759,8 +787,17 @@ sub collect_nad_ips {
 
 sub is_ip {
     my $value = shift;
-    return ( body_parameters->get('server-ip') =~ /^$RE{net}{IPv4}$/xms
-          || body_parameters->get('server-ip') =~ /^$RE{net}{IPv6}$/xms );
+    return ( is_ip4($value) || is_ip6($value) );
+}
+
+sub is_ip4 {
+    my $value = shift;
+    return ( $value =~ /^$RE{net}{IPv4}$/xms );
+}
+
+sub is_ip6 {
+    my $value = shift;
+    return ( $value =~ /^$RE{net}{IPv6}$/xms );
 }
 
 sub save_cli {

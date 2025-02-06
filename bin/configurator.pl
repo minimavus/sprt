@@ -727,9 +727,8 @@ sub saved_from_env {
         delete $CONFIG->{oauth};
     }
     elsif ( $CONFIG->{external_auth} ) {
-        $CONFIG->{external_auth_opts}->{public} = $ENV{SPRT_PUB_KEY}
-          // '';
-        $CONFIG->{external_auth_opts}->{host} = $ENV{SPRT_EXT_AUTH_ADDRESS}
+        $CONFIG->{external_auth_opts}->{public} = $ENV{SPRT_PUB_KEY} // '';
+        $CONFIG->{external_auth_opts}->{host}   = $ENV{SPRT_EXT_AUTH_ADDRESS}
           // '';
         delete $CONFIG->{one_user_mode};
         delete $CONFIG->{one_user_opts};
@@ -751,6 +750,10 @@ sub saved_from_env {
     if ( $ENV{SPRT_REAL_IP} ) {
         $CONFIG->{nad}->{ip}            = $ENV{SPRT_REAL_IP};
         $CONFIG->{nad}->{no_local_addr} = 1;
+        if ( $ENV{SPRT_AVAILABLE_IPS} ) {
+            $CONFIG->{nad}->{allowed} =
+              [ split /,/sxm, $ENV{SPRT_AVAILABLE_IPS} ];
+        }
     }
     else {
         delete $CONFIG->{nad}->{no_local_addr};
