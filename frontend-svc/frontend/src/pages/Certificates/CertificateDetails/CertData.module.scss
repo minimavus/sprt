@@ -1,0 +1,20 @@
+dl.key_value_pairs {
+  display: grid;
+  grid-template-columns: 200px auto;
+
+  dt.key {
+    font-weight: bold;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-start;
+
+    > p {
+      display: inline-flex;
+      align-items: center;
+    }
+  }
+
+  dd.value {
+    margin-left: 16px;
+  }
+}

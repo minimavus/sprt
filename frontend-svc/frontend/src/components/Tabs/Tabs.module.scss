@@ -1,0 +1,111 @@
+.multi_tabs {
+  padding-top: 12px;
+  width: unset !important;
+  border-right: 1px solid var(--control-border-weak-default);
+  display: flex;
+  position: relative;
+
+  & .multi_tabs {
+    padding-left: 24px;
+    padding-top: 0;
+    margin-right: -1px;
+
+    &::before {
+      --height-gap: 4px;
+      --dbl-height-gap: calc(var(--height-gap) * 2);
+      content: "";
+      position: absolute;
+      border-right: 2px solid var(--control-border-weak-default);
+      height: calc(100% - var(--dbl-height-gap));
+      left: 7px;
+      top: var(--height-gap);
+    }
+  }
+
+  ul {
+    flex-direction: column;
+    gap: 8px;
+    position: relative;
+    display: flex;
+    flex: 1;
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+
+    .tab__item {
+      position: relative;
+      left: 1px;
+      display: flex;
+      text-align: center;
+
+      .tab__item__link {
+        font-size: 14px;
+        line-height: 20px;
+        width: 172px;
+        flex-grow: 1;
+        padding: 8px 31px 8px 0;
+        color: var(--interact-text-weak-default);
+        cursor: pointer;
+        position: relative;
+        display: flex;
+        gap: 6px;
+        align-items: center;
+        text-decoration: none;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        transition: all 0.3s cubic-bezier(0.7, 0.3, 0.1, 1);
+        font-weight: 600;
+
+        &.with_suffix {
+          padding-right: 9px;
+        }
+
+        .tab__item__link__prefix {
+          line-height: 0;
+          color: var(--interact-text-weak-default);
+        }
+
+        .tab__item__link__content {
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        .tab__item__link__suffix {
+          display: flex;
+          align-items: center;
+          margin-left: auto;
+          width: -moz-fit-content;
+          width: fit-content;
+        }
+
+        &::after {
+          content: "";
+          position: absolute;
+          border-radius: 3px;
+          transition: all 0.3s cubic-bezier(0.7, 0.3, 0.1, 1);
+          top: 0;
+          right: 0;
+          width: 3px;
+          height: 100%;
+        }
+
+        &.selected {
+          color: var(--interact-text-weak-active);
+          font-weight: 700;
+
+          &::after {
+            background-color: var(--interact-border-medium-active);
+          }
+        }
+
+        &:hover {
+          color: var(--interact-text-weak-active);
+
+          &::after {
+            background-color: var(--interact-border-medium-hover);
+          }
+        }
+      }
+    }
+  }
+}

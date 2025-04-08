@@ -727,9 +727,8 @@ sub saved_from_env {
         delete $CONFIG->{oauth};
     }
     elsif ( $CONFIG->{external_auth} ) {
-        $CONFIG->{external_auth_opts}->{public} = $ENV{SPRT_PUB_KEY}
-          // '';
-        $CONFIG->{external_auth_opts}->{host} = $ENV{SPRT_EXT_AUTH_ADDRESS}
+        $CONFIG->{external_auth_opts}->{public} = $ENV{SPRT_PUB_KEY} // '';
+        $CONFIG->{external_auth_opts}->{host}   = $ENV{SPRT_EXT_AUTH_ADDRESS}
           // '';
         delete $CONFIG->{one_user_mode};
         delete $CONFIG->{one_user_opts};

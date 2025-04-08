@@ -1,0 +1,13 @@
+.actions {
+  > button {
+    margin-left: 0 !important;
+    padding: 5px !important;
+    > span {
+      display: none;
+    }
+  }
+}
+
+.dropdown-fix {
+  z-index: 3;
+}

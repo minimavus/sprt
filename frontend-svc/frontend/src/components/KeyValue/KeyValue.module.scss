@@ -1,0 +1,49 @@
+dl.key_value {
+  --gap: var(--mantine-spacing-xs);
+
+  font-size: var(--text-fz, var(--mantine-font-size-md));
+  line-height: var(--text-lh, var(--mantine-line-height-md));
+  margin-block-start: unset;
+  margin-block-end: unset;
+
+  .key_value_pair {
+    display: grid;
+    grid-template-columns: var(--key-value-key-width, 200px) auto;
+
+    & + .key_value_pair {
+      margin-top: var(--gap);
+    }
+  }
+
+  &.placement-above {
+    .key_value_pair {
+      display: block;
+    }
+    dt.key {
+      font-weight: normal;
+      align-items: flex-start;
+    }
+    dd.value {
+      font-weight: bold;
+      margin-left: unset;
+    }
+  }
+
+  dt.key {
+    font-weight: bold;
+    display: flex;
+    align-items: flex-start;
+
+    > p {
+      display: inline-flex;
+      align-items: center;
+    }
+  }
+
+  dd.value {
+    margin-left: var(--mantine-spacing-md);
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+}

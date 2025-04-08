@@ -1,0 +1,61 @@
+.compact {
+  display: grid;
+  grid-template-columns: fit-content(10%) auto;
+  grid-template-rows: auto 1fr;
+  grid-template-areas:
+    "label description"
+    "input input";
+  align-items: baseline;
+  gap: 0 calc(0.25rem * var(--mantine-scale));
+
+  &[data-error="true"] {
+    grid-template-areas:
+      "label description"
+      "input input"
+      "error error";
+
+    > :global(.mantine-InputWrapper-error) {
+      grid-area: error;
+    }
+  }
+
+  > label:global(.mantine-InputWrapper-label) {
+    grid-area: label;
+    word-break: keep-all;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  > p:global(.mantine-InputWrapper-description) {
+    grid-area: description;
+    &::before {
+      content: "(";
+    }
+    &::after {
+      content: ")";
+    }
+  }
+
+  > div:global(.mantine-Input-wrapper) {
+    grid-area: input;
+    margin-top: 0;
+  }
+}
+
+.input-help {
+  margin-left: calc(0.25rem * var(--mantine-scale));
+}
+
+.inline {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  align-items: center;
+  gap: calc(0.25rem * var(--mantine-scale));
+  position: relative;
+
+  .wrapper {
+    flex: 1;
+  }
+}

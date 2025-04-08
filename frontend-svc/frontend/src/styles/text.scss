@@ -1,0 +1,36 @@
+.text-control {
+  color: var(--mantine-color-dark-text);
+}
+
+.text-positive {
+  color: var(--mantine-color-green-text);
+}
+
+.text-warning {
+  color: var(--mantine-color-orange-text);
+}
+
+.text-severe-warning {
+  color: var(--mantine-color-orange-text);
+}
+
+.text-negative {
+  color: var(--mantine-color-red-text);
+}
+
+.text-info {
+  color: var(--mantine-color-blue-text);
+}
+
+.text-dormant,
+.text-muted {
+  color: var(--mantine-color-dimmed);
+}
+
+.text-capitalize {
+  text-transform: capitalize;
+}
+
+.text-uppercase {
+  text-transform: uppercase;
+}

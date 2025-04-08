@@ -1,0 +1,22 @@
+.inline {
+  --inline-gap: var(--mantine-spacing-xs);
+  display: flex;
+  gap: var(--inline-gap);
+  min-height: 36px;
+
+  .inline__control {
+    flex-direction: row !important;
+    align-items: center;
+    gap: var(--inline-gap);
+    min-width: 260px;
+    justify-content: flex-end;
+
+    label::after {
+      content: ':';
+    }
+  }
+
+  .inline__item {
+    
+  }
+}

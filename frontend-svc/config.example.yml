@@ -1,0 +1,51 @@
+server:
+  tls: false
+  port: 3000
+  read-timeout: 30m
+  with-pprof: false
+
+session:
+  redis-url: redis://<HOST>:<PORT>/
+  insecure-cookies: true
+
+auth:
+  provider: duo
+  duo-config:
+    redirect: <URL>
+    client: <CLIENT_ID>
+    secret: <SECRET>
+    supers:
+      emails:
+        - <FIRST>@cisco.com
+        - <SECOND>@cisco.com
+  single-config:
+    uid: <REQUIRED>
+    given-name: <FOR_DISPLAY>
+    password: <FOR_GETTING_SUPER_POWER>
+
+db:
+  ssl-mode: disable
+  user: <USER>
+  password: <PASSWORD>
+  host: <DB_HOST>
+  port: <DB_PORT>
+  name: <DB_NAME>
+
+services:
+  px-grider:
+    url: http://<HOST>:<PORT>
+    token: <TOKEN>
+
+generator:
+  free-radius-dictionaries-path: <PATH>
+  source-ip:
+    exclude: # List of IPs to exclude, has higher priority than allowed
+      - '<REGEX or IP>'
+      - '<REGEX or IP>'
+    allowed:
+      - '<REGEX or IP>'
+      - '<REGEX or IP>'
+    auto-detect: true
+    explicit-sources: # List of IPs to use, if auto-detect is false
+      - '<IP>'
+      - '<IP>'

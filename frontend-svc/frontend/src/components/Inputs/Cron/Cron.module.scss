@@ -1,0 +1,22 @@
+.fieldset {
+  --cron-fields-gap: calc(var(--mantine-spacing-xs) / 2);
+  .cron {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--cron-fields-gap);
+
+    & :global(.react-js-cron-field) {
+      display: inline-flex;
+      gap: var(--cron-fields-gap);
+      align-items: center;
+    }
+  }
+}
+
+.combobox__dropdown {
+  width: auto !important;
+
+  .combobox__option {
+    white-space: nowrap;
+  }
+}

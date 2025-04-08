@@ -1,0 +1,5 @@
+.how-it-works {
+  & > span + span {
+    margin-left: 12px;
+  }
+}

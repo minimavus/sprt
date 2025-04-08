@@ -1,0 +1,114 @@
+.timeline {
+  position: relative;
+  display: grid;
+  --timeline-gap: var(--mantine-spacing-xs, 8px);
+
+  @include mantine.light {
+    --timeline-border-color: var(--mantine-color-gray-3);
+  }
+
+  @include mantine.dark {
+    --timeline-border-color: var(--mantine-color-dark-4);
+  }
+
+  .timeline__element {
+    display: grid;
+    gap: var(--timeline-gap) var(--timeline-gap);
+    grid-template-columns: [icons] 44px [content] 1fr;
+    position: relative;
+    max-width: 100%;
+    min-height: 60px;
+
+    & > * {
+      min-width: 0;
+    }
+
+    &:first-child {
+      .timeline__icon::before {
+        top: 0;
+        height: 10px;
+      }
+    }
+
+    &:last-child {
+      .timeline__icon::after {
+        content: none;
+      }
+    }
+
+    .timeline__icon {
+      align-self: start;
+      display: flex;
+      justify-content: center;
+
+      .icon {
+        color: var(--mantine-color-dark-text);
+        border-radius: 50%;
+        height: 28px;
+        width: 28px;
+        line-height: 28px;
+        text-align: center;
+        background-color: var(--mantine-color-body);
+        font-weight: 600;
+        font-size: 14px;
+        border: 2px solid;
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        top: 16px;
+      }
+
+      &::before,
+      &::after {
+        content: "";
+        position: absolute;
+        left: 22px;
+        width: 2px;
+        background-color: var(--timeline-border-color);
+        transform: translateX(-50%);
+      }
+
+      &::before {
+        top: calc(0px - var(--timeline-gap));
+        height: calc(10px + var(--timeline-gap));
+      }
+
+      &::after {
+        bottom: -2px;
+        height: calc(100% - 48px);
+      }
+    }
+
+    &.positive .timeline__icon > .icon {
+      color: var(--mantine-color-green-text);
+      background-color: var(--mantine-color-green-light);
+    }
+
+    &.warning .timeline__icon > .icon {
+      color: var(--mantine-color-orange-text);
+      background-color: var(--mantine-color-orange-light);
+    }
+
+    &.severe-warning .timeline__icon > .icon {
+      color: var(--mantine-color-orange-text);
+      background-color: var(--mantine-color-orange-light);
+    }
+
+    &.negative .timeline__icon > .icon {
+      color: var(--mantine-color-red-text);
+      background-color: var(--mantine-color-red-light);
+    }
+
+    &.info .timeline__icon > .icon {
+      color: var(--mantine-color-blue-text);
+      background-color: var(--mantine-color-blue-light);
+    }
+
+    &.dormant .timeline__icon > .icon {
+      color: var(--mantine-color-dark-text);
+      background-color: var(--mantine-color-dark-light);
+    }
+  }
+}

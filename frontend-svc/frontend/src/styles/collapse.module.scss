@@ -1,0 +1,15 @@
+.collapse {
+  margin-top: 8px;
+
+  > .collapse_heading {
+    background-color: transparent;
+    border: 2px solid transparent;
+    border-radius: 6px;
+    transition: all .3s cubic-bezier(.7,.3,.1,1);
+    display: inline-flex;
+
+    &:hover {
+      background-color: var(--interact-bg-weak-hover);
+    }
+  }
+}

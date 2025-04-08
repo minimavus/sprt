@@ -1,0 +1,101 @@
+th.sortable {
+  cursor: pointer;
+  position: relative;
+  padding-right: calc(
+    1rem + var(--table-horizontal-spacing, var(--mantine-spacing-xs)) +
+      var(--mantine-spacing-xs)
+  );
+
+  &:hover {
+    background: var(--table-highlight-on-hover-color, var(--table-hover-color));
+
+    @include mantine.dark {
+      background: var(
+        --table-dark-highlight-on-hover-color,
+        var(--table-dark-hover-color)
+      );
+    }
+  }
+
+  & .sort_indicator {
+    position: absolute;
+    right: var(--mantine-spacing-sm);
+    top: 50%;
+    transform: translateY(-50%);
+    margin-left: 5px;
+  }
+}
+
+tr.selected {
+  background: var(--mantine-color-blue-light);
+}
+
+.table_container {
+  max-width: 100%;
+  overflow: auto;
+  position: relative;
+  flex: 1;
+  min-width: 0;
+}
+
+.pinnable {
+  tr {
+    & td,
+    & th {
+      background: var(--mantine-color-body);
+      position: relative;
+    }
+
+    &:hover td {
+      background-color: var(--tr-hover-bg);
+    }
+
+    & th:hover {
+      background: var(
+        --table-highlight-on-hover-color,
+        var(--table-hover-color)
+      );
+
+      @include mantine.dark {
+        background: var(
+          --table-dark-highlight-on-hover-color,
+          var(--table-dark-hover-color)
+        );
+      }
+    }
+
+    &.selected td,
+    &.selected th {
+      background: rgb(233, 243, 253);
+
+      @include mantine.dark {
+        background-color: rgb(36, 46, 55);
+      }
+    }
+  }
+
+  td:where([data-pinned]),
+  th:where([data-pinned]) {
+    position: sticky !important;
+    z-index: 1;
+    transition: box-shadow 200ms;
+  }
+
+  td:where([data-last-left-pinned]),
+  th:where([data-last-left-pinned]) {
+    box-shadow: -6px 0 6px -6px
+      color-mix(in srgb, var(--mantine-color-gray-outline), transparent 50%)
+      inset;
+  }
+
+  td:where([data-first-right-pinned]),
+  th:where([data-first-right-pinned]) {
+    box-shadow: 6px 0 6px -6px
+      color-mix(in srgb, var(--mantine-color-gray-outline), transparent 50%)
+      inset;
+  }
+}
+
+tr.row--expandable-content {
+  background: var(--mantine-color-gray-light);
+}

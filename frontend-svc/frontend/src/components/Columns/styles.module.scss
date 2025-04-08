@@ -1,0 +1,59 @@
+.columns {
+  --column-gap: calc(1.5rem * var(--mantine-scale));
+  --column-padding: var(--mantine-spacing-lg);
+  --column-padding-at-divider: var(--mantine-spacing-sm);
+  --column-borders: none;
+
+  &.with-borders {
+    @include mantine.light {
+      --column-borders: 1px solid var(--mantine-color-gray-2);
+    }
+
+    @include mantine.dark {
+      --column-borders: 1px solid var(--mantine-color-dark-5);
+    }
+  }
+
+  .left {
+    flex-direction: column;
+    gap: var(--column-gap);
+    padding: var(--column-padding);
+    padding-right: var(--column-padding-at-divider);
+    display: flex;
+    border-right: var(--column-borders);
+
+    > .section {
+      margin-left: calc(-1 * var(--column-padding));
+      margin-right: calc(-1 * var(--column-padding-at-divider));
+
+      &:first-child {
+        margin-top: calc(-1 * var(--column-padding));
+      }
+
+      &:last-child {
+        margin-bottom: calc(-1 * var(--column-padding));
+      }
+    }
+  }
+
+  .right {
+    padding: var(--column-padding);
+    flex-direction: column;
+    display: flex;
+    gap: var(--column-gap);
+    padding-left: var(--column-padding-at-divider);
+
+    > .section {
+      margin-left: calc(-1 * var(--column-padding-at-divider));
+      margin-right: calc(-1 * var(--column-padding));
+
+      &:first-child {
+        margin-top: calc(-1 * var(--column-padding));
+      }
+
+      &:last-child {
+        margin-bottom: calc(-1 * var(--column-padding));
+      }
+    }
+  }
+}

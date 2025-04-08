@@ -1,0 +1,13 @@
+.item {
+  &:where([data-sub-hovered]) {
+    &:where(:not(:disabled, [data-disabled])) {
+      @include mantine.light {
+        background-color: var(--menu-item-hover, var(--mantine-color-gray-1));
+      }
+
+      @include mantine.dark {
+        background-color: var(--menu-item-hover, var(--mantine-color-dark-4));
+      }
+    }
+  }
+}

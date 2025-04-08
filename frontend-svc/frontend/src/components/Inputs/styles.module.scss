@@ -1,0 +1,17 @@
+.two_sectioned_input {
+  .left_section {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-right: 'none';
+  }
+
+  .right_section {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    margin-left: -2px;
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+}

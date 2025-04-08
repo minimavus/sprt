@@ -1,0 +1,31 @@
+{{- $theme := .Theme -}}
+<!doctype html>
+<html lang="en" data-mantine-color-scheme="{{- $theme }}">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/x-png" href="/favicon.png" />
+    <link rel="icon" type="image/x-png" href="/favicon.png" sizes="128x128" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SPRT</title>
+    <script lang="javascript">
+      {{- $session := .Session -}}
+      {{ if $session -}}
+      window.UserSession = {{ marshal $session }};
+      {{- end }}
+      {{ if .Attributes -}}
+      window.UserAttributes = {{ marshal .Attributes }};
+      {{- end }}
+      {{ if .Environment -}}
+      window.Environment = {{ marshal .Environment }};
+      {{- end }}
+      window.Theme = {{ marshal $theme }};
+      {{ if .MenuData -}}
+      window.MenuData = {{ marshal .MenuData }};
+      {{- end }}
+    </script>
+  </head>
+  <body class="main">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

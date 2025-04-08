@@ -1,0 +1,8 @@
+server:
+  tls: false
+  port: 9000
+  # certificate:
+  private-key: test
+  read-timeout: 30m
+  with-pprof: false
+  # static:

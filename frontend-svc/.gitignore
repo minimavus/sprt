@@ -1,0 +1,9 @@
+/tmp
+/build
+/bin
+/dist
+
+/.env
+/config.dev.yml
+/config.local.yml
+/sqlboiler.toml

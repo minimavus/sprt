@@ -1,0 +1,29 @@
+.topic {
+  transition: all 0.3s cubic-bezier(0.7, 0.3, 0.1, 1);
+  border-bottom: 2px solid transparent;
+  padding: 4px 8px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  justify-content: space-between;
+  align-items: center;
+
+  & + & {
+    margin-top: 12px;
+  }
+
+  &:hover {
+    border-bottom-color: var(--mantine-primary-color-filled-hover);
+  }
+
+  .topic_name {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+}
+
+.service_heading {
+  & + .topic {
+    margin-top: 16px;
+  }
+}

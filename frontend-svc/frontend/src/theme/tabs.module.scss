@@ -1,0 +1,23 @@
+.highlight {
+  --var-tab-color-active-light: var(--mantine-color-blue-8);
+  --var-tab-color-active-dark: var(--mantine-color-blue-1);
+  --var-tab-background-active-light: var(--mantine-color-blue-0);
+  --var-tab-background-active-dark: rgba(24, 100, 171, 0.45);
+  --var-tab-font-weight-active: 500;
+
+  transition: color 100ms ease, background-color 100ms ease;
+  
+  &:where([data-active]) {
+    font-weight: var(--var-tab-font-weight-active);
+
+    @include mantine.light {
+      color: var(--mantine-color-blue-8);
+      background-color: var(--mantine-color-blue-0);
+    }
+
+    @include mantine.dark {
+      color: var(--mantine-color-blue-1);
+      background-color: rgba(24, 100, 171, 0.45);
+    }
+  }
+}

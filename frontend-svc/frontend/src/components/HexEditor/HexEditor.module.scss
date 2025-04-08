@@ -1,0 +1,88 @@
+.hex_editor {
+  border-radius: var(--input-radius);
+  width: 100% !important;
+
+  @include mantine.light {
+    --border-color: var(--mantine-color-gray-3);
+    --header-bg: var(--mantine-color-gray-1);
+  }
+
+  @include mantine.dark {
+    --border-color: var(--mantine-color-dark-4);
+    --header-bg: var(--mantine-color-dark-8);
+  }
+
+  & > input {
+    border-radius: var(--input-radius);
+  }
+
+  & > :global(.hexEditorHeader) {
+    border-top-left-radius: var(--input-radius);
+    border-top-right-radius: var(--input-radius);
+
+    &::-webkit-scrollbar {
+      border-radius: var(--input-radius);
+      width: 0 !important;
+    }
+
+    &::-webkit-scrollbar-track {
+      border-radius: var(--input-radius);
+    }
+
+    & :global(.hexEditorRowHeader),
+    & :global(.gutterHeader),
+    & :global(.byteHeader),
+    & :global(.asciiHeader) {
+      box-shadow: 0 -1px 0 0 var(--border-color) inset;
+    }
+
+    & :global(.hexEditorRowHeader) {
+      background-color: var(--header-bg);
+
+      & :global(.gutterHeader) {
+        background-color: var(--header-bg);
+      }
+    }
+  }
+
+  &.empty {
+    & :global(.hexEditorBody) {
+      &::-webkit-scrollbar {
+        width: 0 !important;
+      }
+
+      & > div::before {
+        content: "No data yet, set the length to add data.";
+        color: var(--mantine-color-dimmed);
+        font-size: 14px;
+        font-weight: 500;
+        display: flex;
+        text-align: center;
+        height: 25px;
+        justify-content: center;
+        align-items: center;
+      }
+    }
+
+    & :global(.offsetLabelHeader) {
+      box-shadow: 0 -1px 0 0 var(--border-color) inset;
+    }
+  }
+
+  & > :global(.hexEditorBody) {
+    border-bottom-left-radius: var(--input-radius);
+    border-bottom-right-radius: var(--input-radius);
+
+    &::-webkit-scrollbar {
+      border-radius: var(--input-radius);
+    }
+
+    &::-webkit-scrollbar-track {
+      border-radius: var(--input-radius);
+    }
+  }
+
+  & :global(.hexEditorRow .offsetLabel) {
+    box-shadow: -1px 0 0 0 var(--border-color) inset;
+  }
+}

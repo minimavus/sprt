@@ -1,0 +1,58 @@
+.virtual-list__wrapper {
+  flex: 1 1 auto;
+  overflow: auto;
+  min-height: 0;
+  height: 0;
+  contain: strict;
+
+  .virtual-list {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+}
+
+.logs-stream {
+  font-family: "Roboto Mono", ui-monospace, "Courier New", Menlo, Monaco;
+  overflow-wrap: break-word;
+
+  .log-line {
+    text-indent: -1em;
+    margin: 0px 1em 0px 3em;
+    word-break: break-word;
+    white-space: break-spaces;
+  }
+}
+
+.logs-preview-popover {
+  max-width: 500px !important;
+
+  .logs-stream-preview-limiter {
+    max-height: 300px;
+    overflow: hidden;
+  }
+
+  .logs-stream {
+    margin-top: 0;
+    margin-bottom: 0;
+    max-height: 100%;
+    overflow: hidden;
+    height: 100%;
+  }
+}
+
+.search-panel {
+  position: sticky;
+  top: 0;
+  right: 0;
+  z-index: 1;
+  margin-bottom: -12px;
+  width: 100%;
+  display: flex;
+  justify-content: end;
+  padding-right: 12px;
+}

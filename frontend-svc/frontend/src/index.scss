@@ -1,0 +1,89 @@
+@use "./mantine.scss" as mantine_loc;
+
+@import "https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400..700;1,400..700&display=swap";
+@import "https://fonts.googleapis.com/css2?family=Roboto Mono&display=swap";
+
+@import "./reset.css";
+
+@import "@mantine/core/styles.css";
+@import "@mantine/dropzone/styles.css";
+@import "@mantine/nprogress/styles.css";
+@import "@mantine/spotlight/styles.css";
+@import "@mantine/notifications/styles.css";
+@import "@mantine/charts/styles.css";
+@import "@mantine/dates/styles.css";
+@import "@mantine/code-highlight/styles.css";
+
+@import "./styles/text.scss";
+
+@font-face {
+  font-family: Sharp Sans;
+  src:
+    url(./assets/SharpSans-Bold-801c30ad.woff2) format("woff2"),
+    url(./assets/SharpSans-Bold-2dfc595d.woff) format("woff");
+}
+
+body {
+  font-size: 12px;
+  padding: 0;
+  margin: 0;
+  --control-text-default: var(--base-text-default);
+}
+
+hr.divider {
+  margin: 3em 0;
+  border-color: #d3d3d3;
+  border-top-width: 0;
+  border-style: dashed;
+}
+
+ul {
+  display: block;
+  list-style-type: disc;
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  padding-inline-start: 40px;
+}
+
+.main.main-padded {
+  margin: 0;
+  padding: 1rem;
+  display: block;
+  box-sizing: border-box;
+}
+
+.main {
+  @include mantine.light {
+    background-color: var(--mantine-color-gray-0);
+  }
+
+  @include mantine.dark {
+    background-color: var(--mantine-color-dark-8);
+  }
+}
+
+.main-container {
+  display: flex;
+  flex-flow: column;
+  flex: 1;
+}
+
+.virtual-height-guard {
+  flex: 1 1 auto;
+  overflow: auto;
+  min-height: 0;
+  height: 0;
+  contain: strict;
+  position: relative;
+}
+
+table.table--no-break-word,
+td.no-break-word {
+  white-space: nowrap;
+}
+
+svg.tabler-icon {
+  transition: all 0.15s ease;
+}

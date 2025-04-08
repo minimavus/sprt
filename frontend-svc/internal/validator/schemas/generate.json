@@ -1,0 +1,2051 @@
+{
+  "type": "object",
+  "properties": {
+    "general": {
+      "type": "object",
+      "properties": {
+        "nas": {
+          "type": "object",
+          "properties": {
+            "nasIp": {
+              "type": "string",
+              "minLength": 1
+            },
+            "connectionType": {
+              "type": "string",
+              "minLength": 1
+            },
+            "mtu": {
+              "type": "number",
+              "minimum": 1
+            },
+            "sessionIdTemplate": {
+              "type": "string",
+              "minLength": 1
+            },
+            "timeout": {
+              "type": "number",
+              "minimum": 0
+            },
+            "retransmits": {
+              "type": "number",
+              "minimum": 0
+            }
+          },
+          "required": [
+            "nasIp",
+            "connectionType",
+            "mtu",
+            "sessionIdTemplate",
+            "timeout",
+            "retransmits"
+          ],
+          "additionalProperties": false
+        },
+        "server": {
+          "type": "object",
+          "properties": {
+            "address": {
+              "type": "string",
+              "minLength": 1
+            },
+            "authPort": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "maximum": 65535
+            },
+            "acctPort": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "maximum": 65535
+            },
+            "secret": {
+              "type": "string"
+            },
+            "save": {
+              "type": "boolean"
+            },
+            "loadedId": {
+              "type": "string"
+            }
+          },
+          "required": ["address", "authPort", "acctPort", "secret", "save"],
+          "additionalProperties": false
+        },
+        "job": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "sessionsAmount": {
+              "type": "number",
+              "minimum": 1
+            },
+            "latency": {
+              "anyOf": [
+                {
+                  "type": "number",
+                  "minimum": 0
+                },
+                {
+                  "type": "string",
+                  "minLength": 1,
+                  "pattern": "^\\d+\\.\\.\\d+$"
+                }
+              ]
+            },
+            "multiThread": {
+              "type": "boolean"
+            },
+            "saveSessions": {
+              "type": "boolean"
+            },
+            "bulkName": {
+              "type": "string"
+            },
+            "withAcctStart": {
+              "type": "boolean"
+            },
+            "latencyAcctStart": {
+              "anyOf": [
+                {
+                  "type": "number",
+                  "minimum": 0
+                },
+                {
+                  "type": "string",
+                  "minLength": 1,
+                  "pattern": "^\\d+\\.\\.\\d+$"
+                }
+              ]
+            },
+            "withDACL": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "name",
+            "sessionsAmount",
+            "latency",
+            "multiThread",
+            "saveSessions",
+            "bulkName",
+            "withAcctStart",
+            "latencyAcctStart",
+            "withDACL"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": ["nas", "server", "job"],
+      "additionalProperties": false
+    },
+    "macAddresses": {
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "how": {
+              "type": "string",
+              "const": "random"
+            },
+            "allowRepeats": {
+              "type": "boolean"
+            }
+          },
+          "required": ["how", "allowRepeats"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "how": {
+              "type": "string",
+              "const": "pattern"
+            },
+            "pattern": {
+              "type": "string",
+              "minLength": 1
+            },
+            "allowRepeats": {
+              "type": "boolean"
+            }
+          },
+          "required": ["how", "pattern", "allowRepeats"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "how": {
+              "type": "string",
+              "const": "list"
+            },
+            "list": {
+              "type": "string",
+              "minLength": 1
+            },
+            "select": {
+              "type": "string",
+              "enum": ["random", "sequential"],
+              "default": "sequential"
+            },
+            "allowRepeats": {
+              "type": "boolean"
+            }
+          },
+          "required": ["how", "list", "allowRepeats"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "how": {
+              "type": "string",
+              "const": "range"
+            },
+            "start": {
+              "type": "string",
+              "minLength": 1
+            },
+            "end": {
+              "type": "string",
+              "minLength": 1
+            },
+            "random": {
+              "type": "boolean"
+            },
+            "step": {
+              "type": "number",
+              "minimum": 1
+            },
+            "allowRepeats": {
+              "type": "boolean"
+            }
+          },
+          "required": ["how", "start", "end", "random", "step", "allowRepeats"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "how": {
+              "type": "string",
+              "const": "dictionary"
+            },
+            "dictionaries": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string"
+              }
+            },
+            "select": {
+              "type": "string",
+              "enum": ["random", "sequential"],
+              "default": "sequential"
+            },
+            "allowRepeats": {
+              "type": "boolean"
+            }
+          },
+          "required": ["how", "dictionaries", "allowRepeats"],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "ipAddresses": {
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "how": {
+              "type": "string",
+              "const": "random"
+            },
+            "allowRepeats": {
+              "type": "boolean"
+            }
+          },
+          "required": ["how", "allowRepeats"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "how": {
+              "type": "string",
+              "const": "list"
+            },
+            "list": {
+              "type": "string",
+              "minLength": 1
+            },
+            "select": {
+              "type": "string",
+              "enum": ["random", "sequential"],
+              "default": "sequential"
+            },
+            "allowRepeats": {
+              "type": "boolean"
+            }
+          },
+          "required": ["how", "list", "allowRepeats"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "how": {
+              "type": "string",
+              "const": "range"
+            },
+            "range": {
+              "type": "string",
+              "minLength": 1
+            },
+            "random": {
+              "type": "boolean"
+            },
+            "step": {
+              "type": "number",
+              "minimum": 1
+            },
+            "allowRepeats": {
+              "type": "boolean"
+            }
+          },
+          "required": ["how", "range", "random", "allowRepeats"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "how": {
+              "type": "string",
+              "const": "dictionary"
+            },
+            "dictionaries": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string"
+              }
+            },
+            "select": {
+              "type": "string",
+              "enum": ["random", "sequential"],
+              "default": "sequential"
+            },
+            "allowRepeats": {
+              "type": "boolean"
+            }
+          },
+          "required": ["how", "dictionaries", "allowRepeats"],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "radius": {
+      "type": "object",
+      "properties": {
+        "dictionaries": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "attributes": {
+          "type": "object",
+          "properties": {
+            "accessRequest": {
+              "type": "array",
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "dictionary": {
+                        "type": ["string", "null"]
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "value": {
+                        "type": "string"
+                      },
+                      "vendor": {
+                        "type": ["string", "null"]
+                      },
+                      "custom": {
+                        "type": "boolean"
+                      },
+                      "base64": {
+                        "type": "boolean"
+                      }
+                    },
+                    "required": ["name", "value"],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "const": "Vendor-Specific"
+                      },
+                      "value": {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/properties/radius/properties/attributes/properties/accessRequest/items/anyOf/0"
+                        }
+                      },
+                      "vendor": {
+                        "type": "string"
+                      },
+                      "custom": {
+                        "type": "boolean"
+                      }
+                    },
+                    "required": ["name", "value", "vendor"],
+                    "additionalProperties": false
+                  }
+                ]
+              }
+            },
+            "accountingStart": {
+              "type": "array",
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "dictionary": {
+                        "type": ["string", "null"]
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "value": {
+                        "type": "string"
+                      },
+                      "vendor": {
+                        "type": ["string", "null"]
+                      },
+                      "custom": {
+                        "type": "boolean"
+                      },
+                      "base64": {
+                        "type": "boolean"
+                      }
+                    },
+                    "required": ["name", "value"],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "const": "Vendor-Specific"
+                      },
+                      "value": {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/properties/radius/properties/attributes/properties/accountingStart/items/anyOf/0"
+                        }
+                      },
+                      "vendor": {
+                        "type": "string"
+                      },
+                      "custom": {
+                        "type": "boolean"
+                      }
+                    },
+                    "required": ["name", "value", "vendor"],
+                    "additionalProperties": false
+                  }
+                ]
+              }
+            }
+          },
+          "required": ["accessRequest", "accountingStart"],
+          "additionalProperties": false
+        }
+      },
+      "required": ["dictionaries", "attributes"],
+      "additionalProperties": false
+    },
+    "scheduler": {
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "what": {
+              "type": "string",
+              "const": "nothing"
+            }
+          },
+          "required": ["what"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "what": {
+              "type": "string",
+              "const": "job"
+            },
+            "params": {
+              "anyOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "how": {
+                      "type": "string",
+                      "const": "when-finished"
+                    },
+                    "times": {
+                      "type": "integer",
+                      "minimum": -1
+                    },
+                    "latency": {
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    "latencyUnit": {
+                      "type": "string",
+                      "enum": ["seconds", "minutes", "hours", "days"],
+                      "default": "minutes"
+                    }
+                  },
+                  "required": ["how", "times", "latency"],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "how": {
+                      "type": "string",
+                      "const": "schedule"
+                    },
+                    "cron": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": ["how", "cron"],
+                  "additionalProperties": false
+                }
+              ]
+            }
+          },
+          "required": ["what", "params"],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "what": {
+              "type": "string",
+              "const": "interim-updates"
+            },
+            "cron": {
+              "type": "string",
+              "minLength": 1
+            },
+            "attributes": {
+              "type": "object",
+              "properties": {
+                "acctSessionTime": {
+                  "type": "string",
+                  "enum": ["since-start", "since-last"]
+                },
+                "acctInputOctets": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "acctOutputOctets": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "acctInputPackets": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "acctOutputPackets": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "additional": {
+                  "anyOf": [
+                    {
+                      "type": "array"
+                    },
+                    {
+                      "type": "string"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "acctSessionTime",
+                "acctInputOctets",
+                "acctOutputOctets",
+                "acctInputPackets",
+                "acctOutputPackets",
+                "additional"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": ["what", "cron", "attributes"],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "coa": {
+      "type": "object",
+      "properties": {
+        "onBounceHostPort": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "actionAfter": {
+                  "type": "string",
+                  "enum": [
+                    "reauthenticate",
+                    "reauthenticateWithMab",
+                    "doNothing"
+                  ]
+                },
+                "dropOld": {
+                  "type": "boolean"
+                },
+                "newSessionId": {
+                  "type": "boolean"
+                },
+                "variant": {
+                  "type": "string",
+                  "const": "ack"
+                }
+              },
+              "required": ["variant"],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "actionAfter": {
+                  "type": "string",
+                  "enum": [
+                    "reauthenticate",
+                    "reauthenticateWithMab",
+                    "doNothing"
+                  ]
+                },
+                "dropOld": {
+                  "type": "boolean"
+                },
+                "errorCause": {
+                  "type": "string",
+                  "enum": [
+                    "201",
+                    "202",
+                    "401",
+                    "402",
+                    "403",
+                    "404",
+                    "405",
+                    "406",
+                    "407",
+                    "501",
+                    "502",
+                    "503",
+                    "504",
+                    "505",
+                    "506",
+                    "507",
+                    "508",
+                    "000"
+                  ]
+                },
+                "newSessionId": {
+                  "type": "boolean"
+                },
+                "variant": {
+                  "type": "string",
+                  "const": "nack"
+                }
+              },
+              "required": ["variant"],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "variant": {
+                  "type": "string",
+                  "const": "drop"
+                }
+              },
+              "required": ["variant"],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "onDefault": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "actionAfter": {
+                  "type": "string",
+                  "enum": [
+                    "reauthenticate",
+                    "reauthenticateWithMab",
+                    "doNothing"
+                  ]
+                },
+                "dropOld": {
+                  "type": "boolean"
+                },
+                "newSessionId": {
+                  "type": "boolean"
+                },
+                "variant": {
+                  "type": "string",
+                  "const": "ack"
+                }
+              },
+              "required": ["variant"],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "actionAfter": {
+                  "type": "string",
+                  "enum": [
+                    "reauthenticate",
+                    "reauthenticateWithMab",
+                    "doNothing"
+                  ]
+                },
+                "dropOld": {
+                  "type": "boolean"
+                },
+                "errorCause": {
+                  "type": "string",
+                  "enum": [
+                    "201",
+                    "202",
+                    "401",
+                    "402",
+                    "403",
+                    "404",
+                    "405",
+                    "406",
+                    "407",
+                    "501",
+                    "502",
+                    "503",
+                    "504",
+                    "505",
+                    "506",
+                    "507",
+                    "508",
+                    "000"
+                  ]
+                },
+                "newSessionId": {
+                  "type": "boolean"
+                },
+                "variant": {
+                  "type": "string",
+                  "const": "nack"
+                }
+              },
+              "required": ["variant"],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "variant": {
+                  "type": "string",
+                  "const": "drop"
+                }
+              },
+              "required": ["variant"],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "onDisableHostPort": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "actionAfter": {
+                  "type": "string",
+                  "enum": [
+                    "reauthenticate",
+                    "reauthenticateWithMab",
+                    "doNothing"
+                  ]
+                },
+                "dropOld": {
+                  "type": "boolean"
+                },
+                "newSessionId": {
+                  "type": "boolean"
+                },
+                "variant": {
+                  "type": "string",
+                  "const": "ack"
+                }
+              },
+              "required": ["variant"],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "actionAfter": {
+                  "type": "string",
+                  "enum": [
+                    "reauthenticate",
+                    "reauthenticateWithMab",
+                    "doNothing"
+                  ]
+                },
+                "dropOld": {
+                  "type": "boolean"
+                },
+                "errorCause": {
+                  "type": "string",
+                  "enum": [
+                    "201",
+                    "202",
+                    "401",
+                    "402",
+                    "403",
+                    "404",
+                    "405",
+                    "406",
+                    "407",
+                    "501",
+                    "502",
+                    "503",
+                    "504",
+                    "505",
+                    "506",
+                    "507",
+                    "508",
+                    "000"
+                  ]
+                },
+                "newSessionId": {
+                  "type": "boolean"
+                },
+                "variant": {
+                  "type": "string",
+                  "const": "nack"
+                }
+              },
+              "required": ["variant"],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "variant": {
+                  "type": "string",
+                  "const": "drop"
+                }
+              },
+              "required": ["variant"],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "onReauthenticateDefault": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "actionAfter": {
+                  "type": "string",
+                  "enum": [
+                    "reauthenticate",
+                    "reauthenticateWithMab",
+                    "doNothing"
+                  ]
+                },
+                "dropOld": {
+                  "type": "boolean"
+                },
+                "newSessionId": {
+                  "type": "boolean"
+                },
+                "variant": {
+                  "type": "string",
+                  "const": "ack"
+                }
+              },
+              "required": ["variant"],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "actionAfter": {
+                  "type": "string",
+                  "enum": [
+                    "reauthenticate",
+                    "reauthenticateWithMab",
+                    "doNothing"
+                  ]
+                },
+                "dropOld": {
+                  "type": "boolean"
+                },
+                "errorCause": {
+                  "type": "string",
+                  "enum": [
+                    "201",
+                    "202",
+                    "401",
+                    "402",
+                    "403",
+                    "404",
+                    "405",
+                    "406",
+                    "407",
+                    "501",
+                    "502",
+                    "503",
+                    "504",
+                    "505",
+                    "506",
+                    "507",
+                    "508",
+                    "000"
+                  ]
+                },
+                "newSessionId": {
+                  "type": "boolean"
+                },
+                "variant": {
+                  "type": "string",
+                  "const": "nack"
+                }
+              },
+              "required": ["variant"],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "variant": {
+                  "type": "string",
+                  "const": "drop"
+                }
+              },
+              "required": ["variant"],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "onReauthenticateLast": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "actionAfter": {
+                  "type": "string",
+                  "enum": [
+                    "reauthenticate",
+                    "reauthenticateWithMab",
+                    "doNothing"
+                  ]
+                },
+                "dropOld": {
+                  "type": "boolean"
+                },
+                "newSessionId": {
+                  "type": "boolean"
+                },
+                "variant": {
+                  "type": "string",
+                  "const": "ack"
+                }
+              },
+              "required": ["variant"],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "actionAfter": {
+                  "type": "string",
+                  "enum": [
+                    "reauthenticate",
+                    "reauthenticateWithMab",
+                    "doNothing"
+                  ]
+                },
+                "dropOld": {
+                  "type": "boolean"
+                },
+                "errorCause": {
+                  "type": "string",
+                  "enum": [
+                    "201",
+                    "202",
+                    "401",
+                    "402",
+                    "403",
+                    "404",
+                    "405",
+                    "406",
+                    "407",
+                    "501",
+                    "502",
+                    "503",
+                    "504",
+                    "505",
+                    "506",
+                    "507",
+                    "508",
+                    "000"
+                  ]
+                },
+                "newSessionId": {
+                  "type": "boolean"
+                },
+                "variant": {
+                  "type": "string",
+                  "const": "nack"
+                }
+              },
+              "required": ["variant"],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "variant": {
+                  "type": "string",
+                  "const": "drop"
+                }
+              },
+              "required": ["variant"],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "onReauthenticateRerun": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "actionAfter": {
+                  "type": "string",
+                  "enum": [
+                    "reauthenticate",
+                    "reauthenticateWithMab",
+                    "doNothing"
+                  ]
+                },
+                "dropOld": {
+                  "type": "boolean"
+                },
+                "newSessionId": {
+                  "type": "boolean"
+                },
+                "variant": {
+                  "type": "string",
+                  "const": "ack"
+                }
+              },
+              "required": ["variant"],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "actionAfter": {
+                  "type": "string",
+                  "enum": [
+                    "reauthenticate",
+                    "reauthenticateWithMab",
+                    "doNothing"
+                  ]
+                },
+                "dropOld": {
+                  "type": "boolean"
+                },
+                "errorCause": {
+                  "type": "string",
+                  "enum": [
+                    "201",
+                    "202",
+                    "401",
+                    "402",
+                    "403",
+                    "404",
+                    "405",
+                    "406",
+                    "407",
+                    "501",
+                    "502",
+                    "503",
+                    "504",
+                    "505",
+                    "506",
+                    "507",
+                    "508",
+                    "000"
+                  ]
+                },
+                "newSessionId": {
+                  "type": "boolean"
+                },
+                "variant": {
+                  "type": "string",
+                  "const": "nack"
+                }
+              },
+              "required": ["variant"],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "variant": {
+                  "type": "string",
+                  "const": "drop"
+                }
+              },
+              "required": ["variant"],
+              "additionalProperties": false
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "guest": {
+      "type": "object",
+      "properties": {
+        "guestFlow": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "variant": {
+                  "type": "string",
+                  "const": "none"
+                }
+              },
+              "required": ["variant"],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "accessCode": {
+                  "type": "string"
+                },
+                "formName": {
+                  "type": "string"
+                },
+                "hotspotField:accessCode": {
+                  "type": "string"
+                },
+                "successCondition": {
+                  "type": "string"
+                },
+                "tokenFormName": {
+                  "type": "string"
+                },
+                "variant": {
+                  "type": "string",
+                  "const": "hotspot"
+                }
+              },
+              "required": ["variant"],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "accessCode": {
+                  "type": "string"
+                },
+                "aupFormName": {
+                  "type": "string"
+                },
+                "credentials": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "credentialsList": {
+                          "type": "string"
+                        },
+                        "variant": {
+                          "type": "string",
+                          "const": "list"
+                        }
+                      },
+                      "required": ["variant"],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "credentialsDictionary": {
+                          "type": "object",
+                          "properties": {
+                            "allowRepeats": {
+                              "type": "boolean"
+                            },
+                            "dictionaries": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              }
+                            },
+                            "select": {
+                              "type": "string",
+                              "enum": ["sequential", "random"]
+                            }
+                          },
+                          "additionalProperties": false
+                        },
+                        "variant": {
+                          "type": "string",
+                          "const": "dictionaries"
+                        }
+                      },
+                      "required": ["variant"],
+                      "additionalProperties": false
+                    }
+                  ]
+                },
+                "loginFields:accessCode": {
+                  "type": "string"
+                },
+                "loginFields:password": {
+                  "type": "string"
+                },
+                "loginFields:username": {
+                  "type": "string"
+                },
+                "loginFormName": {
+                  "type": "string"
+                },
+                "successCondition": {
+                  "type": "string"
+                },
+                "tokenFormName": {
+                  "type": "string"
+                },
+                "variant": {
+                  "type": "string",
+                  "const": "with-creds"
+                }
+              },
+              "required": ["variant"],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "accessCode": {
+                  "type": "string"
+                },
+                "aupFormName": {
+                  "type": "string"
+                },
+                "companyRule": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "maxLength": {
+                          "type": "number"
+                        },
+                        "minLength": {
+                          "type": "number"
+                        },
+                        "variant": {
+                          "type": "string",
+                          "const": "random"
+                        }
+                      },
+                      "required": ["variant"],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "pattern": {
+                          "type": "string"
+                        },
+                        "variant": {
+                          "type": "string",
+                          "const": "random-pattern"
+                        }
+                      },
+                      "required": ["variant"],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "dictionary": {
+                          "type": "object",
+                          "properties": {
+                            "allowRepeats": {
+                              "type": "boolean"
+                            },
+                            "dictionaries": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              }
+                            },
+                            "select": {
+                              "type": "string",
+                              "enum": ["sequential", "random"]
+                            }
+                          },
+                          "additionalProperties": false
+                        },
+                        "variant": {
+                          "type": "string",
+                          "const": "dictionary"
+                        }
+                      },
+                      "required": ["variant"],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "variant": {
+                          "type": "string",
+                          "const": "faker"
+                        },
+                        "what": {
+                          "type": "string",
+                          "const": "company"
+                        }
+                      },
+                      "required": ["variant"],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "variant": {
+                          "type": "string",
+                          "const": "keep-empty"
+                        }
+                      },
+                      "required": ["variant"],
+                      "additionalProperties": false
+                    }
+                  ]
+                },
+                "emailAddressRule": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "maxLength": {
+                          "type": "number"
+                        },
+                        "minLength": {
+                          "type": "number"
+                        },
+                        "variant": {
+                          "type": "string",
+                          "const": "random"
+                        }
+                      },
+                      "required": ["variant"],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "pattern": {
+                          "type": "string"
+                        },
+                        "variant": {
+                          "type": "string",
+                          "const": "random-pattern"
+                        }
+                      },
+                      "required": ["variant"],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "dictionary": {
+                          "type": "object",
+                          "properties": {
+                            "allowRepeats": {
+                              "type": "boolean"
+                            },
+                            "dictionaries": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              }
+                            },
+                            "select": {
+                              "type": "string",
+                              "enum": ["sequential", "random"]
+                            }
+                          },
+                          "additionalProperties": false
+                        },
+                        "variant": {
+                          "type": "string",
+                          "const": "dictionary"
+                        }
+                      },
+                      "required": ["variant"],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "variant": {
+                          "type": "string",
+                          "const": "faker"
+                        },
+                        "what": {
+                          "type": "string",
+                          "const": "email"
+                        }
+                      },
+                      "required": ["variant"],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "variant": {
+                          "type": "string",
+                          "const": "keep-empty"
+                        }
+                      },
+                      "required": ["variant"],
+                      "additionalProperties": false
+                    }
+                  ]
+                },
+                "firstNameRule": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "maxLength": {
+                          "type": "number"
+                        },
+                        "minLength": {
+                          "type": "number"
+                        },
+                        "variant": {
+                          "type": "string",
+                          "const": "random"
+                        }
+                      },
+                      "required": ["variant"],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "pattern": {
+                          "type": "string"
+                        },
+                        "variant": {
+                          "type": "string",
+                          "const": "random-pattern"
+                        }
+                      },
+                      "required": ["variant"],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "dictionary": {
+                          "type": "object",
+                          "properties": {
+                            "allowRepeats": {
+                              "type": "boolean"
+                            },
+                            "dictionaries": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              }
+                            },
+                            "select": {
+                              "type": "string",
+                              "enum": ["sequential", "random"]
+                            }
+                          },
+                          "additionalProperties": false
+                        },
+                        "variant": {
+                          "type": "string",
+                          "const": "dictionary"
+                        }
+                      },
+                      "required": ["variant"],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "variant": {
+                          "type": "string",
+                          "const": "faker"
+                        },
+                        "what": {
+                          "type": "string",
+                          "const": "first_name"
+                        }
+                      },
+                      "required": ["variant"],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "variant": {
+                          "type": "string",
+                          "const": "keep-empty"
+                        }
+                      },
+                      "required": ["variant"],
+                      "additionalProperties": false
+                    }
+                  ]
+                },
+                "lastNameRule": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "maxLength": {
+                          "type": "number"
+                        },
+                        "minLength": {
+                          "type": "number"
+                        },
+                        "variant": {
+                          "type": "string",
+                          "const": "random"
+                        }
+                      },
+                      "required": ["variant"],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "pattern": {
+                          "type": "string"
+                        },
+                        "variant": {
+                          "type": "string",
+                          "const": "random-pattern"
+                        }
+                      },
+                      "required": ["variant"],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "dictionary": {
+                          "type": "object",
+                          "properties": {
+                            "allowRepeats": {
+                              "type": "boolean"
+                            },
+                            "dictionaries": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              }
+                            },
+                            "select": {
+                              "type": "string",
+                              "enum": ["sequential", "random"]
+                            }
+                          },
+                          "additionalProperties": false
+                        },
+                        "variant": {
+                          "type": "string",
+                          "const": "dictionary"
+                        }
+                      },
+                      "required": ["variant"],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "variant": {
+                          "type": "string",
+                          "const": "faker"
+                        },
+                        "what": {
+                          "type": "string",
+                          "const": "last_name"
+                        }
+                      },
+                      "required": ["variant"],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "variant": {
+                          "type": "string",
+                          "const": "keep-empty"
+                        }
+                      },
+                      "required": ["variant"],
+                      "additionalProperties": false
+                    }
+                  ]
+                },
+                "locationRule": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "value": {
+                          "type": "string"
+                        },
+                        "variant": {
+                          "type": "string",
+                          "const": "static"
+                        }
+                      },
+                      "required": ["variant"],
+                      "additionalProperties": false
+                    }
+                  ]
+                },
+                "login-successCondition": {
+                  "type": "string"
+                },
+                "loginFields:accessCode": {
+                  "type": "string"
+                },
+                "loginFields:password": {
+                  "type": "string"
+                },
+                "loginFields:username": {
+                  "type": "string"
+                },
+                "loginFormName": {
+                  "type": "string"
+                },
+                "personVisitedRule": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "maxLength": {
+                          "type": "number"
+                        },
+                        "minLength": {
+                          "type": "number"
+                        },
+                        "variant": {
+                          "type": "string",
+                          "const": "random"
+                        }
+                      },
+                      "required": ["variant"],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "pattern": {
+                          "type": "string"
+                        },
+                        "variant": {
+                          "type": "string",
+                          "const": "random-pattern"
+                        }
+                      },
+                      "required": ["variant"],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "dictionary": {
+                          "type": "object",
+                          "properties": {
+                            "allowRepeats": {
+                              "type": "boolean"
+                            },
+                            "dictionaries": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              }
+                            },
+                            "select": {
+                              "type": "string",
+                              "enum": ["sequential", "random"]
+                            }
+                          },
+                          "additionalProperties": false
+                        },
+                        "variant": {
+                          "type": "string",
+                          "const": "dictionary"
+                        }
+                      },
+                      "required": ["variant"],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "variant": {
+                          "type": "string",
+                          "const": "faker"
+                        },
+                        "what": {
+                          "type": "string",
+                          "const": "email"
+                        }
+                      },
+                      "required": ["variant"],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "variant": {
+                          "type": "string",
+                          "const": "keep-empty"
+                        }
+                      },
+                      "required": ["variant"],
+                      "additionalProperties": false
+                    }
+                  ]
+                },
+                "reasonVisitRule": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "maxLength": {
+                          "type": "number"
+                        },
+                        "minLength": {
+                          "type": "number"
+                        },
+                        "variant": {
+                          "type": "string",
+                          "const": "random"
+                        }
+                      },
+                      "required": ["variant"],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "pattern": {
+                          "type": "string"
+                        },
+                        "variant": {
+                          "type": "string",
+                          "const": "random-pattern"
+                        }
+                      },
+                      "required": ["variant"],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "dictionary": {
+                          "type": "object",
+                          "properties": {
+                            "allowRepeats": {
+                              "type": "boolean"
+                            },
+                            "dictionaries": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              }
+                            },
+                            "select": {
+                              "type": "string",
+                              "enum": ["sequential", "random"]
+                            }
+                          },
+                          "additionalProperties": false
+                        },
+                        "variant": {
+                          "type": "string",
+                          "const": "dictionary"
+                        }
+                      },
+                      "required": ["variant"],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "variant": {
+                          "type": "string",
+                          "const": "faker"
+                        },
+                        "what": {
+                          "type": "string",
+                          "const": "sentence"
+                        }
+                      },
+                      "required": ["variant"],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "variant": {
+                          "type": "string",
+                          "const": "keep-empty"
+                        }
+                      },
+                      "required": ["variant"],
+                      "additionalProperties": false
+                    }
+                  ]
+                },
+                "reauthAfterTimeout": {
+                  "type": "number"
+                },
+                "registrationCode": {
+                  "type": "string"
+                },
+                "selfRegFields:access_code": {
+                  "type": "string"
+                },
+                "selfRegFields:company": {
+                  "type": "string"
+                },
+                "selfRegFields:email_address": {
+                  "type": "string"
+                },
+                "selfRegFields:first_name": {
+                  "type": "string"
+                },
+                "selfRegFields:last_name": {
+                  "type": "string"
+                },
+                "selfRegFields:location": {
+                  "type": "string"
+                },
+                "selfRegFields:person_visited": {
+                  "type": "string"
+                },
+                "selfRegFields:phone_number": {
+                  "type": "string"
+                },
+                "selfRegFields:reason_visit": {
+                  "type": "string"
+                },
+                "selfRegFields:sms_provider": {
+                  "type": "string"
+                },
+                "selfRegFields:user_name": {
+                  "type": "string"
+                },
+                "selfRegFormName": {
+                  "type": "string"
+                },
+                "selfRegSuccessFormName": {
+                  "type": "string"
+                },
+                "smsProviderRule": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "value": {
+                          "type": "string"
+                        },
+                        "variant": {
+                          "type": "string",
+                          "const": "static"
+                        }
+                      },
+                      "required": ["variant"],
+                      "additionalProperties": false
+                    }
+                  ]
+                },
+                "successCondition": {
+                  "type": "string"
+                },
+                "tokenFormName": {
+                  "type": "string"
+                },
+                "userNameRule": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "maxLength": {
+                          "type": "number"
+                        },
+                        "minLength": {
+                          "type": "number"
+                        },
+                        "variant": {
+                          "type": "string",
+                          "const": "random"
+                        }
+                      },
+                      "required": ["variant"],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "pattern": {
+                          "type": "string"
+                        },
+                        "variant": {
+                          "type": "string",
+                          "const": "random-pattern"
+                        }
+                      },
+                      "required": ["variant"],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "dictionary": {
+                          "type": "object",
+                          "properties": {
+                            "allowRepeats": {
+                              "type": "boolean"
+                            },
+                            "dictionaries": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              }
+                            },
+                            "select": {
+                              "type": "string",
+                              "enum": ["sequential", "random"]
+                            }
+                          },
+                          "additionalProperties": false
+                        },
+                        "variant": {
+                          "type": "string",
+                          "const": "dictionary"
+                        }
+                      },
+                      "required": ["variant"],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "funBasedPattern": {
+                          "type": "string"
+                        },
+                        "variant": {
+                          "type": "string",
+                          "const": "others"
+                        }
+                      },
+                      "required": ["variant"],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "variant": {
+                          "type": "string",
+                          "const": "keep-empty"
+                        }
+                      },
+                      "required": ["variant"],
+                      "additionalProperties": false
+                    }
+                  ]
+                },
+                "variant": {
+                  "type": "string",
+                  "const": "self-reg"
+                }
+              },
+              "required": ["variant"],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "userAgents": {
+          "type": "object",
+          "properties": {
+            "allowRepeats": {
+              "type": "boolean"
+            },
+            "dictionaries": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "select": {
+              "type": "string",
+              "enum": ["sequential", "random"]
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "required": ["general", "macAddresses", "ipAddresses", "radius"],
+  "additionalProperties": false,
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

@@ -1,0 +1,11 @@
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 16px;
+}
+
+.remove_btn__container {
+  display: inline-flex;
+  justify-content: flex-end;
+  flex-direction: column;
+}

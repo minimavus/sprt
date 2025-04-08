@@ -1,0 +1,41 @@
+.messages {
+  width: 100% !important;
+  max-width: 100% !important;
+
+  th {
+    max-width: unset !important;
+    width: unset !important;
+  }
+
+  td {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    position: relative;
+    overflow-wrap: break-word !important;
+  }
+
+  td:last-child {
+    white-space: break-spaces !important;
+    word-wrap: break-word !important;
+
+    & > div.height_limit {
+      --height-limit: 100px;
+      overflow: hidden;
+      overflow-wrap: anywhere;
+      max-height: var(--height-limit);
+    }
+
+    & > div.height_limit > p {
+      white-space: break-spaces;
+      word-wrap: break-word;
+      overflow-wrap: anywhere;
+    }
+  }
+}
+
+.expanded.break pre {
+  white-space: break-spaces !important;
+  word-break: break-word !important;
+  word-wrap: break-word !important;
+}

@@ -1,0 +1,17 @@
+.address_with_port {
+  --second-column-width: 200px;
+  display: grid;
+  grid-template-columns: 1fr var(--second-column-width);
+  grid-gap: var(--mantine-spacing-xs);
+
+  &.action > .action {
+    display: grid;
+    grid-template-columns: 1fr fit-content(50px);
+    gap: var(--mantine-spacing-xs);
+
+    & > button {
+      margin-top: 24px;
+    }
+  }
+}
+
