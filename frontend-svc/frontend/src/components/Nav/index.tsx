@@ -7,7 +7,6 @@ import {
   IconList,
   IconLocationPlus,
   IconSettings,
-  IconSwitchHorizontal,
   IconTools,
 } from "@tabler/icons-react";
 import { useLocation } from "react-router-dom";

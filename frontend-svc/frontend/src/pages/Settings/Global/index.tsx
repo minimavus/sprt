@@ -10,7 +10,8 @@ import {
 import { AwaitError } from "@/components/Error";
 import { PageLayout } from "@/components/Layout/PageLayout";
 import { DefaultLoaderFallback } from "@/components/Loader";
-import { useQueryUser } from "@/hooks/useQueryUser";
+
+// import { useQueryUser } from "@/hooks/useQueryUser";
 
 const GlobalSettingsView: FC = () => {
   return (
@@ -21,7 +22,7 @@ const GlobalSettingsView: FC = () => {
 };
 
 const GlobalSettings: FC = () => {
-  const [user] = useQueryUser();
+  // const [user] = useQueryUser();
   const data = useLoaderData<typeof globalSettingsLoader>();
 
   return (
@@ -40,8 +41,10 @@ const GlobalSettings: FC = () => {
 
 export { GlobalSettings };
 
-export const globalSettingsLoader = async ({ request }: LoaderFunctionArgs) => {
-  const user = new URL(request.url).searchParams.get("user");
+export const globalSettingsLoader = async ({
+  request: _,
+}: LoaderFunctionArgs) => {
+  // const user = new URL(request.url).searchParams.get("user");
   const resolved = Promise.resolve(["something"]);
 
   return resolved;

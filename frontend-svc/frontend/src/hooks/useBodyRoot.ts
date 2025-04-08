@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 
 export function useBodyRoot() {
-  const ref = useRef<HTMLElement | null>();
+  const ref = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     if (typeof document === "undefined") return;

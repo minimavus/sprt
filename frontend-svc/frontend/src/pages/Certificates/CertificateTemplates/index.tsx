@@ -2,6 +2,7 @@ import { FC, useState } from "react";
 import { Button, Menu, Stack, Text } from "@mantine/core";
 import { IconPencil, IconPlus, IconTrash } from "@tabler/icons-react";
 import { ColumnDef, RowSelectionState } from "@tanstack/react-table";
+import { ok } from "neverthrow";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 
 import { ButtonWithConfirm } from "@/components/Buttons/ButtonWithConfirm";
@@ -157,7 +158,8 @@ const CertificateTemplates: FC = () => {
                   (id) => data[Number(id)].id,
                 );
                 try {
-                  return await deleteAsync({ id: ids, user });
+                  await deleteAsync({ id: ids, user });
+                  return ok();
                 } finally {
                   setSelected({});
                 }

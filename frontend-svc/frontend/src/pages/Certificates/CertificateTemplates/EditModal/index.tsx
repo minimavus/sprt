@@ -151,7 +151,8 @@ export const TemplateEditModal: FC = () => {
   const [submitError, setSubmitError] = useState<string | null>(null);
   const form = useForm<FormValues>({
     defaultValues: prepDefaultValues(data.template),
-    resolver: zodResolver(formSchemaResolver),
+    // FIXME:
+    resolver: zodResolver(formSchemaResolver) as any,
   });
   const { mutateAsync } = useCertTemplateUpsert();
 

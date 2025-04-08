@@ -222,7 +222,7 @@ export type DictionariesMap = Map<
 >;
 
 export function useRadiusDictionaryBulk(
-  dictionaries: Set<string>,
+  dictionaries: Set<string> | string[],
   user: QueryUser,
 ) {
   const combinedCached = useRef<DictionariesMap>(new Map());

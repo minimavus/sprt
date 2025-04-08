@@ -75,7 +75,8 @@ export const TestEnrollmentButton: FC<{ disabled: boolean }> = ({
 
   const form = useForm<TemplateFormValues>({
     defaultValues: prepDefaultValues(defaultTemplate(user ?? "me")),
-    resolver: zodResolver(templateFormResolver),
+    // FIXME:
+    resolver: zodResolver(templateFormResolver) as any,
   });
 
   const { mutateAsync, error, reset } = useMutation({

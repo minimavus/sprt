@@ -77,7 +77,7 @@ const SessionsTable: FC<{ data: TacacsSessionsInBulk | null }> = ({
     },
   });
 
-  const [ref, rect] = useResizeObserver<HTMLDivElement>();
+  const [ref, _rect] = useResizeObserver<HTMLDivElement>();
 
   if (!initialData) {
     return null;

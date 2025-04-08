@@ -70,7 +70,9 @@ export const Server: FC = () => {
               params: { user },
             }),
           }),
-    resolver: zodResolver(isNew ? NewServerSchema : ServerSettingsSchema),
+    resolver: zodResolver(
+      isNew ? NewServerSchema : ServerSettingsSchema,
+    ) as any,
   });
 
   const onSubmit: SubmitHandler<ServerSettings> = async (values) => {

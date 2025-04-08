@@ -139,7 +139,7 @@ const AttributesTree: FC<{
 const AttributeSelectModal: FC<{
   onClose: () => void;
   onAdd: (selected: TransferTreeData) => void;
-  dictionaries: Set<string>;
+  dictionaries: string[];
   user: QueryUser;
   vsa?: boolean;
   vendor?: string;

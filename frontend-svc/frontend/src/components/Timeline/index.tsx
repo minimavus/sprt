@@ -60,7 +60,7 @@ export const TimelineElement = forwardRef<HTMLDivElement, TimelineElementProps>(
         <div className={cx(styles["timeline__icon"])}>
           <div className={cx(styles["icon"])}>{icon}</div>
         </div>
-        <div className={cx(styles["timeline__content"])}>{children}</div>
+        <div>{children}</div>
       </Box>
     );
   },

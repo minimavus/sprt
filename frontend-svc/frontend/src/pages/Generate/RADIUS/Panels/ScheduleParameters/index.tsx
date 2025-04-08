@@ -1,10 +1,5 @@
 import { type FC } from "react";
-import {
-  InputLabel,
-  SegmentedControl,
-  SegmentedControlItem,
-  Stack,
-} from "@mantine/core";
+import { SegmentedControlItem } from "@mantine/core";
 import { useController } from "react-hook-form";
 
 import { Info } from "@/components/Alerts";

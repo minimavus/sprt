@@ -4,7 +4,6 @@ import {
   getThemeColor,
   Menu,
   Tabs,
-  TabsProps,
   TabsTabProps,
   useMantineTheme,
 } from "@mantine/core";

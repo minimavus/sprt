@@ -6,7 +6,6 @@ import {
   Modal,
   Select,
   Stack,
-  Text,
   TextInput,
   Title,
 } from "@mantine/core";

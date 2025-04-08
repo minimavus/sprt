@@ -2,7 +2,7 @@ import { FC } from "react";
 import { ComboboxData } from "@mantine/core";
 
 import { ActionModalProps } from ".";
-import { Camelize, SupportedActions } from "../types";
+import { SupportedActions } from "../types";
 
 export type SessionTimeVariant = "sinceStart" | "sinceLastUpdate" | "custom";
 
