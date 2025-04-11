@@ -85,6 +85,9 @@ func addSettingsApiRoutes(r shared.EchoRouter) {
 	r.GET("/sms-gateway", rest.GetSmsGatewayConfig, m.ValidatePermission("sms_gateway.read.others"))
 	r.PUT("/sms-gateway", rest.UpdateSmsGatewayConfig, m.ValidatePermission("sms_gateway.update.others"))
 	r.GET("/sms-gateway/examples", rest.GetSmsGatewayConfigExamples, m.ValidatePermission("sms_gateway.read.others"))
+
+	r.GET("/defaults/generate", rest.GetUserGenerateDefaults, m.ValidatePermission("settings.read_defaults.others"))
+	r.PUT("/defaults/generate", rest.UpdateUserGenerateDefaults, m.ValidatePermission("settings.update_defaults.others"))
 }
 
 func addCertificatesApiRoutes(r shared.EchoRouter) {

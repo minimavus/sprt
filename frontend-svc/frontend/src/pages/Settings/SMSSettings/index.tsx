@@ -1,10 +1,10 @@
 import {
-  FC,
-  Ref,
   useEffect,
   useImperativeHandle,
   useRef,
   useState,
+  type FC,
+  type Ref,
 } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -54,7 +54,7 @@ import { getErrorMessage } from "@/utils/errors";
 
 import { formSchema, methodOptions, SMSSettingsFormData } from "./schema";
 import { SMSGatewayResult } from "./SMSGatewayResult";
-import { SMSGatewayConfigRef, SMSSettingsTabs } from "./types";
+import type { SMSGatewayConfigRef, SMSSettingsTabs } from "./types";
 import {
   formValuesToServerData,
   getURLPrefix,

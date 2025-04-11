@@ -3,7 +3,6 @@ package db
 import (
 	"context"
 
-	"github.com/cisco-open/sprt/frontend-svc/internal/json"
 	"github.com/cisco-open/sprt/frontend-svc/models"
 	"github.com/volatiletech/sqlboiler/v4/queries/qm"
 )
@@ -48,26 +47,5 @@ func (e *execute) GetUserByAPIToken(ctx context.Context, token string) (string, 
 }
 
 func (e *execute) SetAPISettingsOfUser(ctx context.Context, u string, s any) (int64, error) {
-	_, err := models.FindUser(ctx, e.db, u, models.UserColumns.Attributes)
-	if err != nil {
-		return 0, err
-	}
-
-	bts, err := json.Marshal(s)
-	if err != nil {
-		return 0, err
-	}
-
-	r, err := models.NewQuery(
-		qm.SQL(
-			`UPDATE `+models.TableNames.Users+` SET "attributes"=jsonb_set("attributes", '{"api"}', $1::jsonb, true) WHERE uid=$2`,
-			string(bts),
-			u,
-		),
-	).ExecContext(ctx, e.db)
-	if err != nil {
-		return 0, err
-	}
-
-	return r.RowsAffected()
+	return e.setUserSettingsJSON(ctx, u, "api", s)
 }

@@ -27,6 +27,8 @@ import { SessionsInBulk, TacacsSessionsInBulk } from "@/hooks/sessions/schemas";
 import { useQueryUser } from "@/hooks/useQueryUser";
 import { sortingStateToSort } from "@/utils/toSort";
 
+import { ActionBar } from "./ActionBar";
+import { ActionsProvider } from "./actionsContext";
 import { columns } from "./table/columns";
 
 type LoaderData = {
@@ -77,14 +79,14 @@ const SessionsTable: FC<{ data: TacacsSessionsInBulk | null }> = ({
     },
   });
 
-  const [ref, _rect] = useResizeObserver<HTMLDivElement>();
+  const [ref, rect] = useResizeObserver<HTMLDivElement>();
 
   if (!initialData) {
     return null;
   }
 
   return (
-    <>
+    <ActionsProvider selected={selected}>
       <FilterBar
         globalFilter={globalSearch}
         setGlobalFilter={(v) => {
@@ -92,7 +94,7 @@ const SessionsTable: FC<{ data: TacacsSessionsInBulk | null }> = ({
           setGlobalSearchDebounced(v);
         }}
       >
-        {/* <ActionBar selected={selected} collapsed={(rect.width || 0) < 910} /> */}
+        <ActionBar selected={selected} collapsed={(rect.width || 0) < 910} />
       </FilterBar>
       <Table
         containerRef={ref}
@@ -134,7 +136,7 @@ const SessionsTable: FC<{ data: TacacsSessionsInBulk | null }> = ({
         itemSingleText="session"
         itemPluralText="sessions"
       />
-    </>
+    </ActionsProvider>
   );
 };
 

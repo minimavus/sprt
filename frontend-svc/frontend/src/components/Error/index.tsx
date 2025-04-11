@@ -132,10 +132,10 @@ type ErrorResetProps = {
 export const DisplayError: FC<
   ComponentProps<typeof DisplayErrorText> &
     ErrorResetProps &
-    Pick<AlertProps, "title">
-> = ({ onReset, title = "Error", ...props }) => {
+    Pick<AlertProps, "title" | "flex">
+> = ({ onReset, title = "Error", flex, ...props }) => {
   return (
-    <Warning variant="light" title={title}>
+    <Warning variant="light" title={title} flex={flex}>
       <DisplayErrorText {...props} />
       {onReset ? (
         <Button onClick={onReset} size="compact-sm">

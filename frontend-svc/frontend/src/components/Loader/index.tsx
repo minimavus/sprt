@@ -4,12 +4,21 @@ import { FetchStatus, UseQueryResult } from "@tanstack/react-query";
 
 import { DisplayError } from "@/components/Error";
 
+type ErrRenderer = (
+  error: any,
+  opts?: {
+    refetch?: UseQueryResult<any>["refetch"];
+    allowRetry?: boolean;
+  },
+) => ReactNode;
+
 type LoaderProps<Data> = UseQueryResult<Data> & {
   children:
     | ReactNode
     | ((data: NonNullable<Data>, fetchStatus: FetchStatus) => ReactNode);
   fallback?: ReactNode;
-  errorComponent?: ReactNode | ((error: any) => ReactNode);
+  errorComponent?: ReactNode | ErrRenderer;
+  allowRetry?: boolean;
 };
 
 const ErrorContext = createContext<{ error: any }>(undefined!);
@@ -28,6 +37,17 @@ export const DefaultLoaderFallback: FC = () => (
   </Center>
 );
 
+const defaultErrorComponent: ErrRenderer = (
+  error: any,
+  { refetch, allowRetry = false } = {},
+) => (
+  <DisplayError
+    error={error}
+    onReset={allowRetry ? refetch : undefined}
+    flex={1}
+  />
+);
+
 function Loader<Data>({
   data,
   children,
@@ -35,12 +55,15 @@ function Loader<Data>({
   status,
   fallback = <DefaultLoaderFallback />,
   fetchStatus,
-  errorComponent = (error) => <DisplayError error={error} />,
+  errorComponent = defaultErrorComponent,
+  refetch,
+  allowRetry = true,
 }: LoaderProps<Data>): ReactNode {
   if (status === "pending") return fallback;
+
   if (status === "error")
     return typeof errorComponent === "function" ? (
-      errorComponent(error)
+      errorComponent(error, { refetch, allowRetry })
     ) : (
       <ErrorContext value={{ error }}>{errorComponent}</ErrorContext>
     );

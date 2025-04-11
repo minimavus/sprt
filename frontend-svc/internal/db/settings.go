@@ -6,6 +6,7 @@ import (
 	"github.com/volatiletech/null/v8"
 	"github.com/volatiletech/sqlboiler/v4/queries/qm"
 
+	"github.com/cisco-open/sprt/frontend-svc/internal/json"
 	"github.com/cisco-open/sprt/frontend-svc/models"
 )
 
@@ -22,4 +23,38 @@ func (e *execute) getUserSettingsJSON(ctx context.Context, user, propertyName st
 		return null.JSON{}, err
 	}
 	return queryResult.Settings, nil
+}
+
+func (e *execute) setUserSettingsJSON(ctx context.Context, user, propertyName string, settings any) (int64, error) {
+	_, err := models.FindUser(ctx, e.db, user, models.UserColumns.Attributes)
+	if err != nil {
+		return 0, err
+	}
+
+	var bts []byte
+
+	switch settings := settings.(type) {
+	case null.JSON:
+		bts = settings.JSON
+	case []byte:
+		bts = settings
+	default:
+		bts, err = json.Marshal(settings)
+		if err != nil {
+			return 0, err
+		}
+	}
+
+	r, err := models.NewQuery(
+		qm.SQL(
+			`UPDATE `+models.TableNames.Users+` SET "attributes"=jsonb_set("attributes", '{"`+propertyName+`"}', $1::jsonb, true) WHERE uid=$2`,
+			string(bts),
+			user,
+		),
+	).ExecContext(ctx, e.db)
+	if err != nil {
+		return 0, err
+	}
+
+	return r.RowsAffected()
 }

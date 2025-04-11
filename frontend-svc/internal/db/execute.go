@@ -60,6 +60,7 @@ type (
 		DictionariesManipulator
 		CertificatesManipulator
 		ScepManipulator
+		UserDefaultsManipulator
 
 		// App Config
 		AppConfigManipulator
