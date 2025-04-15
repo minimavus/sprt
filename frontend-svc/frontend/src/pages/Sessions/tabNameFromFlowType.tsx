@@ -5,6 +5,7 @@ export const tabNameFromFlowType = {
   "radius-acct": "Accounting",
   "radius-coa": "CoA",
   "radius-disconnect": "Disconnect",
+  "radius-acl-download": "dACL",
   http: "HTTP",
   "out-of-order": "Out of Order",
   pxgrid: "pxGrid",

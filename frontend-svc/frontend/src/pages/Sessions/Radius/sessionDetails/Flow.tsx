@@ -1,4 +1,4 @@
-import { Fragment, useMemo, type FC } from "react";
+import { Fragment, useMemo, useState, type FC } from "react";
 import {
   Button,
   Card,
@@ -136,16 +136,19 @@ const Attributes: FC<{
   >;
 }> = ({ packet }) => {
   const [isOpen, { toggle }] = useDisclosure();
+  const [shouldRender, setShouldRender] = useState(false);
 
   return (
     <>
-      <Collapse in={isOpen}>
-        <Table
-          columns={attributesTableColumns}
-          data={packet}
-          pagination={false}
-          enableSorting={false}
-        />
+      <Collapse in={isOpen} onTransitionEnd={() => setShouldRender((v) => !v)}>
+        {shouldRender || isOpen ? (
+          <Table
+            columns={attributesTableColumns}
+            data={packet}
+            pagination={false}
+            enableSorting={false}
+          />
+        ) : null}
       </Collapse>
       <Card.Section
         inheritPadding

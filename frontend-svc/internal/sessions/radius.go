@@ -1,6 +1,8 @@
 package sessions
 
 import (
+	"strings"
+
 	"github.com/cisco-open/sprt/frontend-svc/internal/db"
 	"github.com/cisco-open/sprt/frontend-svc/internal/json"
 	"github.com/cisco-open/sprt/frontend-svc/models"
@@ -10,6 +12,7 @@ type PacketType string
 
 const (
 	PacketAccessRequest      PacketType = "ACCESS_REQUEST"
+	PacketDaclRequest        PacketType = "DACL_REQUEST"
 	PacketAccessAccept       PacketType = "ACCESS_ACCEPT"
 	PacketAccessReject       PacketType = "ACCESS_REJECT"
 	PacketAccountingRequest  PacketType = "ACCOUNTING_REQUEST"
@@ -47,17 +50,19 @@ func (p PacketType) Valid() bool {
 type FlowType string
 
 const (
-	FlowTypeRadiusAuth       FlowType = "radius-auth"
-	FlowTypeRadiusAcct       FlowType = "radius-acct"
-	FlowTypeRadiusCoa        FlowType = "radius-coa"
-	FlowTypeRadiusDisconnect FlowType = "radius-disconnect"
-	FlowTypeHTTP             FlowType = "http"
-	FlowTypePXGrid           FlowType = "pxgrid"
-	FlowTypeOutOfOrder       FlowType = "out-of-order"
+	FlowTypeRadiusAuth        FlowType = "radius-auth"
+	FlowTypeRadiusAcct        FlowType = "radius-acct"
+	FlowTypeRadiusCoa         FlowType = "radius-coa"
+	FlowTypeRadiusDisconnect  FlowType = "radius-disconnect"
+	FlowTypeRadiusAclDownload FlowType = "radius-acl-download"
+	FlowTypeHTTP              FlowType = "http"
+	FlowTypePXGrid            FlowType = "pxgrid"
+	FlowTypeOutOfOrder        FlowType = "out-of-order"
 )
 
 var FlowTypeMarkerByPacket = map[PacketType]FlowType{
 	PacketAccessRequest:     FlowTypeRadiusAuth,
+	PacketDaclRequest:       FlowTypeRadiusAclDownload,
 	PacketAccountingRequest: FlowTypeRadiusAcct,
 	PacketCoaCOARequest:     FlowTypeRadiusCoa,
 	PacketDisconnectRequest: FlowTypeRadiusDisconnect,
@@ -68,6 +73,11 @@ type SessionFlow struct {
 	FlowType FlowType  `json:"type"`
 	Packets  []*Packet `json:"packets"`
 }
+
+const (
+	daclAvPairName  = "cisco-avpair"
+	daclAvPairValue = "aaa:event=acl-download"
+)
 
 func isNewFlow(current *SessionFlow, newPacket PacketType) bool {
 	if current == nil || current.FlowType == "" {
@@ -87,16 +97,63 @@ func getPacketType(packet *models.Flow) PacketType {
 		return PacketUnknown
 	}
 
-	t := new(struct {
-		Code string `json:"code"`
-	})
+	t := make(map[string]any)
 
-	err := json.Unmarshal([]byte(packet.Radius.String), t)
+	err := json.Unmarshal([]byte(packet.Radius.String), &t)
 	if err != nil {
 		return PacketUnknown
 	}
 
-	return PacketType(t.Code)
+	c, ok := getFromMap[string](t, "code")
+	if !ok {
+		return PacketUnknown
+	}
+
+	cp := PacketType(c)
+
+	if isDaclRequest(cp, t) {
+		return PacketDaclRequest
+	}
+
+	return cp
+}
+
+func isDaclRequest(code PacketType, packet map[string]any) bool {
+	if code != PacketAccessRequest || len(packet) == 0 {
+		return false
+	}
+
+	pb, ok := getFromMap[[]any](packet, "packet")
+	if !ok {
+		return false
+	}
+
+	for _, attr := range pb {
+		am, ok := attr.(map[string]any)
+		if !ok {
+			continue
+		}
+
+		n, ok := getFromMap[string](am, "Name", "name")
+		if !ok {
+			continue
+		}
+		n = strings.ToLower(strings.TrimSpace(n))
+
+		if n == daclAvPairName {
+			v, ok := getFromMap[string](am, "Value", "value")
+			if !ok {
+				continue
+			}
+			v = strings.ToLower(strings.TrimSpace(v))
+
+			if v == daclAvPairValue {
+				return true
+			}
+		}
+	}
+
+	return false
 }
 
 func SplitRadiusToFlowTypes(s *db.SessionWithFlow) []*SessionFlow {
@@ -128,4 +185,25 @@ func SplitRadiusToFlowTypes(s *db.SessionWithFlow) []*SessionFlow {
 	}
 
 	return result
+}
+
+func getFromMap[T any](m map[string]any, key ...string) (T, bool) {
+	var empty T
+
+	if m == nil || len(key) == 0 {
+		return empty, false
+	}
+
+	for _, k := range key {
+		v, ok := m[k]
+		if !ok {
+			continue
+		}
+
+		if vt, ok := v.(T); ok {
+			return vt, true
+		}
+	}
+
+	return empty, true
 }

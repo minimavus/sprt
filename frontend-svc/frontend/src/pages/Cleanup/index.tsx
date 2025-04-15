@@ -1,5 +1,5 @@
 import { type FC, type ReactNode } from "react";
-import { Loader, Tabs, TabsTabProps, Tooltip } from "@mantine/core";
+import { Divider, Loader, Tabs, TabsTabProps, Tooltip } from "@mantine/core";
 import { IconSettings } from "@tabler/icons-react";
 import { Outlet, useLocation, useMatch, useNavigate } from "react-router-dom";
 
@@ -110,6 +110,7 @@ const Cleanup: FC = () => {
           >
             Scheduled
           </Tabs.Tab>
+          <Divider my="xs" />
           <Tabs.Tab value="settings" leftSection={<IconSettings size={14} />}>
             Settings
           </Tabs.Tab>

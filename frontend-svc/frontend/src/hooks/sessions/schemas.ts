@@ -168,6 +168,7 @@ export const FlowTypeSchema = z.enum([
   "radius-acct",
   "radius-coa",
   "radius-disconnect",
+  "radius-acl-download",
   "http",
   "tacacs-any",
   "out-of-order",

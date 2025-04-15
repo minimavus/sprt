@@ -1,5 +1,18 @@
 import { Suspense, type FC } from "react";
-import { Group, Loader, rem, Stack, Title } from "@mantine/core";
+import {
+  Box,
+  Button,
+  Collapse,
+  Group,
+  Loader,
+  px,
+  rem,
+  Stack,
+  Text,
+  Title,
+} from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
+import { IconChevronDown } from "@tabler/icons-react";
 import { DefaultError } from "@tanstack/react-query";
 import {
   Await,
@@ -67,6 +80,7 @@ const PxGridView: FC = () => {
 const PxGridStatusView: FC<{ status: PxGridStatus }> = ({ status: init }) => {
   const { data } = usePxGridStatus();
   const status = data ?? init;
+  const [opened, { toggle }] = useDisclosure(false);
 
   if (status.enabled && status.healthy) {
     return null;
@@ -78,10 +92,39 @@ const PxGridStatusView: FC<{ status: PxGridStatus }> = ({ status: init }) => {
         {status.enabled
           ? "pxGrid is enabled but unhealthy"
           : "pxGrid is disabled"}
-        {status.error && <div>Error: {status.error}</div>}
+
+        {status.error ? (
+          <Box mt="xs">
+            <Collapse in={opened}>
+              <Text mb="xs">Error: {status.error}</Text>
+            </Collapse>
+            <Button
+              variant="subtle"
+              onClick={toggle}
+              size="compact-xs"
+              rightSection={
+                <IconChevronDown
+                  size={14}
+                  style={{ transform: opened ? "rotate(-180deg)" : "none" }}
+                />
+              }
+            >
+              {opened ? "Hide" : "Show"} details
+            </Button>
+          </Box>
+        ) : null}
       </Warning>
     </Stack>
   );
+};
+
+const PxAwaitError: FC = () => {
+  const { data: st } = usePxGridStatus();
+  if (st?.enabled && !st?.healthy) {
+    return null;
+  }
+
+  return <AwaitError before={null} />;
 };
 
 type LoaderData = {
@@ -109,10 +152,7 @@ const PxGridPage: FC = () => {
             </Await>
           </Suspense>
           <Suspense fallback={<DefaultLoaderFallback />}>
-            <Await
-              resolve={data.connections}
-              errorElement={<AwaitError before={null} />}
-            >
+            <Await resolve={data.connections} errorElement={<PxAwaitError />}>
               {() => <PxGridView />}
             </Await>
           </Suspense>

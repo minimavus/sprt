@@ -22,6 +22,8 @@ export function NavbarLink({
   collapsed,
   href,
   target,
+  buttonProps,
+  ref,
 }: NavbarLinkProps) {
   const hasLinks = Boolean(El);
   const [opened, setOpened] = useState(active || false);
@@ -43,6 +45,7 @@ export function NavbarLink({
               onClick={() => setOpened((o) => !o)}
               className={classes.link}
               data-active={active || undefined}
+              {...buttonProps}
             >
               <Icon size={24} stroke={1.5} />
             </UnstyledButton>
@@ -54,19 +57,27 @@ export function NavbarLink({
       );
     }
 
-    return (
+    const Btn = (
+      <UnstyledButton
+        onClick={onClick}
+        className={classes.link}
+        data-active={active || undefined}
+        component={hasLinks ? "button" : "a"}
+        href={hasLinks ? undefined : href}
+        target={hasLinks ? undefined : target}
+        ref={ref}
+        {...buttonProps}
+      >
+        <Icon size={24} stroke={1.5} />
+      </UnstyledButton>
+    );
+
+    return label ? (
       <Tooltip label={label} position="right" transitionProps={{ duration: 0 }}>
-        <UnstyledButton
-          onClick={onClick}
-          className={classes.link}
-          data-active={active || undefined}
-          component={hasLinks ? "button" : "a"}
-          href={hasLinks ? undefined : href}
-          target={hasLinks ? undefined : target}
-        >
-          <Icon size={24} stroke={1.5} />
-        </UnstyledButton>
+        {Btn}
       </Tooltip>
+    ) : (
+      Btn
     );
   }
 
@@ -79,6 +90,8 @@ export function NavbarLink({
         href={hasLinks ? undefined : href}
         target={hasLinks ? undefined : target}
         data-active={hasLinks ? undefined : active || undefined}
+        ref={ref}
+        {...buttonProps}
       >
         <Group justify="space-between" gap={0}>
           <Box style={{ display: "flex", alignItems: "center" }}>
