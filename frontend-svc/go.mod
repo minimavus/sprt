@@ -29,8 +29,8 @@ require (
 	github.com/redis/go-redis/v9 v9.7.3
 	github.com/rickb777/date v1.21.1
 	github.com/rs/zerolog v1.34.0
-	github.com/rubenv/sql-migrate v1.7.1
-	github.com/samber/lo v1.49.1
+	github.com/rubenv/sql-migrate v1.8.0
+	github.com/samber/lo v1.50.0
 	github.com/smallstep/pkcs7 v0.2.1
 	github.com/smallstep/scep v0.0.0-20250318231241-a25cabb69492
 	github.com/sosodev/duration v1.3.1
@@ -41,9 +41,9 @@ require (
 	github.com/volatiletech/null/v8 v8.1.2
 	github.com/volatiletech/sqlboiler/v4 v4.18.0
 	github.com/volatiletech/strmangle v0.0.8
-	github.com/zmap/zcrypto v0.0.0-20250324021606-4f0ea0eaccac
+	github.com/zmap/zcrypto v0.0.0-20250418211859-7510c141e4b7
 	golang.org/x/text v0.24.0
-	google.golang.org/grpc v1.71.1
+	google.golang.org/grpc v1.72.0
 	layeh.com/radius v0.0.0-20231213012653-1006025d24f8
 )
 
@@ -90,11 +90,11 @@ require (
 	github.com/valyala/fasttemplate v1.2.2 // indirect
 	github.com/volatiletech/inflect v0.0.1 // indirect
 	github.com/volatiletech/randomize v0.0.1 // indirect
-	github.com/weppos/publicsuffix-go v0.40.3-0.20250311103038-7794c8c0723b // indirect
+	github.com/weppos/publicsuffix-go v0.40.3-0.20250408071509-6074bbe7fd39 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	golang.org/x/crypto v0.37.0 // indirect
 	golang.org/x/net v0.39.0 // indirect
-	golang.org/x/oauth2 v0.25.0 // indirect
+	golang.org/x/oauth2 v0.26.0 // indirect
 	golang.org/x/sys v0.32.0 // indirect
 	golang.org/x/time v0.11.0 // indirect
 	golang.org/x/xerrors v0.0.0-20240903120638-7835f813f4da // indirect

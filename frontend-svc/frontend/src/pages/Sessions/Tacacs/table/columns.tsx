@@ -2,6 +2,7 @@ import type { CellContext, ColumnDef } from "@tanstack/react-table";
 
 import { FormatTime } from "@/components/Time";
 import { TacacsSession } from "@/hooks/sessions/schemas";
+import { dateSortingFn } from "@/utils/dateSortingFn";
 import { formatTime } from "@/utils/time";
 
 import { DetailsCell } from "./DetailsCell";
@@ -47,6 +48,7 @@ export const columns: ColumnDef<TacacsSession>[] = [
     cell: ({ row }) => <FormatTime t={row.original.started} />,
     accessorFn: (row) => (row.started ? formatTime(row.started) : ""),
     size: undefined,
+    sortingFn: dateSortingFn("started"),
   },
   {
     id: "changed",
@@ -54,6 +56,7 @@ export const columns: ColumnDef<TacacsSession>[] = [
     cell: ({ row }) => <FormatTime t={row.original.changed} />,
     accessorFn: (row) => (row.changed ? formatTime(row.changed) : ""),
     size: undefined,
+    sortingFn: dateSortingFn("changed"),
   },
   {
     header: "",

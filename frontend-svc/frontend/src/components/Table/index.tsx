@@ -239,6 +239,15 @@ const MyTable = <TData,>(
     useScrollPinnedShadow(enableColumnPinning);
   const mergedContainerRef = useMergedRef(ourContainerRef, containerRef);
 
+  const handlePageChange = (page: number): void => {
+    const newState = {
+      ...externalOrOwn(paginationConfig.paginationState, pagination),
+      pageIndex: page - 1,
+    };
+    setPagination(newState);
+    paginationConfig.onPaginationChange?.(newState);
+  };
+
   return (
     <>
       {enableRowSelection && selectedItemCount > 0 ? (
@@ -354,7 +363,7 @@ const MyTable = <TData,>(
         <Group justify="space-between" pos="relative">
           <LoadingOverlay loaderProps={{ display: "none" }} visible={loading} />
           <Group pl="xs">
-            <Text c="dimmed">
+            <Text c="dimmed" size="xs">
               Showing {table.getRowModel().rows.length.toLocaleString()} of{" "}
               {externalOrOwn(
                 paginationConfig.totalRows,
@@ -375,22 +384,13 @@ const MyTable = <TData,>(
                 externalOrOwn(paginationConfig.paginationState, pagination)
                   .pageIndex + 1
               }
-              onChange={(page) => {
-                const newState = {
-                  ...externalOrOwn(
-                    paginationConfig.paginationState,
-                    pagination,
-                  ),
-                  pageIndex: page - 1,
-                };
-                setPagination(newState);
-                paginationConfig.onPaginationChange?.(newState);
-              }}
+              onChange={handlePageChange}
               siblings={paginationConfig.siblings}
               boundaries={paginationConfig.boundaries}
+              size="sm"
             />
             <Divider orientation="vertical" />
-            <Text>Per page:</Text>
+            <Text size="xs">Per page:</Text>
             <Select
               w={80}
               value={`${externalOrOwn(paginationConfig.paginationState, pagination).pageSize}`}
@@ -406,6 +406,7 @@ const MyTable = <TData,>(
                 paginationConfig.onPaginationChange?.(newState);
               }}
               data={pageSizeOptions}
+              size="xs"
             />
           </Group>
         </Group>

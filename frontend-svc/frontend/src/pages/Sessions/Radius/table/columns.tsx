@@ -2,6 +2,7 @@ import type { CellContext, ColumnDef } from "@tanstack/react-table";
 
 import { FormatTime } from "@/components/Time";
 import { RadiusSession } from "@/hooks/sessions/schemas";
+import { dateSortingFn } from "@/utils/dateSortingFn";
 import { formatTime } from "@/utils/time";
 
 import { DetailsCell } from "./DetailsCell";
@@ -47,12 +48,14 @@ export const columns: ColumnDef<RadiusSession>[] = [
     header: "Session started",
     cell: ({ row }) => <FormatTime t={row.original.started} />,
     accessorFn: (row) => (row.started ? formatTime(row.started) : ""),
+    sortingFn: dateSortingFn("started"),
   },
   {
     id: "changed",
     header: "Last updated",
     cell: ({ row }) => <FormatTime t={row.original.changed} />,
     accessorFn: (row) => (row.changed ? formatTime(row.changed) : ""),
+    sortingFn: dateSortingFn("changed"),
   },
   {
     header: "",
