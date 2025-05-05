@@ -17,6 +17,7 @@ import { getErrorMessage } from "@/utils/errors";
 
 import type { RadiusForm } from "../form";
 import { useConnectionTypes } from "../hooks/useConnectionTypes";
+import { useMaxRetransmits } from "../hooks/useMaxRetransmits";
 
 const FamilyName: Record<string, string> = {
   "4": "IPv4",
@@ -90,6 +91,8 @@ const ConnectionType: FC = () => {
 };
 
 export const NADParameters: FC = () => {
+  const maxRetransmits = useMaxRetransmits();
+
   return (
     <Stack gap="sm">
       <Title order={3}>Network Access Device</Title>
@@ -144,9 +147,15 @@ export const NADParameters: FC = () => {
             render={({ field, fieldState: { error } }) => (
               <NumberInput
                 {...field}
+                description={
+                  maxRetransmits ? `up to ${maxRetransmits}` : undefined
+                }
                 label="Retransmits"
                 error={getErrorMessage(error)}
                 id="retransmits"
+                className={styles.compact}
+                min={0}
+                max={maxRetransmits || undefined}
               />
             )}
           />

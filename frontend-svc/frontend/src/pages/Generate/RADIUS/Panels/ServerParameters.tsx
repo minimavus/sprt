@@ -62,6 +62,8 @@ const ServerLabel: FC<{ server: ServerSettings; family: Family }> = ({
   );
 };
 
+const ungrouped = "[:ungrouped:]";
+
 const ServerLoader: FC = () => {
   const [u] = useQueryUser();
   const { data, isLoading, error } = useServersSettings(u);
@@ -78,7 +80,7 @@ const ServerLoader: FC = () => {
         : Boolean(s.attributes?.v6_address),
     )
     .reduce((acc: [string, ServerSettings[]][], s) => {
-      const group = s.group || "Ungrouped";
+      const group = s.group || ungrouped;
       const existing = acc.find(([g]) => g === group);
       if (existing) {
         existing[1].push(s);
@@ -86,7 +88,12 @@ const ServerLoader: FC = () => {
         acc.push([group, [s]]);
       }
       return acc;
-    }, []);
+    }, [])
+    .sort((a, b) => {
+      const aName = a[0] === ungrouped ? "zzzz" : a[0];
+      const bName = b[0] === ungrouped ? "zzzz" : b[0];
+      return aName.localeCompare(bName);
+    });
 
   return (
     <Menu onOpen={() => open()} onClose={() => close()}>
@@ -110,23 +117,46 @@ const ServerLoader: FC = () => {
         ) : error ? (
           <Menu.Item>Error loading servers</Menu.Item>
         ) : grouped?.length ? (
-          grouped.map(([group, servers], idx) => (
-            <Fragment key={group}>
-              {idx > 0 && <Menu.Divider />}
-              <Menu.Label>{group}</Menu.Label>
-              {servers.map((s) => (
-                <Menu.Item
-                  key={s.id}
-                  onClick={() => {
-                    setNewServer(s, family);
-                  }}
-                  rightSection={<CoABadge coa={s.coa} />}
-                >
-                  <ServerLabel server={s} family={family} />
-                </Menu.Item>
-              ))}
-            </Fragment>
-          ))
+          grouped.map(([group, servers], idx) =>
+            group === ungrouped ? (
+              <Fragment key={group}>
+                {idx > 0 && <Menu.Divider />}
+                <Menu.Label>
+                  {group === ungrouped ? "Ungrouped" : group}
+                </Menu.Label>
+                {servers.map((s) => (
+                  <Menu.Item
+                    key={s.id}
+                    onClick={() => {
+                      setNewServer(s, family);
+                    }}
+                    rightSection={<CoABadge coa={s.coa} />}
+                  >
+                    <ServerLabel server={s} family={family} />
+                  </Menu.Item>
+                ))}
+              </Fragment>
+            ) : (
+              <Menu.Sub>
+                <Menu.Sub.Target>
+                  <Menu.Sub.Item>{group}</Menu.Sub.Item>
+                </Menu.Sub.Target>
+                <Menu.Sub.Dropdown>
+                  {servers.map((s) => (
+                    <Menu.Item
+                      key={s.id}
+                      onClick={() => {
+                        setNewServer(s, family);
+                      }}
+                      rightSection={<CoABadge coa={s.coa} />}
+                    >
+                      <ServerLabel server={s} family={family} />
+                    </Menu.Item>
+                  ))}
+                </Menu.Sub.Dropdown>
+              </Menu.Sub>
+            ),
+          )
         ) : (
           <Menu.Item>No servers found</Menu.Item>
         )}

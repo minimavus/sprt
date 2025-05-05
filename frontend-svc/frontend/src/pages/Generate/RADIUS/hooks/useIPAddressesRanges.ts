@@ -24,5 +24,6 @@ const patterns: ComboboxItem[] = [
 ];
 
 export const useIPAddressesRanges = () => {
+  //FIXME: this is a temporary solution, we need to get the IP address ranges from the server
   return patterns;
 };
