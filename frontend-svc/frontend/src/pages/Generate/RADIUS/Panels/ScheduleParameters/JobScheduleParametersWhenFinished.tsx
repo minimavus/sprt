@@ -56,7 +56,7 @@ export const JobScheduleParametersWhenFinished: FC = () => {
           }
           onChange={(e) => timesField.onChange(e.target.checked ? -1 : 1)}
           id="times-toggle"
-          label="Repeat forever"
+          label="Repeat forever (until stopped)"
           display="flex"
           pt={rem(21)}
           style={{ alignItems: "center" }}

@@ -3,6 +3,7 @@ package jobs
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"net/http"
 	"net/url"
 	"os"
@@ -12,6 +13,11 @@ import (
 	"github.com/cisco-open/sprt/frontend-svc/internal/db"
 	"github.com/cisco-open/sprt/frontend-svc/internal/json"
 	"github.com/cisco-open/sprt/frontend-svc/shared"
+)
+
+var (
+	ErrJobNotFound      = errors.New("job not found")
+	ErrJobNotRepeatable = errors.New("job not repeatable")
 )
 
 func FindRunning(jobs []*db.JobWithCLI) []string {
@@ -101,4 +107,17 @@ func DeleteJob(app shared.LogDB, ctx context.Context, job, user string, noRollba
 	}
 
 	return tx.Commit()
+}
+
+func RepeatJob(app shared.LogDB, ctx context.Context, job, user string) error {
+	j, err := db.Exec(app).GetJobByID(ctx, job, user)
+	if err != nil {
+		return err
+	}
+
+	if j == nil {
+		return ErrJobNotFound
+	}
+
+	return errors.New("FIXME: not implemented")
 }

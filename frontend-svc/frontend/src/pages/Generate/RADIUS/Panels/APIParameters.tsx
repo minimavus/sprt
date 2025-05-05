@@ -27,7 +27,10 @@ export const APIParameters: FC<{ visible: boolean }> = ({ visible }) => {
 
   if (!parsed.success) {
     return (
-      <DisplayError error={parsed.error} before="Some fields are invalid" />
+      <DisplayError
+        error="Some fields are invalid"
+        before="Cannot generate API example:"
+      />
     );
   }
 

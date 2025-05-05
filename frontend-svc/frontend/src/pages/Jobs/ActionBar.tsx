@@ -2,18 +2,16 @@ import { useState, type FC } from "react";
 import { observer } from "@legendapp/state/react";
 import {
   Button,
-  Divider,
   Group,
   Menu,
   SegmentedControl,
   SegmentedControlItem,
   Text,
 } from "@mantine/core";
-import { IconChevronDown, IconSwitch, IconTrash } from "@tabler/icons-react";
+import { IconChevronDown, IconTrash } from "@tabler/icons-react";
 import { ok } from "neverthrow";
 
 import { useDynamicConfirmation } from "@/components/Modals/Confirmation";
-import { usePermission } from "@/hooks/useUser";
 
 import { ArrangeBy, state$ } from "./store";
 
@@ -28,26 +26,18 @@ const arrangeSwitcherOptions: SegmentedControlItem[] = [
 }>;
 
 export const ActionBar: FC = observer(function ActionBar() {
-  const canSeeAllUsers = usePermission("jobs.read.all_users");
   const confirm = useDynamicConfirmation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
     <Group justify="space-between">
       <Group gap="xs" justify="center">
+        <Text size="sm">Group</Text>
         <SegmentedControl
           data={arrangeSwitcherOptions}
           value={state$.arrangeBy.get()}
           onChange={(v) => state$.arrangeBy.set(v as ArrangeBy)}
         />
-        {canSeeAllUsers ? (
-          <>
-            <Divider orientation="vertical" size="xs" />
-            <Button leftSection={<IconSwitch size={16} />} variant="default">
-              Switch user
-            </Button>
-          </>
-        ) : null}
       </Group>
       <div>
         <Menu

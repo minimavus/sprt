@@ -161,14 +161,10 @@ export const useJobRepeat = (user: QueryUser) => {
   const qc = useQueryClient();
   return useMutation<void, DefaultError, { id: NonNullable<Job["id"]> }>({
     mutationFn: async ({ id }): Promise<void> => {
-      toast.info({
-        title: "FIXME: Not implemented",
-        message: `Repeating job ${id}`,
+      const r = await axios.post(api.v2`jobs/${id}/repeat`, null, {
+        params: { user },
       });
-      // const r = await axios.post(api.v2`jobs/${id}/repeat`, null, {
-      //   params: { user },
-      // });
-      // return r.data;
+      return r.data;
     },
     onError: (error) => {
       log.error(error, "Failed to repeat job");

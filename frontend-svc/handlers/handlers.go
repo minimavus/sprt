@@ -222,7 +222,7 @@ func addJobsApiRoutes(r shared.EchoRouter) {
 	r.GET("", rest.GetJobsOfUser, m.ValidatePermission("jobs.read.others"))
 	r.GET("/:id/stats", rest.GetJobStats, m.ValidatePermission("jobs.read.others"))
 	r.DELETE("/:id", rest.DeleteJob, m.ValidatePermission("jobs.delete.others"))
-	r.POST("/:id/restart", rest.RestartJob, m.ValidatePermission("jobs.restart.others"))
+	r.POST("/:id/repeat", rest.RepeatJob, m.ValidatePermission("jobs.repeat.others"))
 }
 
 func addVariousApiRoutes(r shared.EchoRouter) {

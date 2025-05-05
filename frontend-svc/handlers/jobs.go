@@ -139,9 +139,9 @@ func (m *controller) DeleteJob(c echo.Context) error {
 	return c.NoContent(http.StatusNoContent)
 }
 
-// RestartJob restarts a job by its ID.
-func (m *controller) RestartJob(c echo.Context) error {
-	u, _, err := auth.GetUserDataAndContext(c)
+// RepeatJob repeats a job by its ID.
+func (m *controller) RepeatJob(c echo.Context) error {
+	u, ctx, err := auth.GetUserDataAndContext(c)
 	if err != nil {
 		return err
 	}
@@ -153,7 +153,21 @@ func (m *controller) RestartJob(c echo.Context) error {
 		return err
 	}
 	m.App.Logger().Debug().Str("job_id", req.JobID).Str("requestor", u.UserID).Str("user", u.ForUser).
-		Msg("Restarting job")
+		Msg("Repeating job")
 
-	return echo.ErrNotImplemented
+	err = jobs.RepeatJob(m.App, ctx, req.JobID, u.ForUser)
+	if err != nil {
+		m.App.Logger().Error().Err(err).Str("job_id", req.JobID).Str("requestor", u.UserID).Str("user", u.ForUser).
+			Msg("Failed to repeat job")
+		switch {
+		case errors.Is(err, jobs.ErrJobNotRepeatable):
+			return echo.ErrBadRequest.WithInternal(err)
+		case errors.Is(err, jobs.ErrJobNotFound):
+			return echo.ErrNotFound.WithInternal(err)
+		default:
+			return echo.ErrInternalServerError.WithInternal(err)
+		}
+	}
+
+	return c.NoContent(http.StatusNoContent)
 }

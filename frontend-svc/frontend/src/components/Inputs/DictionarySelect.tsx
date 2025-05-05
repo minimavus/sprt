@@ -15,9 +15,16 @@ import {
   Switch,
   Text,
   TextInput,
+  Tooltip,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { IconChevronDown } from "@tabler/icons-react";
+import {
+  IconArrowsRight,
+  IconArrowsShuffle,
+  IconChevronDown,
+  IconRecycle,
+  IconRecycleOff,
+} from "@tabler/icons-react";
 import { FieldError } from "react-hook-form";
 
 import { EmptyState } from "@/components/EmptyState";
@@ -194,10 +201,41 @@ export const DictionarySelect: FC<DictionarySelectProps> = ({
               input: {
                 borderTopRightRadius: 0,
                 borderBottomRightRadius: 0,
+                borderRightStyle: "none",
+              },
+              section: {
+                gap: rem(8),
               },
             }}
             label={inputLabel}
             disabled={disabled}
+            rightSectionWidth={rem(60)}
+            rightSection={
+              <>
+                <Tooltip
+                  label={
+                    randomized ? "Randomize values" : "Do not randomize values"
+                  }
+                  withArrow
+                >
+                  {randomized ? (
+                    <IconArrowsShuffle size={18} />
+                  ) : (
+                    <IconArrowsRight size={18} />
+                  )}
+                </Tooltip>
+                <Tooltip
+                  label={allowReuse ? "Allow reuse" : "Do not allow reuse"}
+                  withArrow
+                >
+                  {allowReuse ? (
+                    <IconRecycle size={18} />
+                  ) : (
+                    <IconRecycleOff size={18} />
+                  )}
+                </Tooltip>
+              </>
+            }
           />
           <Button
             variant="default"
