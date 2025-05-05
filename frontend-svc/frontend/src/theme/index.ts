@@ -5,6 +5,7 @@ import {
   createTheme,
   MantineColorsTuple,
   Menu,
+  Switch,
   Tabs,
   TabsTab,
   Text,
@@ -71,6 +72,11 @@ export const theme = createTheme({
   fontFamily: "Inter, sans-serif",
   fontFamilyMonospace: "Roboto Mono, monospace",
   components: {
+    Switch: Switch.extend({
+      defaultProps: {
+        withThumbIndicator: false,
+      },
+    }),
     Anchor: Anchor.extend({
       defaultProps: {
         size: "sm",

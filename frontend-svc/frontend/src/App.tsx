@@ -1,4 +1,5 @@
 import { lazy, Suspense } from "react";
+import { CodeHighlightAdapterProvider } from "@mantine/code-highlight";
 import { ColorSchemeScript, MantineProvider } from "@mantine/core";
 import { ModalsProvider } from "@mantine/modals";
 import { Notifications } from "@mantine/notifications";
@@ -8,9 +9,9 @@ import { RouterProvider } from "react-router-dom";
 import AuthHOC from "@/components/Auth";
 import { queryClient } from "@/hooks/queryClient";
 import { useInitial } from "@/hooks/useInitial";
-
-import router from "./router";
-import { theme } from "./theme";
+import router from "@/router";
+import { theme } from "@/theme";
+import { shikiAdapter } from "@/utils/shiki/shikiAdapter";
 
 const ReactQueryDevtools = lazy(() =>
   import("@tanstack/react-query-devtools").then((m) => ({
@@ -25,20 +26,22 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <ColorSchemeScript defaultColorScheme={Theme ?? "auto"} />
       <MantineProvider defaultColorScheme={Theme ?? "auto"} theme={theme}>
-        <Notifications />
-        <ModalsProvider>
-          <AuthHOC>
-            <RouterProvider router={router} />
-          </AuthHOC>
-          {Environment !== "production" ? (
-            <Suspense>
-              <ReactQueryDevtools
-                position="bottom"
-                buttonPosition="bottom-right"
-              />
-            </Suspense>
-          ) : null}
-        </ModalsProvider>
+        <CodeHighlightAdapterProvider adapter={shikiAdapter}>
+          <Notifications />
+          <ModalsProvider>
+            <AuthHOC>
+              <RouterProvider router={router} />
+            </AuthHOC>
+            {Environment !== "production" ? (
+              <Suspense>
+                <ReactQueryDevtools
+                  position="bottom"
+                  buttonPosition="bottom-right"
+                />
+              </Suspense>
+            ) : null}
+          </ModalsProvider>
+        </CodeHighlightAdapterProvider>
       </MantineProvider>
     </QueryClientProvider>
   );

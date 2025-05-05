@@ -1,8 +1,9 @@
-import type { CellContext, ColumnDef } from "@tanstack/react-table";
+import type { ColumnDef } from "@tanstack/react-table";
 
 import { FormatTime } from "@/components/Time";
 import { TacacsSession } from "@/hooks/sessions/schemas";
-import { dateSortingFn } from "@/utils/dateSortingFn";
+import { dateSortingFn } from "@/utils/table/dateSortingFn";
+import { renderOrNone } from "@/utils/table/renderOrNone";
 import { formatTime } from "@/utils/time";
 
 import { DetailsCell } from "./DetailsCell";
@@ -72,7 +73,3 @@ export const columns: ColumnDef<TacacsSession>[] = [
     minSize: 50,
   },
 ];
-
-function renderOrNone({ getValue }: CellContext<any, any>) {
-  return getValue() || "-";
-}
