@@ -10,7 +10,6 @@ import { Button, Menu } from "@mantine/core";
 import { useDisclosure, useElementSize } from "@mantine/hooks";
 import { IconChevronDown } from "@tabler/icons-react";
 
-import { SubMenu } from "@/components/Menu/SubMenu";
 import { Parameter } from "@/hooks/generate/schemas";
 import { log } from "@/utils/log";
 
@@ -88,16 +87,21 @@ const DropdownButton: FC<{
       <Menu.Dropdown>
         {button.values?.map((v) =>
           v.type === "group" ? (
-            <SubMenu key={v.title} label={v.title}>
-              {v.values.map((v) => (
-                <Menu.Item
-                  key={v.title}
-                  onClick={() => handleItemValue(v.value)}
-                >
-                  {v.title}
-                </Menu.Item>
-              ))}
-            </SubMenu>
+            <Menu.Sub>
+              <Menu.Sub.Target>
+                <Menu.Sub.Item>{v.title}</Menu.Sub.Item>
+              </Menu.Sub.Target>
+              <Menu.Sub.Dropdown>
+                {v.values.map((v) => (
+                  <Menu.Item
+                    key={v.title}
+                    onClick={() => handleItemValue(v.value)}
+                  >
+                    {v.title}
+                  </Menu.Item>
+                ))}
+              </Menu.Sub.Dropdown>
+            </Menu.Sub>
           ) : v.type === "value" ? (
             <Menu.Item onClick={() => handleItemValue(v.value)}>
               {v.title}

@@ -8,7 +8,6 @@ import {
 } from "@mantine/core";
 import { IconTransferIn, IconTrash, IconUpload } from "@tabler/icons-react";
 
-import { SubMenu } from "@/components/Menu/SubMenu";
 import { getSessionInBulk, useRadiusBulks } from "@/hooks/sessions";
 import { RadiusSession } from "@/hooks/sessions/schemas";
 import { useQueryUser } from "@/hooks/useQueryUser";
@@ -148,34 +147,38 @@ const FromBulkButton: FC<FromBulkButtonProps> = ({
             <>
               <Menu.Label>Servers</Menu.Label>
               {data?.map((server) => (
-                <SubMenu
-                  key={`${server.friendly_name}-${server.server}`}
-                  label={server.friendly_name ?? server.server}
-                >
-                  {server.bulks?.length ? (
-                    <>
-                      <Menu.Label>Bulks</Menu.Label>
-                      {server.bulks.map((bulk) => (
-                        <Menu.Item
-                          key={bulk.name}
-                          onClick={() =>
-                            handleBulkClick(server.server, bulk.name)
-                          }
-                          rightSection={
-                            <Text size="xs" c="dimmed" span>
-                              ({bulk.sessions} sessions)
-                            </Text>
-                          }
-                          styles={{ itemSection: { alignSelf: "flex-end" } }}
-                        >
-                          {bulk.name}
-                        </Menu.Item>
-                      ))}
-                    </>
-                  ) : (
-                    <Menu.Item disabled>No bulks found</Menu.Item>
-                  )}
-                </SubMenu>
+                <Menu.Sub>
+                  <Menu.Sub.Target>
+                    <Menu.Sub.Item>
+                      {server.friendly_name ?? server.server}
+                    </Menu.Sub.Item>
+                  </Menu.Sub.Target>
+                  <Menu.Sub.Dropdown>
+                    {server.bulks?.length ? (
+                      <>
+                        <Menu.Label>Bulks</Menu.Label>
+                        {server.bulks.map((bulk) => (
+                          <Menu.Item
+                            key={bulk.name}
+                            onClick={() =>
+                              handleBulkClick(server.server, bulk.name)
+                            }
+                            rightSection={
+                              <Text size="xs" c="dimmed" span>
+                                ({bulk.sessions} sessions)
+                              </Text>
+                            }
+                            styles={{ itemSection: { alignSelf: "flex-end" } }}
+                          >
+                            {bulk.name}
+                          </Menu.Item>
+                        ))}
+                      </>
+                    ) : (
+                      <Menu.Item disabled>No bulks found</Menu.Item>
+                    )}
+                  </Menu.Sub.Dropdown>
+                </Menu.Sub>
               ))}
             </>
           )
