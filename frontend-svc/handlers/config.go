@@ -8,19 +8,40 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-var exposedConfigs = map[string]string{
-	"generator.source-ip.exclude":             "Excluded IPs",
-	"generator.source-ip.allowed":             "Allowed IPs",
-	"generator.source-ip.auto-detect":         "Auto-detect IPs and interfaces",
-	"generator.source-ip.explicit-sources":    "Explicit source IPs",
-	"generator.max-var-tries":                 "Max tries for variable generation",
-	"generator.patterns.session-id":           "Session ID pattern",
-	"generator.watcher-lifetime":              "Watcher lifetime",
-	"generator.jobs.max-conc":                 "Max concurrent jobs per user",
-	"generator.jobs.max-threads":              "Max threads per job",
-	"generator.jobs.max-sessions-per-job":     "Max sessions per job",
-	"generator.radius.max-retransmits":        "Max RADIUS retransmits",
-	"generator.radius.max-retransmit-timeout": "Max RADIUS retransmit timeout",
+type (
+	field struct {
+		Label string `json:"label"`
+		Type  string `json:"type"`
+	}
+
+	fieldWithValue struct {
+		field
+		Value any `json:"value"`
+	}
+)
+
+const (
+	fieldTypeString    = "string"
+	fieldTypeInt       = "int"
+	fieldTypeBool      = "bool"
+	fieldTypeArrayStr  = "array[string]"
+	fieldTypeArrayInt  = "array[int]"
+	fieldTypeArrayBool = "array[bool]"
+)
+
+var exposedConfigs = map[string]field{
+	"generator.source-ip.exclude":             {"Excluded IPs", fieldTypeArrayStr},
+	"generator.source-ip.allowed":             {"Allowed IPs", fieldTypeArrayStr},
+	"generator.source-ip.auto-detect":         {"Auto-detect IPs and interfaces", fieldTypeBool},
+	"generator.source-ip.explicit-sources":    {"Explicit source IPs", fieldTypeArrayStr},
+	"generator.max-var-tries":                 {"Max tries for variable generation", fieldTypeInt},
+	"generator.patterns.session-id":           {"Session ID pattern", fieldTypeString},
+	"generator.watcher-lifetime":              {"Watcher lifetime", fieldTypeInt},
+	"generator.jobs.max-conc":                 {"Max concurrent jobs per user", fieldTypeInt},
+	"generator.jobs.max-threads":              {"Max threads per job", fieldTypeInt},
+	"generator.jobs.max-sessions-per-job":     {"Max sessions per job", fieldTypeInt},
+	"generator.radius.max-retransmits":        {"Max RADIUS retransmits", fieldTypeInt},
+	"generator.radius.max-retransmit-timeout": {"Max RADIUS retransmit timeout", fieldTypeInt},
 }
 
 var exposedConfigKeys = make([]string, 0, len(exposedConfigs))
@@ -37,13 +58,30 @@ func (m *controller) GetGlobalConfig(c echo.Context) error {
 		return err
 	}
 
-	configs, ok := m.App.GetSpecs(ctx, exposedConfigKeys...)
+	config, ok := m.App.GetSpecs(ctx, exposedConfigKeys...)
 	if !ok {
 		m.App.Logger().Error().Str("user", u.ForUser).Msg("GetGlobalConfig failed")
 		return echo.ErrInternalServerError
 	}
 
-	return c.JSON(200, configs)
+	globalConfig := make(map[string]fieldWithValue, len(exposedConfigs))
+	for k, v := range exposedConfigs {
+		if val, ok := config[k]; ok {
+			globalConfig[k] = fieldWithValue{
+				field: v,
+				Value: val,
+			}
+		} else {
+			globalConfig[k] = fieldWithValue{
+				field: v,
+				Value: nil,
+			}
+		}
+	}
+
+	return c.JSON(200, map[string]any{
+		"config": globalConfig,
+	})
 }
 
 func (m *controller) UpdateGlobalConfig(c echo.Context) error {

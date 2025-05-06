@@ -1,4 +1,7 @@
+import { useConfig } from "@/hooks/config/useConfig";
+
 export const useMaxRetransmits = () => {
-  //FIXME: this is a temporary solution, we need to get the max retransmits from the server
-  return 5;
+  const { data } = useConfig();
+  const maxRetransmits = data?.["generator.radius.max-retransmits"]?.value;
+  return maxRetransmits;
 };

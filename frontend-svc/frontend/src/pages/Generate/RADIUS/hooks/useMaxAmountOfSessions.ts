@@ -1,4 +1,7 @@
+import { useConfig } from "@/hooks/config/useConfig";
+
 export const useMaxAmountOfSessions = () => {
-  //FIXME: this is a temporary solution, we need to get the max amount of sessions from the server
-  return 100000;
+  const { data } = useConfig();
+  const maxSessions = data?.["generator.jobs.max-sessions-per-job"]?.value;
+  return maxSessions;
 };

@@ -42,7 +42,11 @@ export const GenerationParameters: FC = () => {
           <DisableableNumberInput
             {...field}
             label="Amount of Sessions"
-            description={`up to ${formatNumber(maxAmountOfSessions)}`}
+            description={
+              maxAmountOfSessions
+                ? `up to ${formatNumber(maxAmountOfSessions)}`
+                : undefined
+            }
             error={getErrorMessage(error)}
             id="sessions-amount"
             className={styles.compact}

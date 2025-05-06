@@ -7,7 +7,7 @@ import (
 	"github.com/cisco-open/sprt/frontend-svc/internal/iputils"
 )
 
-func (g *generator) GetAvailableIPSources() ([]iputils.Source, error) {
+func (g *generator) GetAvailableIPSources(includeAll bool) ([]iputils.Source, error) {
 	if !g.cfg.SourceIP.AutoDetect {
 		g.app.Logger().Debug().Msg("IP source auto-detection is disabled")
 		return g.getExplicitSources()
@@ -18,7 +18,7 @@ func (g *generator) GetAvailableIPSources() ([]iputils.Source, error) {
 		return nil, err
 	}
 
-	if len(g.cfg.SourceIP.ExcludeMatchers) == 0 && len(g.cfg.SourceIP.AllowedMatchers) == 0 {
+	if includeAll || (len(g.cfg.SourceIP.ExcludeMatchers) == 0 && len(g.cfg.SourceIP.AllowedMatchers) == 0) {
 		return srcs, nil
 	}
 

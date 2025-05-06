@@ -13,5 +13,5 @@ type Generator interface {
 	ListDictionaries() ([]Dictionary, error)
 	GetDictionary(ctx context.Context, name, user string) (*dictionary.Dictionary, string, error)
 	GetTLSCipherSuites(tlsVersion string) ([]variables.OptionsGroup[bool], error)
-	GetAvailableIPSources() ([]iputils.Source, error)
+	GetAvailableIPSources(includeAll bool) ([]iputils.Source, error)
 }

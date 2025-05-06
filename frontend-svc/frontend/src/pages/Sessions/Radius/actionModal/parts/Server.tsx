@@ -1,21 +1,15 @@
-import { useMemo, type FC } from "react";
-import {
-  Collapse,
-  ComboboxData,
-  ComboboxItemGroup,
-  Select,
-  Stack,
-  Switch,
-  TextInput,
-} from "@mantine/core";
+import { type FC } from "react";
+import { Collapse, Select, Stack, Switch, TextInput } from "@mantine/core";
 import { Controller, useController } from "react-hook-form";
 
-import { useIPSources } from "@/hooks/config/useIPSources";
+import { useNADSourcesCombined } from "@/hooks/generate/useNADSources";
+import { useQueryUser } from "@/hooks/useQueryUser";
 import { maybeError } from "@/utils/errors";
 
 import { FormDataFlags, ServerProps } from "../types";
 
 export const Server: FC = () => {
+  const [u] = useQueryUser();
   const useDifferentServer = useController<
     FormDataFlags,
     "flags.differentServer"
@@ -23,34 +17,7 @@ export const Server: FC = () => {
     name: "flags.differentServer",
   });
 
-  const { data } = useIPSources();
-  const options: ComboboxData = useMemo(() => {
-    if (data === undefined) {
-      return [];
-    }
-
-    const mapped = [];
-    if (Array.isArray(data.ipv4) && data.ipv4.length > 0) {
-      mapped.push({
-        group: "IPv4",
-        items: data.ipv4.map((ip) => ({
-          label: `${ip.address} (${ip.interface})`,
-          value: ip.address,
-        })),
-      } as ComboboxItemGroup);
-    }
-    if (Array.isArray(data.ipv6) && data.ipv6.length > 0) {
-      mapped.push({
-        group: "IPv6",
-        items: data.ipv6.map((ip) => ({
-          label: `${ip.address} (${ip.interface})`,
-          value: ip.address,
-        })),
-      } as ComboboxItemGroup);
-    }
-
-    return mapped;
-  }, [data]);
+  const { data: options } = useNADSourcesCombined(u);
 
   return (
     <Stack gap="sm">

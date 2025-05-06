@@ -1,6 +1,7 @@
 import { FC, Suspense } from "react";
-import { Stack } from "@mantine/core";
+import { Button, Stack } from "@mantine/core";
 import { DefaultError } from "@tanstack/react-query";
+import { FormProvider, useForm } from "react-hook-form";
 import {
   Await,
   LoaderFunctionArgs,
@@ -16,15 +17,55 @@ import {
   getUseConfigKeyAndEnsureDefaults,
   useConfig,
 } from "@/hooks/config/useConfig";
+import { useNADSourcesAll } from "@/hooks/generate/useNADSources";
 import { queryClient } from "@/hooks/queryClient";
+import { useQueryUser } from "@/hooks/useQueryUser";
 
-const GlobalSettingsView: FC = () => {
+const defaultValuesFromInit = (init: GlobalConfig["config"]) => {
+  return Object.keys(init).reduce(
+    (acc, key) => {
+      acc[key] = init[key as keyof typeof init].value;
+      return acc;
+    },
+    {} as Record<string, unknown>,
+  );
+};
+
+const IPSourcesConfig: FC = () => {
+  const [u] = useQueryUser();
+  const { data, error, status } = useNADSourcesAll(u);
+
+  if (status === "pending") return <>Loading IP sources</>;
+  if (status === "error") {
+    return <DisplayError error={error} before="Failed to load IP sources" />;
+  }
+
+  return <pre>{JSON.stringify(data, null, 2)}</pre>;
+};
+
+const GlobalSettingsView: FC<{ data: GlobalConfig["config"] }> = ({
+  data: init,
+}) => {
   const { data, error } = useConfig();
+  const form = useForm({
+    defaultValues: defaultValuesFromInit(init),
+  });
+
+  const onSubmit = form.handleSubmit((values) => {
+    console.log("Form submitted with values:", values);
+  });
+
   return (
-    <Stack gap="sm" p="md">
-      <pre>{JSON.stringify(data, null, 2)}</pre>
-      {error ? <DisplayError error={error} /> : null}
-    </Stack>
+    <FormProvider {...form}>
+      <Stack gap="sm" p="md" flex={1}>
+        <IPSourcesConfig />
+        <div>
+          <Button type="submit" onClick={onSubmit}>
+            Save
+          </Button>
+        </div>
+      </Stack>
+    </FormProvider>
   );
 };
 
@@ -35,8 +76,8 @@ const GlobalSettings: FC = () => {
     <>
       <PageLayout title="Global Settings" suspense fullHeight={false}>
         <Suspense fallback={<DefaultLoaderFallback />}>
-          <Await resolve={data} errorElement={<AwaitError before={null} />}>
-            {() => <GlobalSettingsView />}
+          <Await resolve={data.cfg} errorElement={<AwaitError before={null} />}>
+            {(data) => <GlobalSettingsView data={data?.config} />}
           </Await>
         </Suspense>
       </PageLayout>

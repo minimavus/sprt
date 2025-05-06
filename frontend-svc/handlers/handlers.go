@@ -47,7 +47,6 @@ func RegisterRoutes(a *config.AppConfig, e *echo.Echo) {
 	addCertificatesApiRoutes(v2.Group("/certificates"))
 	addSessionsApiRoutes(v2.Group("/sessions"))
 	addJobsApiRoutes(v2.Group("/jobs"))
-	addVariousApiRoutes(v2.Group("/various"))
 	addPxGridApiRoutes(v2.Group("/pxgrid"))
 	addGenerateApiRoutes(v2.Group("/generate"))
 	addScepRoutes(v2.Group("/scep"))
@@ -224,10 +223,6 @@ func addJobsApiRoutes(r shared.EchoRouter) {
 	r.GET("/:id/stats", rest.GetJobStats, m.ValidatePermission("jobs.read.others"))
 	r.DELETE("/:id", rest.DeleteJob, m.ValidatePermission("jobs.delete.others"))
 	r.POST("/:id/repeat", rest.RepeatJob, m.ValidatePermission("jobs.repeat.others"))
-}
-
-func addVariousApiRoutes(r shared.EchoRouter) {
-	r.GET("/ip-sources", rest.getAvailableSources)
 }
 
 func addUIApiRoutes(r shared.EchoRouter) {

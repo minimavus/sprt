@@ -44,7 +44,22 @@ func (m *controller) GetVariableDefinition(c echo.Context) error {
 }
 
 func (m *controller) GetAvailableIPSources(c echo.Context) error {
-	sources, err := m.App.Generator().GetAvailableIPSources()
+	req := new(struct {
+		IncludeAll bool `query:"include_all"`
+	})
+	if err := m.bindAndValidate(c, req); err != nil {
+		return err
+	}
+
+	u, _, err := auth.GetUserDataAndContext(c)
+	if err != nil {
+		return err
+	}
+	if !policy.UserCan(u, "ipsources.read.all") {
+		return echo.ErrForbidden
+	}
+
+	sources, err := m.App.Generator().GetAvailableIPSources(req.IncludeAll)
 	if err != nil {
 		return echo.ErrInternalServerError.WithInternal(err)
 	}

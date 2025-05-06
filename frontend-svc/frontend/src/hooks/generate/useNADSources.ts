@@ -1,3 +1,5 @@
+import { useMemo } from "react";
+import { ComboboxItemGroup } from "@mantine/core";
 import { DefaultError, QueryKey, useQuery } from "@tanstack/react-query";
 import { z } from "zod";
 
@@ -10,14 +12,17 @@ import { orMe } from "@/utils/orMe";
 
 import { NADSourceSchema, NADSourcesResponse } from "./schemas";
 
-const getNADSourcesQueryKey = (user: string): QueryKey => [
+const getNADSourcesQueryKey = (includeAll: boolean, user: string): QueryKey => [
   "generate",
   "nad-sources",
-  { user },
+  { user, includeAll },
 ];
 
-export const getNADSourcesQueryKeyAndEnsureDefaults = (user: QueryUser) => {
-  const queryKey = getNADSourcesQueryKey(orMe(user));
+export const getNADSourcesQueryKeyAndEnsureDefaults = (
+  includeAll: boolean,
+  user: QueryUser,
+) => {
+  const queryKey = getNADSourcesQueryKey(includeAll, orMe(user));
 
   const def = queryClient.getQueryDefaults(queryKey);
   if (!def || !def.queryFn) {
@@ -38,6 +43,49 @@ export const getNADSourcesQueryKeyAndEnsureDefaults = (user: QueryUser) => {
 
 export function useNADSources(user: QueryUser) {
   return useQuery<unknown, DefaultError, NADSourcesResponse | null>({
-    queryKey: getNADSourcesQueryKeyAndEnsureDefaults(user),
+    queryKey: getNADSourcesQueryKeyAndEnsureDefaults(false, user),
   });
+}
+
+export function useNADSourcesAll(user: QueryUser) {
+  return useQuery<unknown, DefaultError, NADSourcesResponse | null>({
+    queryKey: getNADSourcesQueryKeyAndEnsureDefaults(true, user),
+  });
+}
+
+const FamilyName: Record<string, string> = {
+  "4": "IPv4",
+  "6": "IPv6",
+};
+
+export function useNADSourcesCombined(user: QueryUser) {
+  const { data, ...rest } = useNADSources(user);
+
+  const options = useMemo(() => {
+    if (!data) return [];
+
+    return data
+      .reduce((acc, source) => {
+        const familyName = FamilyName[source.family] ?? source.family;
+        const group = acc.find((g) => g.group === familyName);
+        const compiled = {
+          value: source.address,
+          label: source.interface
+            ? `${source.address} (${source.interface})`
+            : source.address,
+        };
+        if (group) {
+          group.items.push(compiled);
+        } else {
+          acc.push({ group: familyName, items: [compiled] });
+        }
+        return acc;
+      }, [] as ComboboxItemGroup[])
+      .sort((a, b) => a.group.localeCompare(b.group));
+  }, [data]);
+
+  return {
+    data: options,
+    ...rest,
+  };
 }

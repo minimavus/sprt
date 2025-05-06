@@ -20,6 +20,9 @@ export const getUseConfigKeyAndEnsureDefaults = (): QueryKey => {
         schema: globalConfigSchema,
         withSignal: true,
       }),
+      select: (data: GlobalConfig) => {
+        return data?.config;
+      },
       retry: failOrRetry(),
     });
   }
@@ -29,5 +32,5 @@ export const getUseConfigKeyAndEnsureDefaults = (): QueryKey => {
 
 export const useConfig = () => {
   const queryKey = getUseConfigKey();
-  return useQuery<unknown, DefaultError, GlobalConfig>({ queryKey });
+  return useQuery<unknown, DefaultError, GlobalConfig["config"]>({ queryKey });
 };

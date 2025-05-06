@@ -1,6 +1,5 @@
-import { useMemo, type FC } from "react";
+import { type FC } from "react";
 import {
-  ComboboxItemGroup,
   Grid,
   NumberInput,
   Select,
@@ -10,7 +9,7 @@ import {
 } from "@mantine/core";
 import { Controller } from "react-hook-form";
 
-import { useNADSources } from "@/hooks/generate/useNADSources";
+import { useNADSourcesCombined } from "@/hooks/generate/useNADSources";
 import { useQueryUser } from "@/hooks/useQueryUser";
 import styles from "@/styles/TextInput.module.scss";
 import { getErrorMessage } from "@/utils/errors";
@@ -19,37 +18,9 @@ import type { RadiusForm } from "../form";
 import { useConnectionTypes } from "../hooks/useConnectionTypes";
 import { useMaxRetransmits } from "../hooks/useMaxRetransmits";
 
-const FamilyName: Record<string, string> = {
-  "4": "IPv4",
-  "6": "IPv6",
-};
-
 const NADSourceAddress: FC = () => {
   const [u] = useQueryUser();
-  const { data } = useNADSources(u);
-
-  const options = useMemo(() => {
-    if (!data) return [];
-
-    return data
-      .reduce((acc, source) => {
-        const familyName = FamilyName[source.family] ?? source.family;
-        const group = acc.find((g) => g.group === familyName);
-        const compiled = {
-          value: source.address,
-          label: source.interface
-            ? `${source.address} (${source.interface})`
-            : source.address,
-        };
-        if (group) {
-          group.items.push(compiled);
-        } else {
-          acc.push({ group: familyName, items: [compiled] });
-        }
-        return acc;
-      }, [] as ComboboxItemGroup[])
-      .sort((a, b) => a.group.localeCompare(b.group));
-  }, [data]);
+  const { data: options } = useNADSourcesCombined(u);
 
   return (
     <Controller<RadiusForm, "general.nas.nasIp">
