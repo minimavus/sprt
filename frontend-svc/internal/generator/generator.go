@@ -40,7 +40,7 @@ type (
 	}
 )
 
-func New(app shared.LogDB, cfg Specs) (Generator, error) {
+func New(app shared.LogDB, cfg Specs) (*generator, error) {
 	parser := dictionary.Parser{IgnoreIdenticalAttributes: true}
 	cache := cachedDictionaries{data: make(map[string]*dictionary.Dictionary)}
 

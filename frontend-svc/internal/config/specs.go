@@ -1,6 +1,7 @@
 package config
 
 import (
+	"errors"
 	"fmt"
 	"reflect"
 	"strings"
@@ -19,6 +20,9 @@ var (
 	BuildStamp = "undefined"
 	GitHash    = "undefined"
 	V          = "undefined"
+
+	ErrFieldNotFound  = errors.New("field not found")
+	ErrFieldNotStruct = errors.New("field not struct")
 )
 
 type (
@@ -98,7 +102,7 @@ type (
 )
 
 func traverseStruct(prefix string, rt reflect.Type, rv reflect.Value) {
-	for i := 0; i < rt.NumField(); i++ {
+	for i := range rt.NumField() {
 		rf := rt.Field(i)
 		ymlName := prefixed(prefix, strcase.ToKebab(rf.Name))
 		if rf.Type.Kind() == reflect.Struct {
@@ -153,14 +157,14 @@ func (s *Specs) setSpec(key string, value any) (err error) {
 		}
 		rv = rv.Elem()
 		if rv.Kind() != reflect.Struct {
-			err = fmt.Errorf("field not struct: %s, left: %s", strings.Join(parts[:i], "."), strings.Join(parts[i:], "."))
+			err = newFieldError(ErrFieldNotStruct, strings.Join(parts[:i], "."), strings.Join(parts[i:], "."))
 			return
 		}
 
 		fieldName := strcase.ToCamel(part)
 		rv = rv.FieldByName(fieldName)
 		if !rv.IsValid() {
-			err = fmt.Errorf("field not found: %s, left: %s", strings.Join(parts[:i], "."), strings.Join(parts[i:], "."))
+			err = newFieldError(ErrFieldNotFound, strings.Join(parts[:i], "."), strings.Join(parts[i:], "."))
 			return
 		}
 		rv = rv.Addr()
@@ -182,4 +186,30 @@ func (s *Specs) setSpec(key string, value any) (err error) {
 
 func (s *Specs) getSpec(key string) any {
 	return viper.Get(key)
+}
+
+func (s *Specs) querySpec(key string) (any, bool) {
+	if !viper.IsSet(key) {
+		return nil, false
+	}
+
+	return viper.Get(key), true
+}
+
+type FieldError struct {
+	err  error
+	path string
+	left string
+}
+
+func (e *FieldError) Error() string {
+	return fmt.Sprintf("%s: %s, left: %s", e.err, e.path, e.left)
+}
+
+func (e *FieldError) Unwrap() error {
+	return e.err
+}
+
+func newFieldError(err error, path, left string) *FieldError {
+	return &FieldError{err, path, left}
 }

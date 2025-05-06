@@ -49,3 +49,14 @@ generator:
     explicit-sources: # List of IPs to use, if auto-detect is false
       - '<IP>'
       - '<IP>'
+  max-var-tries: 10000
+  patterns:
+    session-id: uc(hex(rand(4096..65535)))/uc($MAC$)/uc(hex(rand(4096..65535)))
+  watcher-lifetime: 86400
+  jobs:
+    max-conc: 4
+    max-threads: 16
+    max-sessions-per-job: 100000
+  radius:
+    max-retransmits: 5
+    max-retransmit-timeout: 60

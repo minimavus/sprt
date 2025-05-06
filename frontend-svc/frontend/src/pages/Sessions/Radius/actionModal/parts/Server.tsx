@@ -10,7 +10,7 @@ import {
 } from "@mantine/core";
 import { Controller, useController } from "react-hook-form";
 
-import { useIPSources } from "@/hooks/useIPSources";
+import { useIPSources } from "@/hooks/config/useIPSources";
 import { maybeError } from "@/utils/errors";
 
 import { FormDataFlags, ServerProps } from "../types";

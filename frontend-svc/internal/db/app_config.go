@@ -9,6 +9,7 @@ import (
 
 type AppConfigManipulator interface {
 	GetAllAppConfig(ctx context.Context) (models.ConfigSlice, error)
+	GetAppConfig(ctx context.Context, keys ...string) (map[string]any, error)
 	SetAppConfig(ctx context.Context, key string, val any) error
 }
 
@@ -21,6 +22,33 @@ func (e *execute) GetAllAppConfig(ctx context.Context) (models.ConfigSlice, erro
 	}
 
 	return c, nil
+}
+
+func (e *execute) GetAppConfig(ctx context.Context, keys ...string) (map[string]any, error) {
+	qm := mods{
+		models.ConfigWhere.Key.IN(keys),
+	}
+
+	c, err := models.Configs(qm.fromExec(e, nil)...).All(ctx, e.db)
+	if err != nil {
+		return nil, err
+	}
+
+	configs := make(map[string]any, len(c))
+	for _, v := range c {
+		if v.Value.Valid {
+			var val any
+			err = v.Value.Unmarshal(&val)
+			if err != nil {
+				return nil, err
+			}
+			configs[v.Key] = val
+		} else {
+			configs[v.Key] = nil
+		}
+	}
+
+	return configs, nil
 }
 
 func (e *execute) SetAppConfig(ctx context.Context, key string, val any) error {

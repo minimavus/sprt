@@ -24,7 +24,7 @@ type (
 	}
 
 	SpecSetter interface {
-		SetSpec(ctx context.Context, key string, value any) error
+		SetSpec(ctx context.Context, key string, value any, opts ...SetSpecOptions) error
 	}
 
 	SpecChangeCallback func(key string, value any)

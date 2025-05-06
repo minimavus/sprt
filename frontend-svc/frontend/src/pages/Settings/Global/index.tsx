@@ -1,5 +1,6 @@
 import { FC, Suspense } from "react";
 import { Stack } from "@mantine/core";
+import { DefaultError } from "@tanstack/react-query";
 import {
   Await,
   LoaderFunctionArgs,
@@ -7,14 +8,22 @@ import {
   useLoaderData,
 } from "react-router-dom";
 
-import { AwaitError } from "@/components/Error";
+import { AwaitError, DisplayError } from "@/components/Error";
 import { PageLayout } from "@/components/Layout/PageLayout";
 import { DefaultLoaderFallback } from "@/components/Loader";
+import { GlobalConfig } from "@/hooks/config/schemas";
+import {
+  getUseConfigKeyAndEnsureDefaults,
+  useConfig,
+} from "@/hooks/config/useConfig";
+import { queryClient } from "@/hooks/queryClient";
 
 const GlobalSettingsView: FC = () => {
+  const { data, error } = useConfig();
   return (
     <Stack gap="sm" p="md">
-      Hey!
+      <pre>{JSON.stringify(data, null, 2)}</pre>
+      {error ? <DisplayError error={error} /> : null}
     </Stack>
   );
 };
@@ -41,7 +50,11 @@ export { GlobalSettings };
 export const globalSettingsLoader = async ({
   request: _,
 }: LoaderFunctionArgs) => {
-  const resolved = Promise.resolve(["something"]);
+  const globalConfigKey = getUseConfigKeyAndEnsureDefaults();
 
-  return resolved;
+  return {
+    cfg: queryClient.ensureQueryData<unknown, DefaultError, GlobalConfig>({
+      queryKey: globalConfigKey,
+    }),
+  };
 };

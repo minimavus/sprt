@@ -2,6 +2,7 @@ package config
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"reflect"
 	"sync"
@@ -76,7 +77,16 @@ func (app *AppConfig) mustInitSpecNotifier() *AppConfig {
 	return app
 }
 
-func (app *AppConfig) SetSpec(ctx context.Context, key string, value any) (err error) {
+func getSetSpecOptions(opts ...shared.SetSpecOptions) shared.SetSpecOptions {
+	if len(opts) == 0 {
+		return shared.SetSpecOptions{}
+	}
+	return opts[0]
+}
+
+func (app *AppConfig) SetSpec(ctx context.Context, key string, value any, opts ...shared.SetSpecOptions) (err error) {
+	o := getSetSpecOptions(opts...)
+
 	shouldRevert := true
 	defer func(oldValue any) {
 		if !shouldRevert {
@@ -87,7 +97,9 @@ func (app *AppConfig) SetSpec(ctx context.Context, key string, value any) (err e
 
 	err = app.Specs.setSpec(key, value)
 	if err != nil {
-		return
+		if !o.AllowDbOnly || !errors.Is(err, ErrFieldNotFound) {
+			return
+		}
 	}
 
 	err = db.Exec(app).SetAppConfig(ctx, key, value)
@@ -103,6 +115,58 @@ func (app *AppConfig) SetSpec(ctx context.Context, key string, value any) (err e
 	}
 
 	return nil
+}
+
+func (app *AppConfig) GetSpec(ctx context.Context, key string) (any, bool) {
+	v, ok := app.Specs.querySpec(key)
+	if ok {
+		return v, true
+	}
+
+	mp, err := db.Exec(app).GetAppConfig(ctx, key)
+	if err != nil {
+		app.Logger().Error().Err(err).Msg("Failed to get app config")
+		return nil, false
+	}
+	if len(mp) == 0 {
+		return nil, false
+	}
+
+	v, ok = mp[key]
+	return v, ok
+}
+
+func (app *AppConfig) GetSpecs(ctx context.Context, keys ...string) (map[string]any, bool) {
+	if len(keys) == 0 {
+		return nil, false
+	}
+
+	missingKeys := make([]string, 0)
+	configs := make(map[string]any, len(keys))
+	for _, k := range keys {
+		v, ok := app.Specs.querySpec(k)
+		if ok {
+			configs[k] = v
+			continue
+		}
+		missingKeys = append(missingKeys, k)
+	}
+
+	if len(missingKeys) == 0 {
+		return configs, true
+	}
+
+	mp, err := db.Exec(app).GetAppConfig(context.Background(), missingKeys...)
+	if err != nil {
+		app.Logger().Error().Err(err).Msg("Failed to get app config")
+		return nil, false
+	}
+
+	for k, v := range mp {
+		configs[k] = v
+	}
+
+	return configs, true
 }
 
 func (app *AppConfig) OnSpecChange(key string, cb shared.SpecChangeCallback) {

@@ -51,6 +51,7 @@ func RegisterRoutes(a *config.AppConfig, e *echo.Echo) {
 	addPxGridApiRoutes(v2.Group("/pxgrid"))
 	addGenerateApiRoutes(v2.Group("/generate"))
 	addScepRoutes(v2.Group("/scep"))
+	addGlobalConfigApiRoutes(v2.Group("/config"))
 
 	addUIApiRoutes(api.Group("/ui"))
 
@@ -244,4 +245,9 @@ func addGenerateApiRoutes(r shared.EchoRouter) {
 	r.GET("/radius/dictionaries", rest.GetRadiusDictionaries)
 	r.GET("/radius/dictionaries/:name", rest.GetRadiusDictionary)
 	r.GET("/tls/ciphers", rest.GetSupportedTLSCipherSuites)
+}
+
+func addGlobalConfigApiRoutes(r shared.EchoRouter) {
+	r.GET("", rest.GetGlobalConfig)
+	r.PUT("", rest.UpdateGlobalConfig, m.ValidatePermission("global_config.update", policy.PoliceAlways()))
 }

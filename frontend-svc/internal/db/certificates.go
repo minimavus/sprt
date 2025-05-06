@@ -42,7 +42,7 @@ func (e *execute) GetCertificatesOfType(ctx context.Context, t models.CertType, 
 		models.CertificateWhere.Owner.EQ(owner),
 	}
 
-	c, err := models.Certificates(mods(q).fromExec(e, nil)...).All(ctx, e.db)
+	c, err := models.Certificates(q.fromExec(e, nil)...).All(ctx, e.db)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, nil
@@ -70,7 +70,7 @@ func (e *execute) GetCertificate(ctx context.Context, owner, id string) (*models
 		models.CertificateWhere.Owner.EQ(owner),
 	}
 
-	c, err := models.Certificates(mods(q).fromExec(e, nil)...).One(ctx, e.db)
+	c, err := models.Certificates(q.fromExec(e, nil)...).One(ctx, e.db)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, nil

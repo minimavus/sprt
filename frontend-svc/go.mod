@@ -26,7 +26,7 @@ require (
 	github.com/pexip/go-openssl v0.2.8
 	github.com/quasoft/memstore v0.0.0-20191010062613-2bce066d2b0b
 	github.com/rbcervilla/redisstore/v9 v9.0.0
-	github.com/redis/go-redis/v9 v9.7.3
+	github.com/redis/go-redis/v9 v9.8.0
 	github.com/rickb777/date v1.21.1
 	github.com/rs/zerolog v1.34.0
 	github.com/rubenv/sql-migrate v1.8.0
@@ -35,14 +35,14 @@ require (
 	github.com/smallstep/scep v0.0.0-20250318231241-a25cabb69492
 	github.com/sosodev/duration v1.3.1
 	github.com/sourcegraph/conc v0.3.0
-	github.com/spf13/cast v1.7.1
+	github.com/spf13/cast v1.8.0
 	github.com/spf13/viper v1.20.1
 	github.com/vkumov/go-pxgrider/pkg v1.8.0
 	github.com/volatiletech/null/v8 v8.1.2
 	github.com/volatiletech/sqlboiler/v4 v4.18.0
 	github.com/volatiletech/strmangle v0.0.8
 	github.com/zmap/zcrypto v0.0.0-20250418211859-7510c141e4b7
-	golang.org/x/text v0.24.0
+	golang.org/x/text v0.25.0
 	google.golang.org/grpc v1.72.0
 	layeh.com/radius v0.0.0-20231213012653-1006025d24f8
 )

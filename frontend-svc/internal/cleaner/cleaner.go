@@ -36,7 +36,7 @@ type (
 
 const sessionCleanupTag = "session-cleanup"
 
-func NewCleaner(app shared.LogDB, cfg Specs) (Cleaner, error) {
+func NewCleaner(app shared.LogDB, cfg Specs) (*cleaner, error) {
 	s, err := gocron.NewScheduler(
 		gocron.WithLogger(&cronLogger{app.Logger()}),
 	)
