@@ -1,5 +1,12 @@
 import ip from "ipaddr.js";
+import { path, pick } from "rambda";
+import { FieldValues } from "react-hook-form";
 import { z } from "zod";
+
+import { Family } from "@/hooks/generate/schemas";
+import set from "@/utils/set";
+
+import { radiusParamsStore$ } from "./store";
 
 const isIPv4 = (ip: ip.IPv4 | ip.IPv6): ip is ip.IPv4 => ip.kind() === "ipv4";
 
@@ -306,3 +313,49 @@ export const getDefaultValue = () =>
   }) as RadiusForm;
 
 export type FieldWithId<T> = T & { id: string };
+
+export function cleanupRadiusAttributes<D extends FieldValues>(
+  data: D,
+  nadFamily: Family,
+): D {
+  const accReq = path("radius.attributes.accessRequest", data);
+  const accStart = path("radius.attributes.accountingStart", data);
+
+  if (!Array.isArray(accReq) && !Array.isArray(accStart)) {
+    return data;
+  }
+
+  const cleanedData = { ...data };
+
+  if (Array.isArray(accReq)) {
+    const cleanedAccReq = accReq.filter((attr: BasicRadiusAttributeForm) => {
+      const s =
+        radiusParamsStore$.radius.protoSpecific["accessRequest"].byName[
+          attr.name
+        ].get();
+      if (s.family_specific && s.family_specific !== nadFamily) {
+        return false;
+      }
+      return true;
+    });
+    cleanedData.radius.attributes.accessRequest = cleanedAccReq;
+  }
+
+  if (Array.isArray(accStart)) {
+    const cleanedAccStart = accStart.filter(
+      (attr: BasicRadiusAttributeForm) => {
+        const s =
+          radiusParamsStore$.radius.protoSpecific["accountingStart"].byName[
+            attr.name
+          ].get();
+        if (s.family_specific && s.family_specific !== nadFamily) {
+          return false;
+        }
+        return true;
+      },
+    );
+    cleanedData.radius.attributes.accountingStart = cleanedAccStart;
+  }
+
+  return cleanedData;
+}

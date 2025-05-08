@@ -15,6 +15,12 @@ export enum WatchAction {
   Enable = "enable",
 }
 
+export enum Family {
+  Unspecified = 0,
+  IPv4 = 4,
+  IPv6 = 6,
+}
+
 const ActSchema = z.object({
   action: z.nativeEnum(WatchAction),
   target: z.string(),
@@ -95,6 +101,7 @@ const RadiusAttributeSchema = z.object({
   dictionary: z.string().optional(),
   non_removable: z.boolean().optional().default(false),
   vendor: z.string().optional(),
+  family_specific: z.nativeEnum(Family).optional(),
 });
 
 export type ProtoRadiusAttribute = z.infer<typeof RadiusAttributeSchema>;
@@ -169,6 +176,8 @@ const inputSideButtonSchema = z.object({
   name: z.string().optional(),
   values: z.array(inputSideButtonValuesSchema).optional(),
 });
+
+export type InputSideButton = z.infer<typeof inputSideButtonSchema>;
 
 const basicValueInputSchema = BaseSchema.extend({
   label: z.string(),
@@ -406,11 +415,6 @@ const ProtoDefinitionSchema = VariableDefinitionSchema.extend({
   proto_name: z.string(),
   radius: ProtoRadiusSchema,
 });
-
-export enum Family {
-  IPv4 = 4,
-  IPv6 = 6,
-}
 
 const NADSourceSchema = z.object({
   address: z.string().ip(),

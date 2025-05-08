@@ -30,18 +30,18 @@ const (
 )
 
 var exposedConfigs = map[string]field{
-	"generator.source-ip.exclude":             {"Excluded IPs", fieldTypeArrayStr},
-	"generator.source-ip.allowed":             {"Allowed IPs", fieldTypeArrayStr},
-	"generator.source-ip.auto-detect":         {"Auto-detect IPs and interfaces", fieldTypeBool},
-	"generator.source-ip.explicit-sources":    {"Explicit source IPs", fieldTypeArrayStr},
-	"generator.max-var-tries":                 {"Max tries for variable generation", fieldTypeInt},
-	"generator.patterns.session-id":           {"Session ID pattern", fieldTypeString},
-	"generator.watcher-lifetime":              {"Watcher lifetime", fieldTypeInt},
-	"generator.jobs.max-conc":                 {"Max concurrent jobs per user", fieldTypeInt},
-	"generator.jobs.max-threads":              {"Max threads per job", fieldTypeInt},
-	"generator.jobs.max-sessions-per-job":     {"Max sessions per job", fieldTypeInt},
-	"generator.radius.max-retransmits":        {"Max RADIUS retransmits", fieldTypeInt},
-	"generator.radius.max-retransmit-timeout": {"Max RADIUS retransmit timeout", fieldTypeInt},
+	"generator.source-ip.exclude":          {"Excluded (IPs/patterns)", fieldTypeArrayStr},
+	"generator.source-ip.allowed":          {"Allowed (IPs/patterns)", fieldTypeArrayStr},
+	"generator.source-ip.auto-detect":      {"Auto-detect IPs and interfaces", fieldTypeBool},
+	"generator.source-ip.explicit-sources": {"Explicit source IPs", fieldTypeArrayStr},
+	"generator.max-var-tries":              {"Max tries for variable generation", fieldTypeInt},
+	"generator.patterns.session-id":        {"Session ID pattern", fieldTypeString},
+	"generator.watcher-lifetime":           {"Watcher lifetime (seconds)", fieldTypeInt},
+	"generator.jobs.max-conc":              {"Max concurrent jobs per user", fieldTypeInt},
+	"generator.jobs.max-threads":           {"Max threads per job", fieldTypeInt},
+	"generator.jobs.max-sessions-per-job":  {"Max sessions per job", fieldTypeInt},
+	"generator.radius.max-retransmits":     {"Max RADIUS retransmits", fieldTypeInt},
+	"generator.radius.max-timeout":         {"Max RADIUS timeout (seconds)", fieldTypeInt},
 }
 
 var exposedConfigKeys = make([]string, 0, len(exposedConfigs))

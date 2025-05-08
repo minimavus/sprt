@@ -59,4 +59,4 @@ generator:
     max-sessions-per-job: 100000
   radius:
     max-retransmits: 5
-    max-retransmit-timeout: 60
+    max-timeout: 60

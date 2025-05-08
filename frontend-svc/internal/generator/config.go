@@ -23,8 +23,8 @@ type (
 	}
 
 	Radius struct {
-		MaxRetransmits       int `env:"RADIUS_MAX_RETRANSMITS" default:"5"`
-		MaxRetransmitTimeout int `env:"RADIUS_MAX_RETRANSMIT_TIMEOUT" default:"60"`
+		MaxRetransmits int `env:"RADIUS_MAX_RETRANSMITS" default:"5"`
+		MaxTimeout     int `env:"RADIUS_MAX_TIMEOUT" default:"60"`
 	}
 
 	Specs struct {

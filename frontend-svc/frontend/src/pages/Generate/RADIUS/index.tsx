@@ -10,10 +10,10 @@ import { Await, useAsyncValue, useLoaderData } from "react-router-dom";
 import { SuspenseWrapper } from "@/components/Layout/SuspenseWrapper";
 import { DefaultLoaderFallback } from "@/components/Loader";
 import { useDynamicConfirmation } from "@/components/Modals/Confirmation";
-import { ProtoDefinition } from "@/hooks/generate/schemas";
+import type { ProtoDefinition } from "@/hooks/generate/schemas";
 
 import { LoaderData } from "../loader";
-import { RadiusForm } from "./form";
+import type { RadiusForm } from "./form";
 import { FormStateProvider } from "./formStateContext";
 import { useAutoProtoSchema } from "./hooks/useAutoSchema";
 import { useDefaultValues } from "./hooks/useDefaultValues";
@@ -66,7 +66,6 @@ const RadiusGeneratePageLoaded: FC = () => {
   const defaultValues = useDefaultValues();
   const form = useForm<RadiusForm>({
     defaultValues,
-    // @ts-expect-error
     resolver: (...args) => zodResolver(schema$.get())(...args),
     mode: "onBlur",
   });

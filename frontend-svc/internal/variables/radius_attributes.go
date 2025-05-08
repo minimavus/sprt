@@ -1,6 +1,10 @@
 package variables
 
-import "slices"
+import (
+	"slices"
+
+	"github.com/cisco-open/sprt/frontend-svc/internal/iputils"
+)
 
 var (
 	copyLatestValue     = value("Copy Latest Value")
@@ -15,12 +19,17 @@ var (
 	rfc2866 = dictionary("rfc2866")
 	rfc2869 = dictionary("rfc2869")
 	rfc3579 = dictionary("rfc3579")
+	rfc3162 = dictionary("rfc3162")
+
+	v4Only = familySpecific(iputils.IPv4)
+	v6Only = familySpecific(iputils.IPv6)
 
 	commonRequest = []RadiusAttribute{
 		buildAttribute(id("Acct-Session-Id"), value("$SESSION_ID$"), rfc2866, nonRemovable()),
 		buildAttribute(id("Calling-Station-Id"), value("$MAC$"), rfc2865, overwritable(), customValues([]string{"$MAC$"})),
 		buildAttribute(id("Called-Station-Id"), value("00-00-00-FF-FF-FF"), rfc2865, overwritable()),
-		buildAttribute(id("NAS-IP-Address"), value("$NAS_IP$"), rfc2865, overwritable(), customValues([]string{"$NAS_IP$"})),
+		buildAttribute(id("NAS-IP-Address"), value("$NAS_IP$"), rfc2865, overwritable(), customValues([]string{"$NAS_IP$"}), v4Only),
+		buildAttribute(id("NAS-IPv6-Address"), value("$NAS_IP$"), rfc3162, overwritable(), customValues([]string{"$NAS_IP$"}), v6Only),
 		buildAttribute(id("NAS-Port-Type"), value("$PORT_TYPE$"), rfc2865, overwritable(), customValues([]string{"$PORT_TYPE$"})),
 		buildAttribute(id("Message-Authenticator"), calculate, rfc2869, overwritable(), customValues([]string{"Calculate"})),
 		buildAttribute(id("Framed-MTU"), value("$MTU$"), rfc2865, overwritable(), customValues([]string{"$MTU$"})),
@@ -34,7 +43,8 @@ var (
 		buildAttribute(id("Calling-Station-Id"), copyLatestValue, rfc2865, overwritable(), copyValues),
 		buildAttribute(id("Class"), copyFromResponse, rfc2865, overwritable(), copyValues),
 		buildAttribute(id("Framed-IP-Address"), value("$IP$"), rfc2865, overwritable(), customValues([]string{"$IP$"})),
-		buildAttribute(id("NAS-IP-Address"), copyLatestValue, rfc2865, overwritable(), copyValues),
+		buildAttribute(id("NAS-IP-Address"), copyLatestValue, rfc2865, overwritable(), copyValues, v4Only),
+		buildAttribute(id("NAS-IPv6-Address"), copyLatestValue, rfc3162, overwritable(), copyValues, v6Only),
 		buildAttribute(id("NAS-Port-Type"), copyLatestValue, rfc2865, overwritable(), copyValues),
 		buildAttribute(id("Service-Type"), copyLatestValue, rfc2865, overwritable(), copyValues),
 		buildAttribute(id("User-Name"), copyFromResponse, rfc2865, overwritable(), copyValues),
@@ -121,6 +131,12 @@ func vendor(vendor string) buildOption {
 func customValues(customValues []string) buildOption {
 	return func(ra *RadiusAttribute) {
 		ra.CustomValues = customValues
+	}
+}
+
+func familySpecific(family iputils.IPFamily) buildOption {
+	return func(ra *RadiusAttribute) {
+		ra.FamilySpecific = family
 	}
 }
 

@@ -11,6 +11,7 @@ import (
 	"sync"
 
 	"github.com/google/uuid"
+	"github.com/spf13/cast"
 	"layeh.com/radius/dictionary"
 
 	"github.com/cisco-open/sprt/frontend-svc/internal/db"
@@ -44,31 +45,78 @@ func New(app shared.LogDB, cfg Specs) (*generator, error) {
 	parser := dictionary.Parser{IgnoreIdenticalAttributes: true}
 	cache := cachedDictionaries{data: make(map[string]*dictionary.Dictionary)}
 
-	if len(cfg.SourceIP.Exclude) > 0 {
-		cfg.SourceIP.ExcludeMatchers = make([]Matcher, 0, len(cfg.SourceIP.Exclude))
-		app.Logger().Debug().Strs("exclude", cfg.SourceIP.Exclude).Msg("source IP exclude list")
-		for _, ip := range cfg.SourceIP.Exclude {
-			if iputils.IsIP(ip) {
-				cfg.SourceIP.ExcludeMatchers = append(cfg.SourceIP.ExcludeMatchers, matchIP(ip))
-			} else {
-				cfg.SourceIP.ExcludeMatchers = append(cfg.SourceIP.ExcludeMatchers, matchRegex(ip))
-			}
+	g := &generator{app, cfg, &parser, &cache}
+
+	g.buildExcludeMatchers(cfg.SourceIP.Exclude)
+	g.buildAllowedMatchers(cfg.SourceIP.Allowed)
+
+	app.(shared.SpecNotifier).OnSpecChange("generator.source-ip.exclude", g.onSpecChange)
+	app.(shared.SpecNotifier).OnSpecChange("generator.source-ip.allowed", g.onSpecChange)
+	app.(shared.SpecNotifier).OnSpecChange("generator.source-ip.auto-detect", g.onSpecChange)
+	app.(shared.SpecNotifier).OnSpecChange("generator.source-ip.explicit-sources", g.onSpecChange)
+
+	return g, nil
+}
+
+func (g *generator) onSpecChange(key string, value any) {
+	switch key {
+	case "generator.source-ip.exclude":
+		g.buildExcludeMatchers(value)
+	case "generator.source-ip.allowed":
+		g.buildAllowedMatchers(value)
+	case "generator.source-ip.auto-detect":
+		v, ok := value.(bool)
+		if !ok {
+			g.app.Logger().Error().Msgf("invalid type for generator.source-ip.auto-detect: %v", value)
+			return
 		}
+		g.cfg.SourceIP.AutoDetect = v
+	case "generator.source-ip.explicit-sources":
+		v, err := cast.ToStringSliceE(value)
+		if err != nil {
+			g.app.Logger().Error().Err(err).Msgf("invalid type for generator.source-ip.explicit-sources: %v", value)
+			return
+		}
+		g.cfg.SourceIP.ExplicitSources = v
+	}
+}
+
+func (g *generator) buildExcludeMatchers(value any) {
+	exclude, err := cast.ToStringSliceE(value)
+	if err != nil {
+		g.app.Logger().Error().Err(err).Msgf("invalid type for generator.source-ip.exclude: %v", value)
+		return
 	}
 
-	if len(cfg.SourceIP.Allowed) > 0 {
-		cfg.SourceIP.AllowedMatchers = make([]Matcher, 0, len(cfg.SourceIP.Allowed))
-		app.Logger().Debug().Strs("allowed", cfg.SourceIP.Allowed).Msg("source IP allowed list")
-		for _, ip := range cfg.SourceIP.Allowed {
-			if iputils.IsIP(ip) {
-				cfg.SourceIP.AllowedMatchers = append(cfg.SourceIP.AllowedMatchers, matchIP(ip))
-			} else {
-				cfg.SourceIP.AllowedMatchers = append(cfg.SourceIP.AllowedMatchers, matchRegex(ip))
-			}
+	g.cfg.SourceIP.Exclude = exclude
+	g.cfg.SourceIP.ExcludeMatchers = make([]Matcher, 0, len(exclude))
+	g.app.Logger().Debug().Strs("exclude", exclude).Msg("source IP exclude list")
+	for _, ip := range exclude {
+		if iputils.IsIP(ip) {
+			g.cfg.SourceIP.ExcludeMatchers = append(g.cfg.SourceIP.ExcludeMatchers, matchIP(ip))
+		} else {
+			g.cfg.SourceIP.ExcludeMatchers = append(g.cfg.SourceIP.ExcludeMatchers, matchRegex(ip))
 		}
 	}
+}
 
-	return &generator{app, cfg, &parser, &cache}, nil
+func (g *generator) buildAllowedMatchers(value any) {
+	allowed, err := cast.ToStringSliceE(value)
+	if err != nil {
+		g.app.Logger().Error().Err(err).Msgf("invalid type for generator.source-ip.allowed: %v", value)
+		return
+	}
+
+	g.cfg.SourceIP.Allowed = allowed
+	g.cfg.SourceIP.AllowedMatchers = make([]Matcher, 0, len(allowed))
+	g.app.Logger().Debug().Strs("allowed", allowed).Msg("source IP allowed list")
+	for _, ip := range allowed {
+		if iputils.IsIP(ip) {
+			g.cfg.SourceIP.AllowedMatchers = append(g.cfg.SourceIP.AllowedMatchers, matchIP(ip))
+		} else {
+			g.cfg.SourceIP.AllowedMatchers = append(g.cfg.SourceIP.AllowedMatchers, matchRegex(ip))
+		}
+	}
 }
 
 func (g *generator) ListDictionaries() ([]Dictionary, error) {

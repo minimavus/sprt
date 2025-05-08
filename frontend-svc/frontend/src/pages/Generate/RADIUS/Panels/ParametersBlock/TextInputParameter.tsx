@@ -4,12 +4,15 @@ import { useMergedRef } from "@mantine/hooks";
 import { useController } from "react-hook-form";
 
 import { InputHelp } from "@/components/Inputs/InputHelp";
+import {
+  InputSideButtons,
+  InputSideButtonsContext,
+} from "@/components/Inputs/InputSideButtons";
 import styles from "@/styles/TextInput.module.scss";
 import { getErrorMessage } from "@/utils/errors";
 
 import { useFieldState } from "../../formStateContext";
 import { useIsInline } from "./blockContext";
-import { Buttons, ButtonsContext } from "./InputSideButtons";
 import { ParameterComponent } from "./types";
 import { withPrefix } from "./utils";
 
@@ -34,7 +37,7 @@ export const TextInputParameter: ParameterComponent<"text_input"> = ({
   }
 
   return (
-    <ButtonsContext value={{ setButtonsWidth }}>
+    <InputSideButtonsContext value={{ setButtonsWidth }}>
       <TextInput
         {...field}
         error={getErrorMessage(error)}
@@ -59,7 +62,7 @@ export const TextInputParameter: ParameterComponent<"text_input"> = ({
         rightSectionWidth={buttonsWidth || undefined}
         rightSection={
           p.buttons ? (
-            <Buttons
+            <InputSideButtons
               buttons={p.buttons}
               onChange={field.onChange}
               inputRef={inputRef}
@@ -67,6 +70,6 @@ export const TextInputParameter: ParameterComponent<"text_input"> = ({
           ) : undefined
         }
       />
-    </ButtonsContext>
+    </InputSideButtonsContext>
   );
 };

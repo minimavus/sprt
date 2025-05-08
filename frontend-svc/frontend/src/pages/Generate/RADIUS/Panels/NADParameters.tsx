@@ -16,7 +16,7 @@ import { getErrorMessage } from "@/utils/errors";
 
 import type { RadiusForm } from "../form";
 import { useConnectionTypes } from "../hooks/useConnectionTypes";
-import { useMaxRetransmits } from "../hooks/useMaxRetransmits";
+import { useMaxRetransmits, useMaxTimeout } from "../hooks/useMax";
 
 const NADSourceAddress: FC = () => {
   const [u] = useQueryUser();
@@ -63,6 +63,7 @@ const ConnectionType: FC = () => {
 
 export const NADParameters: FC = () => {
   const maxRetransmits = useMaxRetransmits();
+  const maxTimeout = useMaxTimeout();
 
   return (
     <Stack gap="sm">
@@ -104,7 +105,11 @@ export const NADParameters: FC = () => {
               <NumberInput
                 {...field}
                 label="Timeout"
-                description="seconds"
+                description={`seconds${
+                  maxTimeout ? `, up to ${maxTimeout}` : ""
+                }`}
+                max={maxTimeout || undefined}
+                min={1}
                 error={getErrorMessage(error)}
                 id="timeout"
                 className={styles.compact}

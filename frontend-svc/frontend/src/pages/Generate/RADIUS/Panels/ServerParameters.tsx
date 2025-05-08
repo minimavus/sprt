@@ -137,7 +137,7 @@ const ServerLoader: FC = () => {
                 ))}
               </Fragment>
             ) : (
-              <Menu.Sub>
+              <Menu.Sub key={group}>
                 <Menu.Sub.Target>
                   <Menu.Sub.Item>{group}</Menu.Sub.Item>
                 </Menu.Sub.Target>

@@ -35,7 +35,7 @@ export const globalConfigValuesSchema = z.object({
   "generator.radius.max-retransmits": fieldSchema(
     z.coerce.number().int().nonnegative().nullish(),
   ),
-  "generator.radius.max-retransmit-timeout": fieldSchema(
+  "generator.radius.max-timeout": fieldSchema(
     z.coerce.number().int().nonnegative().nullish(),
   ),
 });

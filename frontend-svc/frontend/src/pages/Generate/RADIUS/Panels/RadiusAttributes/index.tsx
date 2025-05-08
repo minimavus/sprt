@@ -14,18 +14,18 @@ import type {
 } from "../../form";
 import { radiusParamsStore$ } from "../../store";
 import { AddAttribute } from "./AddAttribute";
-import { AttributeEdit, AttributeEditProps } from "./AttributeEdit";
+import { AttributeEdit } from "./AttributeEdit";
 import { VendorSpecific } from "./VendorSpecific";
 
-const SpecificEditsMap: Record<
-  StringWithKnownValues<"default">,
-  FC<AttributeEditProps>
-> = {
-  "NAS-IP-Address": AttributeEdit,
-  "Framed-MTU": AttributeEdit,
-  "NAS-Port-Type": AttributeEdit,
-  default: AttributeEdit,
-};
+// const SpecificEditsMap: Record<
+//   StringWithKnownValues<"default">,
+//   FC<AttributeEditProps>
+// > = {
+//   "NAS-IP-Address": AttributeEdit,
+//   "Framed-MTU": AttributeEdit,
+//   "NAS-Port-Type": AttributeEdit,
+//   default: AttributeEdit,
+// };
 
 const AttributesLocation: FC<{
   loc: RadiusAttributeLocation;
@@ -63,9 +63,9 @@ const AttributesLocation: FC<{
           );
         }
 
-        const El = SpecificEditsMap[field.name] ?? SpecificEditsMap.default;
+        // const El = SpecificEditsMap[field.name] ?? SpecificEditsMap.default;
         return (
-          <El
+          <AttributeEdit
             key={field.id}
             field={field as FieldWithId<BasicRadiusAttributeForm>}
             idx={index}

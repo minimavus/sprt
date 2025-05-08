@@ -1,30 +1,31 @@
 import {
   createContext,
-  FC,
-  RefObject,
   use,
   useCallback,
   useEffect,
+  type Dispatch,
+  type FC,
+  type RefObject,
+  type SetStateAction,
 } from "react";
 import { Button, Menu } from "@mantine/core";
 import { useDisclosure, useElementSize } from "@mantine/hooks";
 import { IconChevronDown } from "@tabler/icons-react";
 
-import { Parameter } from "@/hooks/generate/schemas";
+import type { InputSideButton } from "@/hooks/generate/schemas";
 import { log } from "@/utils/log";
 
-import { ExtractParam } from "./types";
-
-type ButtonsContextValue = {
-  setButtonsWidth: (width: number) => void;
+type InputSideButtonsContextValue = {
+  setButtonsWidth: Dispatch<SetStateAction<number>>;
 };
 
-export const ButtonsContext = createContext<ButtonsContextValue>(
-  {} as ButtonsContextValue,
-);
+export const InputSideButtonsContext =
+  createContext<InputSideButtonsContextValue>(
+    {} as InputSideButtonsContextValue,
+  );
 
 const DropdownButton: FC<{
-  button: NonNullable<ExtractParam<Parameter, "text_input">["buttons"]>[number];
+  button: InputSideButton;
   onChange: (value: string) => void;
   inputRef: RefObject<HTMLInputElement | null>;
 }> = ({ button, onChange, inputRef }) => {
@@ -113,13 +114,13 @@ const DropdownButton: FC<{
   );
 };
 
-export const Buttons: FC<{
-  buttons: ExtractParam<Parameter, "text_input">["buttons"];
+export const InputSideButtons: FC<{
+  buttons: InputSideButton[] | undefined;
   onChange: (value: string) => void;
   inputRef: RefObject<HTMLInputElement | null>;
 }> = ({ buttons, onChange, inputRef }) => {
   const { ref: groupRef, width } = useElementSize();
-  const { setButtonsWidth } = use(ButtonsContext);
+  const { setButtonsWidth } = use(InputSideButtonsContext);
 
   useEffect(() => {
     setButtonsWidth(width ? width + 12 : 0);

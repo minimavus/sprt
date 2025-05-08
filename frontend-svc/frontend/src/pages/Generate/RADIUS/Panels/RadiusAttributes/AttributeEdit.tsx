@@ -18,6 +18,7 @@ import { useController } from "react-hook-form";
 
 import { useDynamicConfirmation } from "@/components/Modals/Confirmation";
 import { RadiusDictionaryAttributeType } from "@/hooks/generate/useRadiusDictionaries";
+import { useQueryUser } from "@/hooks/useQueryUser";
 import styles from "@/styles/TextInput.module.scss";
 import { getErrorMessage } from "@/utils/errors";
 
@@ -27,6 +28,7 @@ import type {
   RadiusAttributeLocation,
   RadiusForm,
 } from "../../form";
+import { useNadFamily } from "../../hooks/useNadFamily";
 import { radiusParamsStore$ } from "../../store";
 import { attrTypeToString } from "./formatters";
 import { HexEditModal } from "./HexEditModal";
@@ -63,6 +65,9 @@ const AttributeEdit = forwardRef<HTMLInputElement, AttributeEditProps>(
     { field: fieldData, onRemove, idx, loc, fieldPath: fieldPathFromProps },
     forwardedRef,
   ) => {
+    const [u] = useQueryUser();
+    const family = useNadFamily(u);
+
     const specific = use$(() =>
       radiusParamsStore$.radius.protoSpecific[loc].byName[fieldData.name].get(),
     );
@@ -124,6 +129,10 @@ const AttributeEdit = forwardRef<HTMLInputElement, AttributeEditProps>(
 
     const theme = useMantineTheme();
     const rightSectionWidth = `calc(${rem(`${28 * icons} + 8`)})`;
+
+    if (specific.family_specific && family !== specific.family_specific) {
+      return null;
+    }
 
     return (
       <Autocomplete

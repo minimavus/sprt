@@ -3,17 +3,20 @@ package variables
 import (
 	"fmt"
 	"net/http"
+
+	"github.com/cisco-open/sprt/frontend-svc/internal/iputils"
 )
 
 type (
 	RadiusAttribute struct {
-		ID           string   `json:"id"`
-		Value        string   `json:"value"`
-		Dictionary   string   `json:"dictionary"`
-		Vendor       string   `json:"vendor,omitempty"`
-		Overwrite    bool     `json:"overwrite"`
-		NonRemovable bool     `json:"non_removable"`
-		CustomValues []string `json:"custom_values,omitempty"`
+		ID             string           `json:"id"`
+		Value          string           `json:"value"`
+		Dictionary     string           `json:"dictionary"`
+		Vendor         string           `json:"vendor,omitempty"`
+		Overwrite      bool             `json:"overwrite"`
+		NonRemovable   bool             `json:"non_removable"`
+		CustomValues   []string         `json:"custom_values,omitempty"`
+		FamilySpecific iputils.IPFamily `json:"family_specific,omitempty"`
 	}
 
 	ParametersBlock struct {

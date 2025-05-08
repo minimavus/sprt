@@ -1,15 +1,24 @@
-import { useMemo, type FC } from "react";
+import { ComponentProps, useMemo, type FC } from "react";
 import { CodeHighlight } from "@mantine/code-highlight";
 import { Paper } from "@mantine/core";
 import { useFormContext } from "react-hook-form";
 
+import { Warning } from "@/components/Alerts";
 import { DisplayError } from "@/components/Error";
+import { DefaultLoaderFallback } from "@/components/Loader";
+import { useAPISettings } from "@/hooks/settings/api";
+import { useQueryUser } from "@/hooks/useQueryUser";
 
+import { cleanupRadiusAttributes } from "../form";
 import { useFormSchema } from "../formStateContext";
+import { useNadFamily } from "../hooks/useNadFamily";
 
-export const APIParameters: FC<{ visible: boolean }> = ({ visible }) => {
+const APIParameters: FC<{ visible: boolean }> = ({ visible }) => {
   const schema$ = useFormSchema();
   const { getValues, trigger, clearErrors } = useFormContext();
+
+  const [u] = useQueryUser();
+  const nadFamily = useNadFamily(u);
 
   const parsed = useMemo(() => {
     if (!visible) return null;
@@ -20,8 +29,12 @@ export const APIParameters: FC<{ visible: boolean }> = ({ visible }) => {
     } else {
       clearErrors();
     }
+    if (p.success) {
+      const cleaned = cleanupRadiusAttributes(p.data, nadFamily);
+      return { ...p, data: cleaned };
+    }
     return p;
-  }, [visible, schema$, getValues]);
+  }, [visible, schema$, getValues, nadFamily]);
 
   if (!parsed) return <></>;
 
@@ -50,3 +63,25 @@ export const APIParameters: FC<{ visible: boolean }> = ({ visible }) => {
     </Paper>
   );
 };
+
+const APIEnabledWrapper: FC<ComponentProps<typeof APIParameters>> = (props) => {
+  const [u] = useQueryUser();
+  const { data, status, error } = useAPISettings(u);
+
+  if (status === "pending") return <DefaultLoaderFallback />;
+  if (status === "error") {
+    return <DisplayError error={error} before="Cannot load API settings" />;
+  }
+
+  if (!data?.token) {
+    return (
+      <Warning>
+        API access is disabled, please enable it in the settings first
+      </Warning>
+    );
+  }
+
+  return <APIParameters {...props} />;
+};
+
+export { APIEnabledWrapper as APIParameters };

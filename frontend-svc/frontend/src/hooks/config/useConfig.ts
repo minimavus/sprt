@@ -31,6 +31,6 @@ export const getUseConfigKeyAndEnsureDefaults = (): QueryKey => {
 };
 
 export const useConfig = () => {
-  const queryKey = getUseConfigKey();
+  const queryKey = getUseConfigKeyAndEnsureDefaults();
   return useQuery<unknown, DefaultError, GlobalConfig["config"]>({ queryKey });
 };

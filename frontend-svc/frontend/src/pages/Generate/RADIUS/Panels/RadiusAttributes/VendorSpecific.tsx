@@ -15,14 +15,14 @@ import { useController, useFieldArray } from "react-hook-form";
 
 import { useDynamicConfirmation } from "@/components/Modals/Confirmation";
 
-import {
+import type {
   BasicRadiusAttributeForm,
   FieldWithId,
   RadiusForm,
   VendorSpecificRadiusAttributeForm,
 } from "../../form";
 import { AddAttribute } from "./AddAttribute";
-import { AttributeEdit, AttributeEditProps } from "./AttributeEdit";
+import { AttributeEdit, type AttributeEditProps } from "./AttributeEdit";
 
 type VendorSpecificProps = Omit<AttributeEditProps, "field"> & {
   field: FieldWithId<VendorSpecificRadiusAttributeForm>;

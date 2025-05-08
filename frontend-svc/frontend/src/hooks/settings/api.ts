@@ -29,7 +29,7 @@ const APISettingsResponseSchema = z.object({
 
 export type APISettings = z.infer<typeof APISettingsSchema>;
 
-export const useAPISettings = (user?: QueryUser) => {
+export const useAPISettings = (user: QueryUser) => {
   return useGetQuery({
     queryKey: getAPISettingsKey(orMe(user)),
     url: api.v2`settings/api`,
@@ -41,7 +41,7 @@ export const useAPISettings = (user?: QueryUser) => {
   });
 };
 
-export const useAPISettingsUpdate = (user?: QueryUser) => {
+export const useAPISettingsUpdate = (user: QueryUser) => {
   const qc = useQueryClient();
   return useMutation<
     unknown,
