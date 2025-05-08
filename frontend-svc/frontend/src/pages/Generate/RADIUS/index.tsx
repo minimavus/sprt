@@ -11,12 +11,14 @@ import { SuspenseWrapper } from "@/components/Layout/SuspenseWrapper";
 import { DefaultLoaderFallback } from "@/components/Loader";
 import { useDynamicConfirmation } from "@/components/Modals/Confirmation";
 import type { ProtoDefinition } from "@/hooks/generate/schemas";
+import { useQueryUser } from "@/hooks/useQueryUser";
 
 import { LoaderData } from "../loader";
-import type { RadiusForm } from "./form";
+import { cleanupRadiusAttributes, type RadiusForm } from "./form";
 import { FormStateProvider } from "./formStateContext";
 import { useAutoProtoSchema } from "./hooks/useAutoSchema";
 import { useDefaultValues } from "./hooks/useDefaultValues";
+import { useDetectNadFamily, useNadFamily } from "./hooks/useNadFamily";
 import { ParametersPane } from "./ParametersPane";
 import { ProtoDataLoader } from "./ProtoDataLoader";
 import { radiusParamsStore$, Tab } from "./store";
@@ -72,6 +74,8 @@ const RadiusGeneratePageLoaded: FC = () => {
 
   const confirm = useDynamicConfirmation();
   const tab = use$(radiusParamsStore$.uiState.tab);
+  const [u] = useQueryUser();
+  const detectFamily = useDetectNadFamily(u);
 
   useUnmount(() => {
     radiusParamsStore$.uiState.tab.set("general");
@@ -79,7 +83,9 @@ const RadiusGeneratePageLoaded: FC = () => {
 
   const onSubmit = form.handleSubmit(
     (values) => {
-      console.log({ values });
+      const family = detectFamily(values.general.nas.nasIp);
+      const clean = cleanupRadiusAttributes(values, family);
+      console.log({ clean });
       confirm({
         children: "Are you sure?",
         confirmText: "Yes",

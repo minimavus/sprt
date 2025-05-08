@@ -1,6 +1,7 @@
 {
   "plugins": ["@ianvs/prettier-plugin-sort-imports"],
   "importOrder": [
+    "react-scan",
     "^(react/(.*)$)|^(react$)",
     "^(next/(.*)$)|^(next$)",
     "<THIRD_PARTY_MODULES>",

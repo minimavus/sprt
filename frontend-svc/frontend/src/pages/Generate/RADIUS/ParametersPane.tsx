@@ -8,6 +8,7 @@ import { DisplayError } from "@/components/Error";
 import { useProtoSpecificParameters } from "@/hooks/generate/useProtoSpecificParams";
 import { useQueryUser } from "@/hooks/useQueryUser";
 
+import { VisibilityContext } from "./common/visibilityContext";
 import { APIParameters } from "./Panels/APIParameters";
 import { CoAParameters } from "./Panels/CoAParameters";
 import { GenerationParameters } from "./Panels/GenerationParameters";
@@ -173,7 +174,9 @@ export const ParametersPane: FC = () => {
         keepMounted
         className={styles.tab_panel}
       >
-        <El key={`${t}-${proto}`} visible={t === tab} />
+        <VisibilityContext value={{ visible: t === tab }}>
+          <El key={`${t}-${proto}`} visible={t === tab} />
+        </VisibilityContext>
       </Tabs.Panel>
     );
   });

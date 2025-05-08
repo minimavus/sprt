@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { useWatch } from "react-hook-form";
 
 import { Family } from "@/hooks/generate/schemas";
@@ -7,15 +7,22 @@ import { QueryUser } from "@/hooks/useQueryUser";
 
 import { RadiusForm } from "../form";
 
-export const useNadFamily = (user: QueryUser) => {
+export const useDetectNadFamily = (user: QueryUser) => {
   const { data: sources } = useNADSources(user);
 
+  return useCallback(
+    (value: string) =>
+      sources?.find((s) => s.address === value)?.family ?? Family.IPv4,
+    [sources],
+  );
+};
+
+export const useNadFamily = (user: QueryUser) => {
   const source = useWatch<RadiusForm, "general.nas.nasIp">({
     name: "general.nas.nasIp",
   });
 
-  return useMemo(
-    () => sources?.find((s) => s.address === source)?.family ?? Family.IPv4,
-    [sources, source],
-  );
+  const detect = useDetectNadFamily(user);
+
+  return useMemo(() => detect(source), [detect, source]);
 };

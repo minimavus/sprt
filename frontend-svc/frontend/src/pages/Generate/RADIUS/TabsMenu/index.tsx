@@ -1,4 +1,5 @@
 import { FC, useEffect, useMemo } from "react";
+import { Memo } from "@legendapp/state/react";
 import {
   Button,
   getThemeColor,
@@ -145,47 +146,49 @@ const ProtoSelect: FC = () => {
   const theme = useMantineTheme();
 
   return (
-    <Menu key={proto} onOpen={() => open()} onClose={() => close()}>
-      <Menu.Target>
-        <Button
-          ml="xl"
-          size="compact-xs"
-          variant="subtle"
-          rightSection={
-            <IconChevronDown
-              size={14}
-              style={{ transform: isMenuOpen ? "rotate(-180deg)" : "none" }}
-            />
-          }
-        >
-          {protoNames.get(proto!)}
-        </Button>
-      </Menu.Target>
-      <Menu.Dropdown>
-        {radiusProtos.map((p) => (
-          <Menu.Item
-            key={p}
-            onClick={() => {
-              if (proto === p) {
-                return;
-              }
-
-              nav(`/generate/${p}`);
-            }}
-            style={{
-              justifyContent: "space-between",
-            }}
+    <Memo>
+      <Menu key={proto} onOpen={() => open()} onClose={() => close()}>
+        <Menu.Target>
+          <Button
+            ml="xl"
+            size="compact-xs"
+            variant="subtle"
             rightSection={
-              proto === p ? (
-                <IconCheck size={14} color={getThemeColor("green", theme)} />
-              ) : null
+              <IconChevronDown
+                size={14}
+                style={{ transform: isMenuOpen ? "rotate(-180deg)" : "none" }}
+              />
             }
           >
-            <span>{protoNames.get(p)}</span>
-          </Menu.Item>
-        ))}
-      </Menu.Dropdown>
-    </Menu>
+            {protoNames.get(proto!)}
+          </Button>
+        </Menu.Target>
+        <Menu.Dropdown>
+          {radiusProtos.map((p) => (
+            <Menu.Item
+              key={p}
+              onClick={() => {
+                if (proto === p) {
+                  return;
+                }
+
+                nav(`/generate/${p}`);
+              }}
+              style={{
+                justifyContent: "space-between",
+              }}
+              rightSection={
+                proto === p ? (
+                  <IconCheck size={14} color={getThemeColor("green", theme)} />
+                ) : null
+              }
+            >
+              <span>{protoNames.get(p)}</span>
+            </Menu.Item>
+          ))}
+        </Menu.Dropdown>
+      </Menu>
+    </Memo>
   );
 };
 

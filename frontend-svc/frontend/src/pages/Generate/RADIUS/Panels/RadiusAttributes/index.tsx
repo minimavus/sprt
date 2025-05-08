@@ -1,10 +1,8 @@
-import { FC, Suspense } from "react";
+import { FC } from "react";
 import { useObserve } from "@legendapp/state/react";
 import { Group, SimpleGrid, Stack, Title } from "@mantine/core";
 import { useFieldArray } from "react-hook-form";
-import { Await, useLoaderData } from "react-router-dom";
 
-import { LoaderData } from "../../../loader";
 import type {
   BasicRadiusAttributeForm,
   FieldWithId,
@@ -80,25 +78,14 @@ const AttributesLocation: FC<{
 };
 
 export const RadiusAttributes: FC = () => {
-  const data = useLoaderData() as LoaderData;
-
   return (
     <Stack gap="sm">
       <Group mt="lg">
         <Title order={3}>Attributes</Title>
       </Group>
       <SimpleGrid cols={{ base: 1, "750px": 2 }} type="container" spacing="sm">
-        <Suspense fallback={null}>
-          <Await
-            resolve={data?.proto}
-            children={
-              <>
-                <AttributesLocation loc="accessRequest" />
-                <AttributesLocation loc="accountingStart" />
-              </>
-            }
-          />
-        </Suspense>
+        <AttributesLocation loc="accessRequest" />
+        <AttributesLocation loc="accountingStart" />
       </SimpleGrid>
     </Stack>
   );

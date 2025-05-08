@@ -1,3 +1,5 @@
+// import { scan } from "react-scan";
+//---
 import { lazy, Suspense } from "react";
 import { CodeHighlightAdapterProvider } from "@mantine/code-highlight";
 import { ColorSchemeScript, MantineProvider } from "@mantine/core";
@@ -12,6 +14,10 @@ import { useInitial } from "@/hooks/useInitial";
 import router from "@/router";
 import { theme } from "@/theme";
 import { shikiAdapter } from "@/utils/shiki/shikiAdapter";
+
+// scan({
+//   enabled: true,
+// });
 
 const ReactQueryDevtools = lazy(() =>
   import("@tanstack/react-query-devtools").then((m) => ({
