@@ -1,41 +1,26 @@
 import { Suspense, useRef, useState, type FC } from "react";
 import {
-  ActionIcon,
   Button,
-  Code,
   Fieldset,
   Group,
-  InputLabel,
   NumberInput,
   rem,
   Stack,
-  Switch,
-  Table,
-  Text,
   TextInput,
   useMantineTheme,
 } from "@mantine/core";
 import { useElementSize, useMergedRef } from "@mantine/hooks";
-import { IconDeviceFloppy, IconTrash } from "@tabler/icons-react";
+import { IconDeviceFloppy } from "@tabler/icons-react";
 import { DefaultError } from "@tanstack/react-query";
 import {
   Controller,
   FormProvider,
   useController,
-  useFieldArray,
   useForm,
-  useFormContext,
-  useWatch,
 } from "react-hook-form";
-import {
-  Await,
-  Outlet,
-  useAsyncValue,
-  useLoaderData,
-  type LoaderFunctionArgs,
-} from "react-router-dom";
+import { Await, Outlet, useAsyncValue, useLoaderData } from "react-router-dom";
 
-import { AwaitError, DisplayError } from "@/components/Error";
+import { AwaitError } from "@/components/Error";
 import {
   InputSideButtons,
   InputSideButtonsContext,
@@ -47,13 +32,12 @@ import {
   getUseConfigKeyAndEnsureDefaults,
   useConfig,
 } from "@/hooks/config/useConfig";
-import { useNADSourcesAll } from "@/hooks/generate/useNADSources";
 import { queryClient } from "@/hooks/queryClient";
-import { useQueryUser } from "@/hooks/useQueryUser";
 import { flattenObject } from "@/utils/flattenObject";
 import set from "@/utils/set";
 
 import { funcButtons } from "./funcButtons";
+import { IPSourcesConfig } from "./IPSourcesConfig";
 
 const defaultValuesFromInit = (init: GlobalConfig["config"]) => {
   return Object.keys(init).reduce(
@@ -61,140 +45,6 @@ const defaultValuesFromInit = (init: GlobalConfig["config"]) => {
       return set(key, init[key as keyof typeof init].value, acc);
     },
     {} as Record<string, unknown>,
-  );
-};
-
-const ListEdit: FC<{
-  label?: string;
-  name: string;
-}> = ({ label, name }) => {
-  const { register } = useFormContext();
-  const { fields, append, remove } = useFieldArray({ name });
-
-  return (
-    <Stack gap="xs">
-      <InputLabel>{label}</InputLabel>
-      <Table>
-        <Table.Tbody>
-          {fields.map((v, i) => (
-            <Table.Tr key={v.id}>
-              <Table.Td>
-                <Group gap="xs">
-                  <TextInput {...register(`${name}.${i}`)} flex={1} />
-                  <ActionIcon
-                    variant="subtle"
-                    color="red"
-                    onClick={() => remove(i)}
-                  >
-                    <IconTrash size={18} />
-                  </ActionIcon>
-                </Group>
-              </Table.Td>
-            </Table.Tr>
-          ))}
-          <Table.Tr>
-            <Table.Td colSpan={2}>
-              <TextInput
-                placeholder="Add new pattern: start typing..."
-                value=""
-                onChange={(e) => {
-                  if (e.target.value.length > 0) {
-                    append(e.target.value, {
-                      shouldFocus: true,
-                      focusName: `${name}.${fields.length}`,
-                    });
-                  }
-                }}
-              />
-            </Table.Td>
-          </Table.Tr>
-        </Table.Tbody>
-      </Table>
-    </Stack>
-  );
-};
-
-const IPSourcesPatterns: FC = () => {
-  const [u] = useQueryUser();
-  const { data } = useNADSourcesAll(u);
-  const { data: cfg } = useConfig();
-
-  return (
-    <Stack gap="sm">
-      <Text size="sm">
-        SPRT automatically detects all available source addresses and
-        interfaces. The user can then select a source from the resulting list.
-        If exclusion patterns are defined, matching sources will be removed from
-        the list. If inclusion patterns are defined, only sources that match
-        will be included.
-      </Text>
-      <ListEdit
-        label={cfg?.["generator.source-ip.exclude"]?.label}
-        name="generator.source-ip.exclude"
-      />
-      <ListEdit
-        label={cfg?.["generator.source-ip.allowed"]?.label}
-        name="generator.source-ip.allowed"
-      />
-      <div>
-        <Button variant="subtle" size="compact-sm">
-          Show matching sources
-        </Button>
-      </div>
-    </Stack>
-  );
-};
-
-const IPSourcesExplicit: FC = () => {
-  const { data: cfg } = useConfig();
-
-  return (
-    <Stack gap="sm">
-      <Text size="sm">
-        Explicit source addresses are used. The user can choose one from a list
-        of available sources. The selected address will be set as the
-        <Code>NAS-IP-Address</Code> (or <Code>NAS-IPv6-Address</Code>) in RADIUS
-        packets. Routing will determine which interface is used for sending.
-      </Text>
-      <ListEdit
-        label={cfg?.["generator.source-ip.explicit-sources"]?.label}
-        name="generator.source-ip.explicit-sources"
-      />
-    </Stack>
-  );
-};
-
-const IPSourcesConfig: FC = () => {
-  const [u] = useQueryUser();
-  const { error, status } = useNADSourcesAll(u);
-  const { data: cfg } = useConfig();
-
-  const autoDetect = useWatch({
-    name: "generator.source-ip.auto-detect",
-  });
-
-  if (status === "pending") return <>Loading IP sources</>;
-  if (status === "error") {
-    return <DisplayError error={error} before="Failed to load IP sources" />;
-  }
-
-  return (
-    <Fieldset legend="IP Sources">
-      <Stack gap="sm">
-        <Controller
-          name="generator.source-ip.auto-detect"
-          render={({ field, fieldState }) => (
-            <Switch
-              label={cfg?.["generator.source-ip.auto-detect"]?.label}
-              checked={field.value}
-              onChange={field.onChange}
-              error={fieldState.isTouched && fieldState.error?.message}
-            />
-          )}
-        />
-        {autoDetect ? <IPSourcesPatterns /> : <IPSourcesExplicit />}
-      </Stack>
-    </Fieldset>
   );
 };
 
@@ -437,9 +287,7 @@ const GlobalSettings: FC = () => {
 
 export { GlobalSettings };
 
-export const globalSettingsLoader = async ({
-  request: _,
-}: LoaderFunctionArgs) => {
+export const globalSettingsLoader = async () => {
   const globalConfigKey = getUseConfigKeyAndEnsureDefaults();
 
   return {

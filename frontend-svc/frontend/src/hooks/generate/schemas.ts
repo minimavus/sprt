@@ -422,6 +422,8 @@ const NADSourceSchema = z.object({
   interface: z.string(),
 });
 
+export type NADSource = z.infer<typeof NADSourceSchema>;
+
 const NADSourcesResponseSchema = z.array(NADSourceSchema);
 
 export type NADSourcesResponse = z.infer<typeof NADSourcesResponseSchema>;
