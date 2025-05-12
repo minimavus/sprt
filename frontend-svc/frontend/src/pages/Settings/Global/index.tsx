@@ -1,30 +1,38 @@
-import { FC, Suspense, useRef, useState } from "react";
+import { Suspense, useRef, useState, type FC } from "react";
 import {
+  ActionIcon,
   Button,
   Code,
   Fieldset,
+  Group,
+  InputLabel,
   NumberInput,
   rem,
   Stack,
   Switch,
+  Table,
   Text,
   TextInput,
+  useMantineTheme,
 } from "@mantine/core";
-import { useMergedRef } from "@mantine/hooks";
+import { useElementSize, useMergedRef } from "@mantine/hooks";
+import { IconDeviceFloppy, IconTrash } from "@tabler/icons-react";
 import { DefaultError } from "@tanstack/react-query";
 import {
   Controller,
   FormProvider,
   useController,
+  useFieldArray,
   useForm,
+  useFormContext,
   useWatch,
 } from "react-hook-form";
 import {
   Await,
-  LoaderFunctionArgs,
   Outlet,
   useAsyncValue,
   useLoaderData,
+  type LoaderFunctionArgs,
 } from "react-router-dom";
 
 import { AwaitError, DisplayError } from "@/components/Error";
@@ -39,12 +47,13 @@ import {
   getUseConfigKeyAndEnsureDefaults,
   useConfig,
 } from "@/hooks/config/useConfig";
-import { InputSideButton } from "@/hooks/generate/schemas";
 import { useNADSourcesAll } from "@/hooks/generate/useNADSources";
 import { queryClient } from "@/hooks/queryClient";
 import { useQueryUser } from "@/hooks/useQueryUser";
 import { flattenObject } from "@/utils/flattenObject";
 import set from "@/utils/set";
+
+import { funcButtons } from "./funcButtons";
 
 const defaultValuesFromInit = (init: GlobalConfig["config"]) => {
   return Object.keys(init).reduce(
@@ -52,6 +61,56 @@ const defaultValuesFromInit = (init: GlobalConfig["config"]) => {
       return set(key, init[key as keyof typeof init].value, acc);
     },
     {} as Record<string, unknown>,
+  );
+};
+
+const ListEdit: FC<{
+  label?: string;
+  name: string;
+}> = ({ label, name }) => {
+  const { register } = useFormContext();
+  const { fields, append, remove } = useFieldArray({ name });
+
+  return (
+    <Stack gap="xs">
+      <InputLabel>{label}</InputLabel>
+      <Table>
+        <Table.Tbody>
+          {fields.map((v, i) => (
+            <Table.Tr key={v.id}>
+              <Table.Td>
+                <Group gap="xs">
+                  <TextInput {...register(`${name}.${i}`)} flex={1} />
+                  <ActionIcon
+                    variant="subtle"
+                    color="red"
+                    onClick={() => remove(i)}
+                  >
+                    <IconTrash size={18} />
+                  </ActionIcon>
+                </Group>
+              </Table.Td>
+            </Table.Tr>
+          ))}
+          <Table.Tr>
+            <Table.Td colSpan={2}>
+              <TextInput
+                placeholder="Add new pattern: start typing..."
+                value=""
+                onChange={(e) => {
+                  if (e.target.value.length > 0) {
+                    append(e.target.value, {
+                      shouldFocus: true,
+                      focusName: `${name}.${fields.length}`,
+                    });
+                  }
+                }}
+              />
+            </Table.Td>
+          </Table.Tr>
+        </Table.Tbody>
+      </Table>
+    </Stack>
   );
 };
 
@@ -69,8 +128,19 @@ const IPSourcesPatterns: FC = () => {
         the list. If inclusion patterns are defined, only sources that match
         will be included.
       </Text>
-      <TextInput label={cfg?.["generator.source-ip.exclude"]?.label} />
-      <TextInput label={cfg?.["generator.source-ip.allowed"]?.label} />
+      <ListEdit
+        label={cfg?.["generator.source-ip.exclude"]?.label}
+        name="generator.source-ip.exclude"
+      />
+      <ListEdit
+        label={cfg?.["generator.source-ip.allowed"]?.label}
+        name="generator.source-ip.allowed"
+      />
+      <div>
+        <Button variant="subtle" size="compact-sm">
+          Show matching sources
+        </Button>
+      </div>
     </Stack>
   );
 };
@@ -86,7 +156,10 @@ const IPSourcesExplicit: FC = () => {
         <Code>NAS-IP-Address</Code> (or <Code>NAS-IPv6-Address</Code>) in RADIUS
         packets. Routing will determine which interface is used for sending.
       </Text>
-      <TextInput label={cfg?.["generator.source-ip.explicit-sources"]?.label} />
+      <ListEdit
+        label={cfg?.["generator.source-ip.explicit-sources"]?.label}
+        name="generator.source-ip.explicit-sources"
+      />
     </Stack>
   );
 };
@@ -207,76 +280,6 @@ const RadiusConfig: FC = () => {
   );
 };
 
-const funcButtons: InputSideButton[] = [
-  {
-    title: "Insert",
-    icon: "",
-    type: "dropdown",
-    values: [
-      {
-        title: "Functions",
-        type: "group",
-        values: [
-          {
-            insert: true,
-            title: "Random number",
-            type: "value",
-            value: "rand()",
-          },
-          {
-            insert: true,
-            title: "Random string",
-            type: "value",
-            value: "randstr()",
-          },
-          {
-            insert: true,
-            title: "Convert to HEX",
-            type: "value",
-            value: "hex()",
-          },
-          {
-            insert: true,
-            title: "Conver to OCT",
-            type: "value",
-            value: "oct()",
-          },
-          {
-            insert: true,
-            title: "To UPPER case",
-            type: "value",
-            value: "uc()",
-          },
-          {
-            insert: true,
-            title: "To lower case",
-            type: "value",
-            value: "lc()",
-          },
-          {
-            insert: true,
-            title: "Remove delimiters",
-            type: "value",
-            value: "no_delimiters()",
-          },
-        ],
-      },
-      {
-        title: "Variables",
-        type: "group",
-        values: [
-          {
-            insert: true,
-            title: "MAC address",
-            type: "value",
-            value: "$MAC$",
-          },
-        ],
-      },
-    ],
-  },
-];
-
 const PatternsConfig: FC = () => {
   const { data: cfg } = useConfig();
 
@@ -360,20 +363,55 @@ const GlobalSettingsView: FC = () => {
     console.log("Form submitted with values:", v);
   });
 
+  const theme = useMantineTheme();
+  const { ref, width } = useElementSize();
+
   return (
     <FormProvider {...form}>
-      <Stack gap="sm" p="md" maw={rem(700)} flex={1}>
-        <IPSourcesConfig />
-        <JobsConfig />
-        <RadiusConfig />
-        <PatternsConfig />
-        <MiscConfigs />
-        <div>
-          <Button type="submit" onClick={onSubmit}>
-            Save
-          </Button>
+      <Group pos="relative" align="normal" gap="0" ref={ref}>
+        <Stack gap="sm" p="md" maw={rem(700)} flex={1} miw={rem(570)}>
+          <IPSourcesConfig />
+          <JobsConfig />
+          <RadiusConfig />
+          <PatternsConfig />
+          <MiscConfigs />
+        </Stack>
+        <div
+          style={
+            width > 680
+              ? {
+                  position: "relative",
+                  height: "100%",
+                  paddingRight: theme.spacing.md,
+                }
+              : undefined
+          }
+        >
+          <div
+            style={
+              width > 680
+                ? {
+                    position: "sticky",
+                    top: `calc(${theme.spacing.sm} + 60px)`,
+                    marginTop: `calc(${theme.spacing.md} + ${theme.spacing.sm})`,
+                  }
+                : {
+                    padding: theme.spacing.md,
+                    paddingTop: 0,
+                  }
+            }
+          >
+            <Button
+              type="submit"
+              onClick={onSubmit}
+              disabled={!form.formState.isDirty}
+              leftSection={<IconDeviceFloppy size={16} />}
+            >
+              Save
+            </Button>
+          </div>
         </div>
-      </Stack>
+      </Group>
     </FormProvider>
   );
 };
