@@ -1,7 +1,21 @@
+import { FC } from "react";
 import { ActionIcon, Tooltip } from "@mantine/core";
 import { IconChevronRight } from "@tabler/icons-react";
 import { CellContext, RowData } from "@tanstack/react-table";
 import cx from "classnames";
+
+export const ExpandIndicator: FC<{
+  isExpanded: boolean;
+}> = ({ isExpanded }) => {
+  return (
+    <IconChevronRight
+      size={18}
+      style={{
+        transform: isExpanded ? "rotate(90deg)" : "none",
+      }}
+    />
+  );
+};
 
 export const TableCellWithExpandedIndication = <TData extends RowData>({
   row,
@@ -18,12 +32,7 @@ export const TableCellWithExpandedIndication = <TData extends RowData>({
           variant="subtle"
           onClick={() => row.toggleExpanded()}
         >
-          <IconChevronRight
-            size={18}
-            style={{
-              transform: row.getIsExpanded() ? "rotate(90deg)" : "none",
-            }}
-          />
+          <ExpandIndicator isExpanded={row.getIsExpanded()} />
         </ActionIcon>
       </Tooltip>
     )

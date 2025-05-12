@@ -1,4 +1,5 @@
-import { Fragment, useState, type FC, type ReactNode } from "react";
+import { useState, type FC, type ReactNode } from "react";
+import { use$ } from "@legendapp/state/react";
 import {
   ActionIcon,
   Badge,
@@ -18,7 +19,7 @@ import {
   IconPlus,
   IconTrash,
 } from "@tabler/icons-react";
-import { ColumnDef } from "@tanstack/react-table";
+import type { ColumnDef } from "@tanstack/react-table";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 
 import { PageLayout } from "@/components/Layout/PageLayout";
@@ -34,7 +35,7 @@ import {
 } from "@/hooks/settings/servers";
 import { useQueryUser } from "@/hooks/useQueryUser";
 
-import { useGroupedServers } from "./store";
+import { serverSettingsDisplayStore$ } from "./store";
 
 const Columns: ColumnDef<ServerSettings>[] = [
   {
@@ -48,6 +49,20 @@ const Columns: ColumnDef<ServerSettings>[] = [
     id: "server",
     cell: ({ row }) => <ServerDisplayName server={row.original} />,
     size: undefined,
+  },
+  {
+    header: "Group",
+    accessorFn: (d) => d.group || "",
+    sortingFn: (a, b, column) => {
+      const aValue = a.getValue(column);
+      const bValue = b.getValue(column);
+      if (column === "group" && aValue === "") return 1;
+      if (column === "group" && bValue === "") return -1;
+      return (aValue as string).localeCompare(bValue as string);
+    },
+    id: "group",
+    size: undefined,
+    getGroupingValue: (row) => row.group || "Ungrouped",
   },
   {
     header: "RADIUS",
@@ -215,21 +230,31 @@ const ServerRadiusBadges: FC<{ server: ServerSettings }> = ({ server }) => {
   );
 };
 
-const ServersGroup: FC<{ servers: ServerSettings[]; title?: ReactNode }> = ({
+const Servers: FC<{ servers: ServerSettings[]; title?: ReactNode }> = ({
   servers,
   title,
 }) => {
   const nav = useNavigate();
   const l = useLocation();
   const [globalFilter, setGlobalFilter] = useState<string>("");
+  const isGrouped = use$(serverSettingsDisplayStore$.displayGrouped);
 
   return (
-    <Stack gap="sm">
+    <Stack flex={1} gap="sm" p="md">
       {title ? <Title order={5}>{title}</Title> : null}
       <FilterBar
         globalFilter={globalFilter}
         setGlobalFilter={setGlobalFilter}
         placeholder="Search servers"
+        // keyFilterChildren={
+        //   <Checkbox
+        //     label="Group servers"
+        //     checked={isGrouped}
+        //     onChange={(e) => {
+        //       serverSettingsDisplayStore$.setGrouped(e.currentTarget.checked);
+        //     }}
+        //   />
+        // }
       >
         <Button
           onClick={() => {
@@ -248,26 +273,10 @@ const ServersGroup: FC<{ servers: ServerSettings[]; title?: ReactNode }> = ({
           sorting: [{ id: "server", desc: false }],
           globalFilter,
         }}
+        grouping={isGrouped ? ["group"] : undefined}
         enableGlobalFilter
+        enableGrouping={isGrouped}
       />
-    </Stack>
-  );
-};
-
-const Servers: FC<{ servers: ServerSettings[] }> = ({ servers: init }) => {
-  const servers = useGroupedServers(init);
-
-  return (
-    <Stack flex={1} gap="sm" p="md">
-      {Array.isArray(servers) ? (
-        <ServersGroup servers={servers} />
-      ) : (
-        Object.keys(servers).map((k) => (
-          <Fragment key={k}>
-            <ServersGroup servers={servers[k]} title={k || "No group"} />
-          </Fragment>
-        ))
-      )}
     </Stack>
   );
 };

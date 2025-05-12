@@ -18,17 +18,21 @@ import {
   type ComboboxData,
   type TableProps,
 } from "@mantine/core";
+import { useMergedRef } from "@mantine/hooks";
 import {
+  ExpandedState,
   flexRender,
   getCoreRowModel,
   getExpandedRowModel,
   getFilteredRowModel,
+  getGroupedRowModel,
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
   type ColumnDef,
   type ColumnFilter,
   type ColumnPinningState,
+  type GroupingState,
   type OnChangeFn,
   type PaginationState,
   type Row,
@@ -43,16 +47,14 @@ import { fixedForwardRef } from "@/utils/fixedForwardRef";
 
 import { ActionBar, ActionBarConfig } from "./ActionBar";
 import styles from "./Table.module.scss";
+import { TableGroupButton } from "./TableGroupButton";
 import { TableRowExpanded } from "./TableRowExpanded";
 import { Th } from "./Th";
 import { useColumns } from "./useColumns";
+import { useScrollPinnedShadow } from "./useScrollPinnedShadow";
 import { getCommonPinningStyles } from "./utils";
 
 import "./types.d";
-
-import { useMergedRef } from "@mantine/hooks";
-
-import { useScrollPinnedShadow } from "./useScrollPinnedShadow";
 
 export { CheckboxColumnId } from "./useColumns";
 
@@ -84,6 +86,8 @@ type MyTableProps<TData> = {
   containerRef?: ForwardedRef<HTMLDivElement>;
   expandedRowRender?: (row: Row<TData>) => ReactNode;
   emptyState?: ReactNode;
+  grouping?: GroupingState;
+  expanded?: ExpandedState;
 } & Omit<TableProps, "columns" | "data"> &
   Pick<
     TableOptions<TData>,
@@ -98,6 +102,9 @@ type MyTableProps<TData> = {
     | "manualPagination"
     | "enableExpanding"
     | "getRowCanExpand"
+    | "enableGrouping"
+    | "onGroupingChange"
+    | "onExpandedChange"
   >;
 
 const externalOrOwn = <T,>(value: T | undefined, defaultValue: T): T => {
@@ -144,6 +151,11 @@ const MyTable = <TData,>(
     expandedRowRender,
     emptyState = "Nothing to show",
     disableMoreRowSelection,
+    enableGrouping,
+    onGroupingChange,
+    grouping,
+    onExpandedChange,
+    expanded,
     ...props
   }: MyTableProps<TData>,
   ref: ForwardedRef<HTMLTableElement>,
@@ -193,6 +205,7 @@ const MyTable = <TData,>(
       columnVisibility,
       columnFilters,
       columnPinning: columnPinningState || initialState?.columnPinning || {},
+      grouping,
     },
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: enablePagination
@@ -200,7 +213,9 @@ const MyTable = <TData,>(
       : undefined,
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    getExpandedRowModel: enableExpanding ? getExpandedRowModel() : undefined,
+    getExpandedRowModel:
+      enableExpanding || enableGrouping ? getExpandedRowModel() : undefined,
+    getGroupedRowModel: enableGrouping ? getGroupedRowModel() : undefined,
     getRowCanExpand,
     getRowId: paginationConfig.getRowId,
 
@@ -214,6 +229,7 @@ const MyTable = <TData,>(
       setSorting(v);
       onSortingChange?.(v);
     },
+    onGroupingChange,
     enableSorting,
     globalFilterFn,
     enableGlobalFilter,
@@ -339,19 +355,31 @@ const MyTable = <TData,>(
                                 : undefined
                             }
                           >
-                            {flexRender(
-                              cell.column.columnDef.cell,
-                              cell.getContext(),
+                            {cell.getIsGrouped() ? (
+                              <TableGroupButton row={row} cell={cell} />
+                            ) : cell.getIsAggregated() ? (
+                              flexRender(
+                                cell.column.columnDef.aggregatedCell ??
+                                  cell.column.columnDef.cell,
+                                cell.getContext(),
+                              )
+                            ) : cell.getIsPlaceholder() ? null : (
+                              flexRender(
+                                cell.column.columnDef.cell,
+                                cell.getContext(),
+                              )
                             )}
                           </Table.Td>
                         );
                       })}
                     </Table.Tr>
-                    {row.getCanExpand() && row.getIsExpanded() && (
+                    {row.getCanExpand() &&
+                    row.getIsExpanded() &&
+                    !row.getIsGrouped() ? (
                       <TableRowExpanded row={row}>
                         {expandedRowRender?.(row)}
                       </TableRowExpanded>
-                    )}
+                    ) : null}
                   </Fragment>
                 );
               })

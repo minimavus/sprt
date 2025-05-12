@@ -18,7 +18,7 @@ import { cleanupRadiusAttributes, type RadiusForm } from "./form";
 import { FormStateProvider } from "./formStateContext";
 import { useAutoProtoSchema } from "./hooks/useAutoSchema";
 import { useDefaultValues } from "./hooks/useDefaultValues";
-import { useDetectNadFamily, useNadFamily } from "./hooks/useNadFamily";
+import { useDetectNadFamily } from "./hooks/useNadFamily";
 import { ParametersPane } from "./ParametersPane";
 import { ProtoDataLoader } from "./ProtoDataLoader";
 import { radiusParamsStore$, Tab } from "./store";

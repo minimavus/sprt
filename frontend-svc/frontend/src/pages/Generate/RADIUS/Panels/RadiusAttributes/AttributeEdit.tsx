@@ -1,4 +1,4 @@
-import { RefAttributes, type FC } from "react";
+import type { FC, RefAttributes } from "react";
 import { use$ } from "@legendapp/state/react";
 import {
   ActionIcon,
@@ -137,7 +137,7 @@ const AttributeEdit: FC<
   const isVisible = useIsVisible();
 
   if (
-    (specific.family_specific && family !== specific.family_specific) ||
+    (specific?.family_specific && family !== specific.family_specific) ||
     !isVisible
   ) {
     return null;

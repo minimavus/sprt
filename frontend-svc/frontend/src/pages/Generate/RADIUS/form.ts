@@ -1,10 +1,9 @@
 import ip from "ipaddr.js";
-import { path, pick } from "rambda";
+import { path } from "rambda";
 import { FieldValues } from "react-hook-form";
 import { z } from "zod";
 
 import { Family } from "@/hooks/generate/schemas";
-import set from "@/utils/set";
 
 import { radiusParamsStore$ } from "./store";
 
@@ -333,7 +332,7 @@ export function cleanupRadiusAttributes<D extends FieldValues>(
         radiusParamsStore$.radius.protoSpecific["accessRequest"].byName[
           attr.name
         ].get();
-      if (s.family_specific && s.family_specific !== nadFamily) {
+      if (s?.family_specific && s.family_specific !== nadFamily) {
         return false;
       }
       return true;
@@ -348,7 +347,7 @@ export function cleanupRadiusAttributes<D extends FieldValues>(
           radiusParamsStore$.radius.protoSpecific["accountingStart"].byName[
             attr.name
           ].get();
-        if (s.family_specific && s.family_specific !== nadFamily) {
+        if (s?.family_specific && s.family_specific !== nadFamily) {
           return false;
         }
         return true;

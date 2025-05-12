@@ -205,6 +205,10 @@ export function useServersSettings(user?: QueryUser) {
     queryKey: getServersSettingsKey(orMe(user)),
     mapper: (value) => value.servers,
     params: { user },
+    refetchInterval: Infinity,
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
+    staleTime: Infinity,
   });
 }
 
