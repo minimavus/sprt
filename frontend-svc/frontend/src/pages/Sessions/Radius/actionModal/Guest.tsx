@@ -2,7 +2,7 @@ import { type FC } from "react";
 import { Button, Card, Code, Stack, Text, Title } from "@mantine/core";
 import { QueryKey } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { DisplayError } from "@/components/Error";
 import { KeyValue } from "@/components/KeyValue";

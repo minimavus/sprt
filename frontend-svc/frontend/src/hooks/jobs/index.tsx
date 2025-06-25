@@ -33,7 +33,7 @@ export function useAllJobsUsers() {
     queryKey: ["jobs", "all_users"],
     url: api.v2`/jobs/get-users`,
     schema: allJobsUsersSchema,
-    mapper: (data) => data.users ?? [],
+    mapper: (data) => data?.users ?? [],
   });
 }
 

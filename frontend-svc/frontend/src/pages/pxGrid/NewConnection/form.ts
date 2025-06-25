@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const newConnectionSchema = z.object({
   friendlyName: z.string().min(1),

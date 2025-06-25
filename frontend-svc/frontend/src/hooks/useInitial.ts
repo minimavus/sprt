@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { usePreferredTheme } from "@/hooks/usePreferredTheme";
 import { log } from "@/utils/log";
@@ -32,27 +32,25 @@ export const UserSessionSchema = z
 
 export const UserAttributesSchema = (preferredTheme: "dark" | "light") =>
   z
-    .object({
-      api: z.object({}).passthrough().nullish(),
-      generate: z.object({}).passthrough().nullish(),
-      sms: z.object({}).passthrough().nullish(),
+    .looseObject({
+      api: z.looseObject({}).nullish(),
+      generate: z.looseObject({}).nullish(),
+      sms: z.looseObject({}).nullish(),
       ui: z
-        .object({
+        .looseObject({
           theme: z
             .enum(["light", "dark", "default"])
             .nullish()
             .default(preferredTheme),
           collapseMenu: z.boolean().nullish().default(false),
         })
-        .passthrough()
         .nullish(),
-      vars: z.object({}).passthrough().nullish(),
-      versions: z.object({}).passthrough().nullish(),
+      vars: z.looseObject({}).nullish(),
+      versions: z.looseObject({}).nullish(),
     })
     .partial()
-    .passthrough()
     .nullish()
-    .default({
+    .prefault({
       ui: {
         theme: preferredTheme,
       },

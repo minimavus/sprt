@@ -5,7 +5,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import axios from "axios";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { useGetQuery } from "@/hooks/useGetQuery";
 import { QueryUser } from "@/hooks/useQueryUser";
@@ -36,7 +36,7 @@ export const useAPISettings = (user: QueryUser) => {
     params: { user },
     schema: APISettingsResponseSchema,
     mapper(value) {
-      return value.settings;
+      return value?.settings;
     },
   });
 };

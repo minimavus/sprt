@@ -1,6 +1,6 @@
-import type { AnimationProps } from "framer-motion";
+import type { MotionNodeAnimationOptions } from "framer-motion";
 
-export const fadeInClampOut: AnimationProps = {
+export const fadeInClampOut: MotionNodeAnimationOptions = {
   initial: { opacity: 0 },
   animate: { opacity: 1, height: "auto" },
   exit: {
@@ -11,7 +11,7 @@ export const fadeInClampOut: AnimationProps = {
   },
 };
 
-export const tabAnimation: AnimationProps = {
+export const tabAnimation: MotionNodeAnimationOptions = {
   initial: { opacity: 0 },
   animate: { opacity: 1 },
   exit: { opacity: 0, transition: { duration: 0.1 } },

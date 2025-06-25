@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const zodSort = z.object({
   sort_by: z.string(),

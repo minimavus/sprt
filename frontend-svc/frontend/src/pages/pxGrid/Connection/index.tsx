@@ -116,7 +116,7 @@ const ServicesSubMenu: FC<SubMenuComponentProps> = () => {
       <DisplayError error={error} before={null} />
     </div>
   ) : (
-    data.map((service) => (
+    data?.map((service) => (
       <ServiceMenuItem key={service.friendly_name} service={service} />
     ))
   );

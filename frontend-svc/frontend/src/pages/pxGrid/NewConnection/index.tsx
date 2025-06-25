@@ -66,8 +66,9 @@ export const NewConnection: FC = observer(function NewConnectionModal() {
   const onNext = async () => {
     form.clearErrors();
     const resolver = zodResolver(
-      steps$.current.get().schema,
-      { async: false },
+      //FIXME: fix types
+      steps$.current.get().schema as any,
+      {},
       { mode: "sync" },
     );
     const d = await resolver(form.getValues(), undefined, {

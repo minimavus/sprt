@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { Pill, PillsInput, Stack, Switch, TextInput } from "@mantine/core";
 import { Controller, useController } from "react-hook-form";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { ServerSettings } from "@/hooks/settings/servers";
 import { getErrorMessage } from "@/utils/errors";

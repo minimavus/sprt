@@ -15,7 +15,7 @@ import axios, {
   type RawAxiosRequestHeaders,
 } from "axios";
 import { saveAs } from "file-saver";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { QueryUser } from "@/hooks/useQueryUser";
 import { api } from "@/utils/apiCompose";

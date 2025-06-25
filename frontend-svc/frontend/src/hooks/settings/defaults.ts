@@ -5,7 +5,7 @@ import {
   type QueryKey,
 } from "@tanstack/react-query";
 import axios from "axios";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { useGetQuery } from "@/hooks/useGetQuery";
 import type { QueryUser } from "@/hooks/useQueryUser";

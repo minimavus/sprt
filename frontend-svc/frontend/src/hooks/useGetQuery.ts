@@ -9,20 +9,20 @@ import {
 } from "@tanstack/react-query";
 import axios from "axios";
 import { isEmpty } from "rambda";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import failOrRetry, { RetryOptions } from "@/utils/failOrRetry";
 
 export type QueryGetParams<
   Url extends string,
   K extends QueryKey,
-  Response extends z.ZodSchema,
+  Response extends z.ZodType,
   Result = z.infer<Response>,
 > = {
   url: Url;
   queryKey: K | undefined;
   schema: Response;
-  mapper?: (value: z.infer<Response>) => Result;
+  mapper?: (data: z.infer<Response> | null) => Result;
   params?: any;
   withSignal?: boolean;
   placeholderData?: UndefinedInitialDataOptions<
@@ -33,29 +33,24 @@ export type QueryGetParams<
   >["placeholderData"];
   retryOptions?: RetryOptions;
 } & Pick<
-  UseQueryOptions<Response, DefaultError, Result, K>,
+  UseQueryOptions<z.infer<Response> | null, DefaultError, Result, K>,
   Extract<
-    keyof UseQueryOptions<Response, DefaultError, Result, K>,
+    keyof UseQueryOptions<z.infer<Response> | null, DefaultError, Result, K>,
     `refetch${string}` | `stale${string}`
   >
 >;
 
 export const queryGetFn =
-  <
-    Url extends string,
-    K extends QueryKey,
-    Response extends z.ZodSchema,
-    Result = z.infer<Response>,
-  >({
+  <Url extends string, K extends QueryKey, Response extends z.ZodType>({
     url,
     withSignal,
     params,
     schema,
     allowEmpty,
   }: Pick<
-    QueryGetParams<Url, K, Response, Result>,
+    QueryGetParams<Url, K, Response>,
     "url" | "withSignal" | "params" | "schema"
-  > & { allowEmpty?: boolean }): QueryFunction<Result, K> =>
+  > & { allowEmpty?: boolean }): QueryFunction<z.infer<Response> | null, K> =>
   async ({ signal }) => {
     const r = await axios.get(url, {
       signal: withSignal ? signal : undefined,
@@ -72,7 +67,7 @@ export const queryGetFn =
 export function useGetQuery<
   Url extends string,
   K extends QueryKey,
-  Response extends z.ZodSchema,
+  Response extends z.ZodType,
   Result = z.infer<Response>,
 >({
   url,
@@ -85,7 +80,7 @@ export function useGetQuery<
   retryOptions,
   ...props
 }: QueryGetParams<Url, K, Response, Result>): UseQueryResult<Result> {
-  return useQuery<Response, DefaultError, Result, K>({
+  return useQuery<z.infer<Response> | null, DefaultError, Result, K>({
     retry: failOrRetry(retryOptions),
     queryKey: queryKey ?? (["-no-use-"] as unknown as K),
     enabled: Boolean(queryKey),
@@ -95,27 +90,3 @@ export function useGetQuery<
     ...props,
   });
 }
-
-// export function useSuspenseGetQuery<
-//   Url extends string,
-//   K extends QueryKey,
-//   Response extends z.ZodSchema,
-//   Result = z.infer<Response>,
-// >({
-//   url,
-//   queryKey,
-//   schema,
-//   mapper,
-//   params,
-//   withSignal = true,
-// }: QueryGetParams<Url, K, Response, Result>): UseSuspenseQueryResult<Result> {
-//   return useSuspenseQuery<Result>({
-//     refetchOnMount: true,
-//     refetchOnWindowFocus: true,
-//     retry: failOrRetry,
-//     queryKey:queryKey ?? ["-no-use-"],
-//     enabled:Boolean(queryKey),
-//     staleTime: minutesToMilliseconds(5),
-//     queryFn: queryGetFn({ url, schema, mapper, params, withSignal }),
-//   });
-// }

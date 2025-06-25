@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { ComboboxItemGroup } from "@mantine/core";
 import { DefaultError, QueryKey, useQuery } from "@tanstack/react-query";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { queryClient } from "@/hooks/queryClient";
 import { queryGetFn } from "@/hooks/useGetQuery";

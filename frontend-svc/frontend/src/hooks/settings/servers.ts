@@ -5,7 +5,7 @@ import {
   type QueryKey,
 } from "@tanstack/react-query";
 import axios from "axios";
-import { z, type RefinementCtx } from "zod";
+import { z } from "zod/v4";
 
 import { useGetQuery } from "@/hooks/useGetQuery";
 import { api } from "@/utils/apiCompose";
@@ -70,7 +70,7 @@ export const ErrCauseList = [
 
 export type ErrCause = Exclude<(typeof ErrCauseList)[number]["code"], "group">;
 
-const ErrCauseSchema = z.enum<ErrCause, [ErrCause, ...ErrCause[]]>(
+const ErrCauseSchema = z.enum<ErrCause[]>(
   ErrCauseList.map((e) => e.code).filter((e) => e !== "group") as [
     ErrCause,
     ...ErrCause[],
@@ -79,12 +79,12 @@ const ErrCauseSchema = z.enum<ErrCause, [ErrCause, ...ErrCause[]]>(
 
 const PortSchema = z.number().positive().lte(65535);
 
-const portRefinement = (v: unknown, ctx: RefinementCtx) => {
-  if (v === undefined) return;
-  const p = PortSchema.safeParse(v);
+const portRefinement: z.core.CheckFn<any> = (ctx) => {
+  if (ctx.value === undefined) return;
+  const p = PortSchema.safeParse(ctx.value);
   if (!p.success) {
     for (const i of p.error.issues) {
-      ctx.addIssue(i);
+      ctx.issues.push(i);
     }
     return z.NEVER;
   }
@@ -126,14 +126,14 @@ const BaseServerSettingsSchema = z.object({
   acct_port: z
     .union([z.string(), z.number(), z.undefined()])
     .transform((v) => (v === "" ? undefined : Number(v)))
-    .superRefine(portRefinement),
+    .check(portRefinement),
 
-  address: z.string().ip(),
+  address: z.union([z.ipv4(), z.ipv6()]),
   auth_port: z
     .union([z.string(), z.number(), z.undefined()])
     .transform((v) => (v === "" ? undefined : Number(v)))
-    .superRefine(portRefinement),
-  attributes: ServerAttributesSchema.nullish().default({
+    .check(portRefinement),
+  attributes: ServerAttributesSchema.nullish().prefault({
     dns: "",
     radius: false,
     shared: "",
@@ -141,49 +141,53 @@ const BaseServerSettingsSchema = z.object({
   }),
 });
 
-const refineServer = (v: any, ctx: RefinementCtx) => {
-  if (v.attributes?.radius) {
-    if (!v.auth_port)
-      ctx.addIssue({
+const refineServer: z.core.CheckFn<any> = (ctx) => {
+  if (ctx.value.attributes?.radius) {
+    if (!ctx.value.auth_port)
+      ctx.issues.push({
         code: "custom",
         path: ["auth_port"],
         message: "Required",
+        input: undefined,
       });
-    if (!v.acct_port)
-      ctx.addIssue({
+    if (!ctx.value.acct_port)
+      ctx.issues.push({
         code: "custom",
         path: ["acct_port"],
         message: "Required",
+        input: undefined,
       });
-    if (!v.attributes.shared)
-      ctx.addIssue({
+    if (!ctx.value.attributes.shared)
+      ctx.issues.push({
         code: "custom",
         path: ["attributes", "shared"],
         message: "Required",
+        input: undefined,
       });
   }
-  if (v.attributes?.tacacs) {
-    if (!v.attributes.tac?.ports?.length)
-      ctx.addIssue({
+  if (ctx.value.attributes?.tacacs) {
+    if (!ctx.value.attributes.tac?.ports?.length)
+      ctx.issues.push({
         code: "custom",
         path: ["attributes", "tac", "ports"],
         message: "At least one port is required",
+        input: undefined,
       });
-    if (!v.attributes.tac?.shared)
-      ctx.addIssue({
+    if (!ctx.value.attributes.tac?.shared)
+      ctx.issues.push({
         code: "custom",
         path: ["attributes", "tac", "shared"],
         message: "Required",
+        input: undefined,
       });
   }
 };
 
 export const ServerSettingsSchema = BaseServerSettingsSchema.merge(
-  z.object({ id: z.string().uuid() }),
-).superRefine(refineServer);
+  z.object({ id: z.uuid() }),
+).check(refineServer);
 
-export const NewServerSchema =
-  BaseServerSettingsSchema.superRefine(refineServer);
+export const NewServerSchema = BaseServerSettingsSchema.check(refineServer);
 export type NewServer = z.infer<typeof NewServerSchema>;
 
 export type ServerSettings = z.infer<typeof ServerSettingsSchema>;
@@ -203,7 +207,7 @@ export function useServersSettings(user?: QueryUser) {
     url: api.v2`settings/servers`,
     schema: getServersPlainResponseSchema,
     queryKey: getServersSettingsKey(orMe(user)),
-    mapper: (value) => value.servers,
+    mapper: (value) => value?.servers,
     params: { user },
     refetchInterval: Infinity,
     refetchOnMount: true,

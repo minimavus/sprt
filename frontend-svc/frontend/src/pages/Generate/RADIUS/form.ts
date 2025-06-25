@@ -1,7 +1,7 @@
 import ip from "ipaddr.js";
 import { path } from "rambda";
 import { FieldValues } from "react-hook-form";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { Family } from "@/hooks/generate/schemas";
 
@@ -72,23 +72,25 @@ const ipAddressesForm = z.discriminatedUnion("how", [
     range: z
       .string()
       .nonempty("Range cannot be empty")
-      .superRefine((v, ctx) => {
-        if (!v) {
-          ctx.addIssue({
-            code: z.ZodIssueCode.custom,
+      .check((ctx) => {
+        if (!ctx.value) {
+          ctx.issues.push({
+            code: "custom",
             message: "Range cannot be empty",
+            input: ctx.value,
           });
           return z.NEVER;
         }
-        if (v.includes("-")) {
-          const [start, end] = v.split(/\s*-\s*/);
+        if (ctx.value.includes("-")) {
+          const [start, end] = ctx.value.split(/\s*-\s*/);
           try {
             const parsedStart = ip.parse(start);
             const parsedEnd = ip.parse(end);
             if (isIPv4(parsedStart) !== isIPv4(parsedEnd)) {
-              ctx.addIssue({
-                code: z.ZodIssueCode.custom,
+              ctx.issues.push({
+                code: "custom",
                 message: "Addresses in range must be of the same version",
+                input: ctx.value,
               });
               return z.NEVER;
             }
@@ -98,31 +100,33 @@ const ipAddressesForm = z.discriminatedUnion("how", [
                 isIPv4(parsedEnd) ? parsedEnd.octets : parsedEnd.parts,
               ) >= 0
             ) {
-              ctx.addIssue({
-                code: z.ZodIssueCode.custom,
+              ctx.issues.push({
+                code: "custom",
                 message: "Start of range must be less than end of range",
+                input: ctx.value,
               });
               return z.NEVER;
             }
           } catch (e) {
             console.warn(e);
-            ctx.addIssue({
-              code: z.ZodIssueCode.custom,
+            ctx.issues.push({
+              code: "custom",
               message: "Invalid IP range",
+              input: ctx.value,
             });
             return z.NEVER;
           }
-          return v;
+          return;
         } else {
-          if (!ip.isValidCIDR(v)) {
-            ctx.addIssue({
-              code: z.ZodIssueCode.custom,
+          if (!ip.isValidCIDR(ctx.value)) {
+            ctx.issues.push({
+              code: "custom",
               message: "Invalid CIDR notation",
+              input: ctx.value,
             });
             return z.NEVER;
           }
         }
-        return v;
       }),
     random: z.boolean(),
     step: z.number().min(1).optional(),

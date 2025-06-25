@@ -16,7 +16,8 @@ import {
 import { useDisclosure } from "@mantine/hooks";
 import { IconCheck, IconChevronDown } from "@tabler/icons-react";
 
-interface DropdownSelectProps extends Omit<SelectProps, "onChange"> {
+interface DropdownSelectProps
+  extends Omit<SelectProps, "onChange" | "wrapperProps"> {
   onChange?: (value: string) => void;
   wrapperProps?: PolymorphicComponentProps<"div", StackProps>;
 }

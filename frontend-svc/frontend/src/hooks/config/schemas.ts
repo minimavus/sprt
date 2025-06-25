@@ -1,8 +1,8 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { zodBool } from "@/utils/zodBool";
 
-const fieldSchema = <Z extends z.ZodSchema>(value: Z) =>
+const fieldSchema = <Z extends z.ZodType>(value: Z) =>
   z.object({
     label: z.string(),
     type: z.string(),

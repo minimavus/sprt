@@ -5,7 +5,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import axios from "axios";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { api } from "@/utils/apiCompose";
 import { getErrorMessage } from "@/utils/errors";

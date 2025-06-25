@@ -4,7 +4,7 @@ import { IconCircleNumber1 } from "@tabler/icons-react";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { useFormContext, useWatch } from "react-hook-form";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import {
   ScepCaCertificateSchema,

@@ -49,9 +49,9 @@ export const TopicsBody: FC<ActionsProps> = ({ serviceName }) => {
     <>
       <Title order={5}>Topics</Title>
       <TopicsOfService
-        topics={topicsData.topics[serviceName] ?? {}}
+        topics={topicsData?.topics[serviceName] ?? {}}
         services={services}
-        subs={topicsData.subscriptions}
+        subs={topicsData?.subscriptions}
         service={serviceName}
         noHeading
       />

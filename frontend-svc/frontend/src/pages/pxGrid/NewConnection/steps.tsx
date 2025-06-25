@@ -1,6 +1,6 @@
 import { ComponentType } from "react";
 import { observable } from "@legendapp/state";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { AuthenticationConfig } from "./AuthenticationConfig";
 import {
@@ -15,7 +15,7 @@ export type Step = {
   key: string;
   title: string;
   description: string;
-  schema: z.ZodSchema<any>;
+  schema: z.ZodType<any, any>;
   component: ComponentType;
 };
 

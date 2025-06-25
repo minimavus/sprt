@@ -1,4 +1,3 @@
-import { z } from "zod";
 import type {
   JsonSchema7AnyType,
   JsonSchema7ArrayType,
@@ -8,6 +7,7 @@ import type {
   JsonSchema7SetType,
   JsonSchema7StringType,
 } from "zod-to-json-schema";
+import { z } from "zod/v4";
 
 import {
   isJsonSchema7AnyOfType,
@@ -24,8 +24,8 @@ import {
   type JsonSchema7OneOfType,
 } from "./guards";
 
-export function jsonSchemaToZod(jsonSchema: JsonSchema7AnyType): z.ZodSchema {
-  let schema: z.ZodSchema;
+export function jsonSchemaToZod(jsonSchema: JsonSchema7AnyType): z.ZodType {
+  let schema: z.ZodType;
   if (isJsonSchema7AnyOfType(jsonSchema)) {
     schema = jsonAnyOfTypeToZod(jsonSchema);
   } else if (isJsonSchema7OneOfType(jsonSchema)) {
@@ -53,7 +53,7 @@ export function jsonSchemaToZod(jsonSchema: JsonSchema7AnyType): z.ZodSchema {
   return schema;
 }
 
-function jsonAnyOfTypeToZod(schema: JsonSchema7AnyOfType): z.ZodSchema {
+function jsonAnyOfTypeToZod(schema: JsonSchema7AnyOfType): z.ZodType {
   let discriminator: Set<string> | null = null;
 
   for (const s of schema.anyOf) {
@@ -76,7 +76,7 @@ function jsonAnyOfTypeToZod(schema: JsonSchema7AnyOfType): z.ZodSchema {
   return z.union(schema.anyOf.map(jsonSchemaToZod) as any);
 }
 
-function jsonOneOfTypeToZod(schema: JsonSchema7OneOfType): z.ZodSchema {
+function jsonOneOfTypeToZod(schema: JsonSchema7OneOfType): z.ZodType {
   return z.enum(
     schema.oneOf.map((v) => {
       if (!isJsonSchema7LiteralType(v)) {
@@ -88,22 +88,22 @@ function jsonOneOfTypeToZod(schema: JsonSchema7OneOfType): z.ZodSchema {
   );
 }
 
-function createStringSchema(jsonSchema: JsonSchema7StringType): z.ZodSchema {
-  let schema = z.string();
+function createStringSchema(jsonSchema: JsonSchema7StringType): z.ZodType {
+  let schema: z.ZodType = z.string();
   if (jsonSchema.minLength !== undefined) {
-    schema = schema.min(
+    schema = (schema as z.ZodString).min(
       jsonSchema.minLength,
       jsonSchema.errorMessage?.minLength,
     );
   }
   if (jsonSchema.maxLength !== undefined) {
-    schema = schema.max(
+    schema = (schema as z.ZodString).max(
       jsonSchema.maxLength,
       jsonSchema.errorMessage?.maxLength,
     );
   }
   if (jsonSchema.pattern !== undefined) {
-    schema = schema.regex(
+    schema = (schema as z.ZodString).regex(
       new RegExp(jsonSchema.pattern),
       jsonSchema.errorMessage?.pattern,
     );
@@ -112,45 +112,46 @@ function createStringSchema(jsonSchema: JsonSchema7StringType): z.ZodSchema {
     switch (jsonSchema.format) {
       case "email":
       case "idn-email":
-        schema = schema.email(jsonSchema.errorMessage?.format);
+        schema = schema.and(z.email(jsonSchema.errorMessage?.format));
         break;
       case "uri":
-        schema = schema.url(jsonSchema.errorMessage?.format);
+        schema = schema.and(z.url(jsonSchema.errorMessage?.format));
         break;
       case "uuid":
-        schema = schema.uuid(jsonSchema.errorMessage?.format);
+        schema = schema.and(z.uuid(jsonSchema.errorMessage?.format));
         break;
       case "date-time":
-        schema = schema.date(jsonSchema.errorMessage?.format);
+        schema = schema.and(z.iso.datetime(jsonSchema.errorMessage?.format));
         break;
       case "ipv4":
-        schema = schema.ip({
-          version: "v4",
-          message: jsonSchema.errorMessage?.format,
-        });
+        schema = schema.and(z.ipv4(jsonSchema.errorMessage?.format));
         break;
       case "ipv6":
-        schema = schema.ip({
-          version: "v6",
-          message: jsonSchema.errorMessage?.format,
-        });
+        schema = schema.and(z.ipv6(jsonSchema.errorMessage?.format));
         break;
       case "date":
-        schema = schema.date(jsonSchema.errorMessage?.format);
+        schema = schema.and(z.iso.date(jsonSchema.errorMessage?.format));
         break;
       case "time":
-        schema = schema.time(jsonSchema.errorMessage?.format);
+        schema = schema.and(z.iso.time(jsonSchema.errorMessage?.format));
         break;
       case "duration":
-        schema = schema.duration(jsonSchema.errorMessage?.format);
+        schema = schema.and(z.iso.duration(jsonSchema.errorMessage?.format));
         break;
     }
   }
   return schema;
 }
 
-function createObjectSchema(jsonSchema: JsonSchema7ObjectType): z.ZodSchema {
-  let schema = z.object({});
+function createObjectSchema(jsonSchema: JsonSchema7ObjectType): z.ZodType {
+  let schema: z.ZodObject;
+
+  if (jsonSchema.additionalProperties) {
+    schema = z.looseObject({});
+  } else {
+    schema = z.strictObject({});
+  }
+
   if (jsonSchema.properties !== undefined) {
     for (const [key, value] of Object.entries(jsonSchema.properties)) {
       let tmp = jsonSchemaToZod(value);
@@ -163,13 +164,11 @@ function createObjectSchema(jsonSchema: JsonSchema7ObjectType): z.ZodSchema {
       });
     }
   }
-  if (jsonSchema.additionalProperties) {
-    (schema as z.ZodObject<any>) = schema.passthrough();
-  }
+
   return schema;
 }
 
-function createNumberSchema(jsonSchema: JsonSchema7NumberType): z.ZodSchema {
+function createNumberSchema(jsonSchema: JsonSchema7NumberType): z.ZodType {
   let schema = z.number();
   if (jsonSchema.minimum !== undefined) {
     schema = schema.min(jsonSchema.minimum, jsonSchema.errorMessage?.minimum);
@@ -180,11 +179,11 @@ function createNumberSchema(jsonSchema: JsonSchema7NumberType): z.ZodSchema {
   return schema;
 }
 
-function createEnumSchema(jsonSchema: JsonSchema7EnumType): z.ZodSchema {
+function createEnumSchema(jsonSchema: JsonSchema7EnumType): z.ZodType {
   return z.enum(jsonSchema.enum as [string, ...string[]]);
 }
 
-function createArraySchema(jsonSchema: JsonSchema7ArrayType): z.ZodSchema {
+function createArraySchema(jsonSchema: JsonSchema7ArrayType): z.ZodType {
   let schema = z.array(jsonSchemaToZod(jsonSchema.items!));
   if (jsonSchema.maxItems !== undefined) {
     schema = schema.max(
@@ -201,15 +200,16 @@ function createArraySchema(jsonSchema: JsonSchema7ArrayType): z.ZodSchema {
   return schema;
 }
 
-function createSetSchema(jsonSchema: JsonSchema7SetType): z.ZodSchema {
+function createSetSchema(jsonSchema: JsonSchema7SetType): z.ZodType {
   return z
     .array(jsonSchemaToZod(jsonSchema.items!))
-    .superRefine((v, ctx) => {
-      const s = new Set(v);
-      if (s.size !== v.length) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
+    .check((ctx) => {
+      const s = new Set(ctx.value);
+      if (s.size !== ctx.value.length) {
+        ctx.issues.push({
+          code: "custom",
           message: "Array contains duplicate values",
+          input: ctx.value,
         });
         return z.NEVER;
       }

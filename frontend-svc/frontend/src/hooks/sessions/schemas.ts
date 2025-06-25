@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { zodBool } from "@/utils/zodBool";
 import { zodJSONString } from "@/utils/zodJSONString";
@@ -31,38 +31,35 @@ export const SessionsSummarySchema = z.object({
 
 export type SessionsSummary = z.infer<typeof SessionsSummarySchema>;
 
-const RadiusSessionAttributesSchema = z
-  .object({
-    AcctPort: z.coerce.number(),
-    AuthPort: z.coerce.number(),
-    coa: z.object({}).passthrough().nullish(),
-    DACL: z.any().nullish(),
-    dns: z.string().nullish(),
-    Dropped: zodBool,
-    jid: z.string().nullish(),
-    localAddr: z.string().nullish(),
-    localPort: z.number().nullish(),
-    proto: z.string().nullish(),
-    Rfc3579MessageAuth: zodBool,
-    snapshot: z
-      .object({
-        GUEST_FLOW: z.string().or(z.object({}).passthrough()).nullish(),
-        SESSIONID: z.string().nullish(),
-        IP: z.string().nullish(),
-        OWNER: z.string().nullish(),
-        MAC: z.string().nullish(),
-      })
-      .passthrough()
-      .nullish(),
-    StatesHistory: z.array(
-      z.object({
-        code: z.string(),
-        time: z.number(),
-      }),
-    ),
-    State: z.string().nullish(),
-  })
-  .passthrough();
+const RadiusSessionAttributesSchema = z.looseObject({
+  AcctPort: z.coerce.number(),
+  AuthPort: z.coerce.number(),
+  coa: z.looseObject({}).nullish(),
+  DACL: z.any().nullish(),
+  dns: z.string().nullish(),
+  Dropped: zodBool,
+  jid: z.string().nullish(),
+  localAddr: z.string().nullish(),
+  localPort: z.number().nullish(),
+  proto: z.string().nullish(),
+  Rfc3579MessageAuth: zodBool,
+  snapshot: z
+    .looseObject({
+      GUEST_FLOW: z.string().or(z.looseObject({})).nullish(),
+      SESSIONID: z.string().nullish(),
+      IP: z.string().nullish(),
+      OWNER: z.string().nullish(),
+      MAC: z.string().nullish(),
+    })
+    .nullish(),
+  StatesHistory: z.array(
+    z.object({
+      code: z.string(),
+      time: z.number(),
+    }),
+  ),
+  State: z.string().nullish(),
+});
 
 export const RadiusSessionSchema = z.object({
   attributes: RadiusSessionAttributesSchema.nullable(),
@@ -144,10 +141,7 @@ export type RadiusAttribute = z.infer<typeof RadiusAttributeSchema>;
 const PacketSchema = z
   .object({
     code: z.string(),
-    packet: z
-      .array(RadiusAttributeSchema)
-      .or(z.object({}).passthrough())
-      .nullish(),
+    packet: z.array(RadiusAttributeSchema).or(z.looseObject({})).nullish(),
     server: PacketServerSchema,
     time: z.number(),
     formattedDateTime: z.string(),
@@ -236,19 +230,17 @@ export const TacacsSessionSchema = z.object({
   proto_data: z.object({
     auth: z.object({
       method: z.string(),
-      attributes: z.record(z.any()),
+      attributes: z.record(z.string(), z.any()),
     }),
     authz: z
       .object({
         order: z.array(z.string()),
       })
       .catchall(
-        z
-          .object({
-            dly: z.number(),
-            type: z.string(),
-          })
-          .passthrough(),
+        z.looseObject({
+          dly: z.number(),
+          type: z.string(),
+        }),
       ),
     commands: z
       .object({
@@ -257,7 +249,7 @@ export const TacacsSessionSchema = z.object({
       .catchall(
         z.object({
           name: z.string(),
-          commands: z.array(z.object({}).passthrough()),
+          commands: z.array(z.looseObject({})),
         }),
       ),
   }),
@@ -268,7 +260,7 @@ export const TacacsSessionSchema = z.object({
     proto: z.string(),
     state: TacacsSessionStateSchema,
     Dropped: zodBool,
-    snapshot: z.record(z.any()),
+    snapshot: z.record(z.string(), z.any()),
     localAddr: z.string(),
     localPort: z.coerce.number(),
     StatesHistory: z.array(
@@ -301,8 +293,8 @@ export const TacacsSessionDetailsSchema = TacacsSessionSchema.merge(
 export type TacacsSessionDetails = z.infer<typeof TacacsSessionDetailsSchema>;
 
 export const TacacsPacketSchema = z.object({
-  body: z.record(z.any()).nullable(),
-  header: z.record(z.any()).nullable(),
+  body: z.record(z.string(), z.any()).nullable(),
+  header: z.record(z.string(), z.any()).nullable(),
 });
 
 export type TacacsPacket = z.infer<typeof TacacsPacketSchema>;

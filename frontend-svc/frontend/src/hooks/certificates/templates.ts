@@ -5,7 +5,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import axios from "axios";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { queryClient } from "@/hooks/queryClient";
 import { queryGetFn, useGetQuery } from "@/hooks/useGetQuery";
@@ -38,36 +38,34 @@ export const SANSchema = z
     return Object.keys(value).every((k) => AllowedSANKeysSchema.safeParse(k));
   });
 
-export const CertTemplateContentSchema = z
-  .object({
-    san: SANSchema,
-    subject: z.object({}).catchall(z.array(z.string())),
-    key_type: z.enum(["rsa", "ecdsa"]).optional(),
-    key_usage: z.object({
-      cRLSign: z.boolean().optional().default(false),
-      keyCertSign: z.boolean().optional().default(false),
-      decipherOnly: z.boolean().optional().default(false),
-      encipherOnly: z.boolean().optional().default(false),
-      keyAgreement: z.boolean().optional().default(false),
-      nonRepudiation: z.boolean().optional().default(false),
-      keyEncipherment: z.boolean().optional().default(false),
-      dataEncipherment: z.boolean().optional().default(false),
-      digitalSignature: z.boolean().optional().default(false),
-    }),
-    key_length: z.number().optional(),
-    e_curve: z
-      .enum(["P-224", "P-256", "P-384", "P-521"])
-      .default("P-256")
-      .optional(),
-    ext_key_usage: z.object({
-      clientAuth: z.boolean().optional().default(false),
-      serverAuth: z.boolean().optional().default(false),
-      codeSigning: z.boolean().optional().default(false),
-      timeStamping: z.boolean().optional().default(false),
-      emailProtection: z.boolean().optional().default(false),
-    }),
-  })
-  .passthrough();
+export const CertTemplateContentSchema = z.looseObject({
+  san: SANSchema,
+  subject: z.object({}).catchall(z.array(z.string())),
+  key_type: z.enum(["rsa", "ecdsa"]).optional(),
+  key_usage: z.object({
+    cRLSign: z.boolean().optional().default(false),
+    keyCertSign: z.boolean().optional().default(false),
+    decipherOnly: z.boolean().optional().default(false),
+    encipherOnly: z.boolean().optional().default(false),
+    keyAgreement: z.boolean().optional().default(false),
+    nonRepudiation: z.boolean().optional().default(false),
+    keyEncipherment: z.boolean().optional().default(false),
+    dataEncipherment: z.boolean().optional().default(false),
+    digitalSignature: z.boolean().optional().default(false),
+  }),
+  key_length: z.number().optional(),
+  e_curve: z
+    .enum(["P-224", "P-256", "P-384", "P-521"])
+    .default("P-256")
+    .optional(),
+  ext_key_usage: z.object({
+    clientAuth: z.boolean().optional().default(false),
+    serverAuth: z.boolean().optional().default(false),
+    codeSigning: z.boolean().optional().default(false),
+    timeStamping: z.boolean().optional().default(false),
+    emailProtection: z.boolean().optional().default(false),
+  }),
+});
 
 export const CertTemplateSchema = z.object({
   id: z.string(),
@@ -101,7 +99,7 @@ export function useCertTemplates({ user }: UseCertTemplatesOptions = {}) {
     queryKey: getCertTemplatesKey(orMe(user)),
     params: { user },
     mapper(value) {
-      return value.templates ?? [];
+      return value?.templates ?? [];
     },
   });
 }

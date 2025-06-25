@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 
 const isWithNanos = (v: unknown): v is { seconds: number; nanos: number } =>
   typeof v === "object" && v !== null && "seconds" in v && "nanos" in v;

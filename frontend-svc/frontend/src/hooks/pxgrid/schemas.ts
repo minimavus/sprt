@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { zodJSONString } from "@/utils/zodJSONString";
 import { zodTime } from "@/utils/zodTime";
@@ -177,21 +177,22 @@ const pxGridRestParamSchema = z
     name: z.string(),
     schema: zodJSONString.optional(),
   })
-  .superRefine((data, ctx) => {
-    if (data.schema) {
-      const schema = jsonSchema.safeParse(data.schema);
+  .check((ctx) => {
+    if (ctx.value.schema) {
+      const schema = jsonSchema.safeParse(ctx.value.schema);
       if (schema.success) {
-        return {
-          ...data,
-          schema: schema.data,
-        };
+        return;
+        // return {
+        //   ...ctx.value,
+        //   schema: schema.data,
+        // };
       }
-      schema.error.errors.forEach((error) => {
-        ctx.addIssue(error);
+      schema.error.issues.forEach((error) => {
+        ctx.issues.push(error);
       });
       return z.NEVER;
     }
-    return data;
+    // return data;
   })
   .transform((value) => value as PxGridRestParam);
 

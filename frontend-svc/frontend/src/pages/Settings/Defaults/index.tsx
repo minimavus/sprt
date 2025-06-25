@@ -7,6 +7,7 @@ import { UserDefaults, useUserDefaults } from "@/hooks/settings/defaults";
 import { useQueryUser } from "@/hooks/useQueryUser";
 
 const DefaultsSettings: FC<{ data: UserDefaults }> = ({ data }) => {
+  console.log("FIXME: unused data", data);
   return (
     <Stack gap="sm" p="md">
       Got some

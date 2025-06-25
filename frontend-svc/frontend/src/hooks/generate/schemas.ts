@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 
 type ColumnsParameter = Base & {
   type: "columns";
@@ -276,7 +276,7 @@ const resultSchema = z.discriminatedUnion("type", [
 const LoadParamsSchema = z.object({
   link: z.string(),
   method: z.string(),
-  request: z.record(z.any()).optional(),
+  request: z.record(z.string(), z.any()).optional(),
   result: resultSchema,
 });
 
@@ -417,8 +417,8 @@ const ProtoDefinitionSchema = VariableDefinitionSchema.extend({
 });
 
 const NADSourceSchema = z.object({
-  address: z.string().ip(),
-  family: z.nativeEnum(Family),
+  address: z.union([z.ipv4(), z.ipv6()]),
+  family: z.enum(Family),
   interface: z.string(),
 });
 

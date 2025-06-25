@@ -68,7 +68,7 @@ const RadiusGeneratePageLoaded: FC = () => {
   const defaultValues = useDefaultValues();
   const form = useForm<RadiusForm>({
     defaultValues,
-    resolver: (...args) => zodResolver(schema$.get())(...args),
+    resolver: (...args) => zodResolver(schema$.get()).apply(null, args as any),
     mode: "onBlur",
   });
 

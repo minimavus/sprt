@@ -6,7 +6,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import axios from "axios";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { queryClient } from "@/hooks/queryClient";
 import { queryGetFn, useGetQuery } from "@/hooks/useGetQuery";
@@ -100,7 +100,7 @@ export function useScepServer(id: string | undefined, user: QueryUser) {
     queryKey: id ? getScepServerKey(orMe(user), id) : undefined,
     params: { user },
     mapper(value) {
-      return value.server;
+      return value?.server;
     },
   });
 }

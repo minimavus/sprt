@@ -1,4 +1,4 @@
-import { FC, ReactElement, useMemo, useState } from "react";
+import { useMemo, useState, type FC, type ReactElement } from "react";
 import { LineChart } from "@mantine/charts";
 import { Paper, Stack, Tabs, Text } from "@mantine/core";
 import { useQueryClient } from "@tanstack/react-query";
@@ -7,11 +7,11 @@ import { format } from "date-fns";
 import { path } from "rambda";
 import { NavigateFunction } from "react-router-dom";
 import { ResponsiveContainer, XAxisProps } from "recharts";
-import { Payload } from "recharts/types/component/DefaultTooltipContent";
+import type { Payload } from "recharts/types/component/DefaultTooltipContent";
 
 import type { Job, JobStats } from "@/hooks/jobs/schemas";
 import { getSearchSessionSummaryAndEnsureDefaults } from "@/hooks/sessions";
-import { CompactSessionSummary } from "@/hooks/sessions/schemas";
+import type { CompactSessionSummary } from "@/hooks/sessions/schemas";
 import type { QueryUser } from "@/hooks/useQueryUser";
 import type { Protos } from "@/hooks/zodProto";
 import { getErrorMessage } from "@/utils/errors";
@@ -85,7 +85,7 @@ const CustomTooltip: FC<{
       </Text>
       <ul style={{ listStyle: "none", padding: 0 }}>
         {payload.map((p) => (
-          <li key={p.dataKey}>
+          <li key={p.dataKey as string}>
             <Text
               c={p.color}
               span

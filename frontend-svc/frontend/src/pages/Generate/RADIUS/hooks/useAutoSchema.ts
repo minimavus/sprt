@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { Observable } from "@legendapp/state";
 import { useObservable } from "@legendapp/state/react";
 import { useAsyncValue } from "react-router-dom";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { ProtoDefinition, VariableDefinition } from "@/hooks/generate/schemas";
 import { jsonSchemaToZod } from "@/utils/jsonSchemaToZod";

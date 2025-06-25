@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import {
   CertTemplate,
@@ -46,36 +46,42 @@ export const formSchemaResolver = CertTemplateSchema.merge(
 
     return rest;
   })
-  .superRefine((data, ctx) => {
-    if (data.content.subject) {
-      for (const k in data.content.subject) {
+  .check((ctx) => {
+    if (ctx.value.content.subject) {
+      for (const k in ctx.value.content.subject) {
         const p = z
           .array(z.string().min(1, "Cannot be empty"))
           .safeParse(
-            data.content.subject[k as keyof typeof data.content.subject],
+            ctx.value.content.subject[
+              k as keyof typeof ctx.value.content.subject
+            ],
           );
         if (!p.success) {
           p.error.issues.forEach((i) =>
-            ctx.addIssue({ ...i, path: ["content", "subject", k, ...i.path] }),
+            ctx.issues.push({
+              ...i,
+              path: ["content", "subject", k, ...i.path],
+            }),
           );
           return z.NEVER;
         }
       }
     }
-    if (data.content.san) {
-      for (const k in data.content.san) {
+    if (ctx.value.content.san) {
+      for (const k in ctx.value.content.san) {
         const p = z
           .array(z.string().min(1, "Cannot be empty"))
-          .safeParse(data.content.san[k as keyof typeof data.content.san]);
+          .safeParse(
+            ctx.value.content.san[k as keyof typeof ctx.value.content.san],
+          );
         if (!p.success) {
           p.error.issues.forEach((i) =>
-            ctx.addIssue({ ...i, path: ["content", "san", k, ...i.path] }),
+            ctx.issues.push({ ...i, path: ["content", "san", k, ...i.path] }),
           );
           return z.NEVER;
         }
       }
     }
-    return data;
   });
 
 export const prepDefaultValues =

@@ -15,13 +15,13 @@ import (
 )
 
 // toString casts to string or returns empty one. Used for lo.Map
-func toString(el any, _ int) string {
-	v, ok := el.(string)
-	if !ok {
-		return ""
-	}
-	return v
-}
+// func toString(el any, _ int) string {
+// 	v, ok := el.(string)
+// 	if !ok {
+// 		return ""
+// 	}
+// 	return v
+// }
 
 // isAdmin verifies if user is admin based on user's roles
 func (m controller) isAdmin(roles []string) bool {

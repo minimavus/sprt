@@ -7,7 +7,7 @@ import {
   type UndefinedInitialDataOptions,
 } from "@tanstack/react-query";
 import { symmetricDifference } from "rambda";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { queryClient } from "@/hooks/queryClient";
 import { queryGetFn } from "@/hooks/useGetQuery";

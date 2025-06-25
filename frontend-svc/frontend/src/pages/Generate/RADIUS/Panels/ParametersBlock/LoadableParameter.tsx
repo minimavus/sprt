@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from "react";
 import { path } from "rambda";
 import { useController, useFormContext } from "react-hook-form";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { DisplayError } from "@/components/Error";
 import {
@@ -42,7 +42,7 @@ export const LoadableSelectParameter: ParameterComponent<"loadable_select"> = ({
       ? path(normalizeKeyPath(p.load.result.result_object_path), data)
       : data;
 
-    let parserSchema: z.ZodSchema<any>;
+    let parserSchema: z.ZodType<any>;
     if (p.load.result.type === LoadResultType.Table) {
       parserSchema = LoadableValueTableSchema;
     } else {

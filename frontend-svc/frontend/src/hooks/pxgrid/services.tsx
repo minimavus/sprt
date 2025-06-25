@@ -36,7 +36,7 @@ export const usePxGridConnectionServices = (
     queryKey,
     params: { user },
     mapper(value) {
-      return value.services;
+      return value?.services;
     },
   });
 };

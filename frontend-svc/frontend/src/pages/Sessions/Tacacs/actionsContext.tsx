@@ -26,6 +26,7 @@ export const ActionsProvider: FC<ActionsContextProps> = ({
 
   const remove = useCallback(
     (payload: ActionPayload["remove"], options?: ActionOptions) => {
+      console.log("FIXME: unused options", options);
       let message: ReactNode;
       switch (payload.sessions) {
         case "all":

@@ -10,7 +10,7 @@ import axios from "axios";
 import { minutesToMilliseconds, secondsToMilliseconds } from "date-fns";
 import { clone } from "rambda";
 import { Path } from "react-hook-form";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import {
   useInitial,

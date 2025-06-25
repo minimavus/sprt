@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { zodTime } from "@/utils/zodTime";
 
@@ -15,7 +15,7 @@ export const jobSchema = z.object({
     .transform((v) => v ?? 0),
   sessions: z.any(),
   attributes: z
-    .object({
+    .looseObject({
       count: z.coerce
         .number()
         .nullish()
@@ -29,7 +29,6 @@ export const jobSchema = z.object({
       protocol: z.string().nullish(),
       succeeded: z.coerce.number().nullish(),
     })
-    .passthrough()
     .nullish(),
   owner: z.string().nullish(),
   pid: z.coerce.number().nullish(),

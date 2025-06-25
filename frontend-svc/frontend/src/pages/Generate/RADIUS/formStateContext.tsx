@@ -1,7 +1,7 @@
 import { createContext, FC, PropsWithChildren, use } from "react";
 import { Observable } from "@legendapp/state";
 import { use$, useObservable } from "@legendapp/state/react";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 type fieldState = "enabled" | "disabled" | "hidden";
 
