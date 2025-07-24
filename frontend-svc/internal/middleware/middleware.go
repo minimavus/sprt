@@ -78,6 +78,7 @@ func (repo *repository) initDefaultMiddlewares(e *echo.Echo) {
 		e.Use(CustomAuth(CustomAuthConfig{}))
 	}
 	e.Use(QueryUser("user"))
+	e.Use(EnsureUser)
 
 	if !repo.App.InProduction() || (repo.App.InProduction() && repo.App.Specs.Server.WithPprof) {
 		repo.App.Logger().Info().Msg("Adding pprof middleware, available at /debug/pprof/")

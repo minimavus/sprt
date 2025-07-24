@@ -61,6 +61,7 @@ type (
 		CertificatesManipulator
 		ScepManipulator
 		UserDefaultsManipulator
+		UsersManipulator
 
 		// App Config
 		AppConfigManipulator

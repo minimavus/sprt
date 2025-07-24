@@ -136,7 +136,7 @@ func (app *AppConfig) GetSpec(ctx context.Context, key string) (any, bool) {
 	return v, ok
 }
 
-func (app *AppConfig) GetSpecs(ctx context.Context, keys ...string) (map[string]any, bool) {
+func (app *AppConfig) GetSpecs(_ context.Context, keys ...string) (map[string]any, bool) {
 	if len(keys) == 0 {
 		return nil, false
 	}

@@ -10,6 +10,6 @@ const log = remote
     format: remote.json,
     level: "warn",
   })
-  .getLogger("pool-manager-ui");
+  .getLogger("sprt-ui");
 log.setLevel("DEBUG");
 export { log };
