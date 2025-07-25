@@ -5,8 +5,10 @@
   --var-tab-background-active-dark: rgba(24, 100, 171, 0.45);
   --var-tab-font-weight-active: 500;
 
-  transition: color 100ms ease, background-color 100ms ease;
-  
+  transition:
+    color 100ms ease,
+    background-color 100ms ease;
+
   &:where([data-active]) {
     font-weight: var(--var-tab-font-weight-active);
 
@@ -20,4 +22,8 @@
       background-color: rgba(24, 100, 171, 0.45);
     }
   }
+}
+
+.position_text[data-orientation="vertical"] > :global(.mantine-Tabs-tabLabel) {
+  text-align: left;
 }

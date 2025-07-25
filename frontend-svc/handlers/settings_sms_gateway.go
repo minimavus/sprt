@@ -9,6 +9,12 @@ import (
 	"github.com/cisco-open/sprt/frontend-svc/internal/db"
 )
 
+func populateEmptySettings(sts *db.SmsGatewaySettings) {
+	if sts.Method == "" {
+		sts.Method = "get"
+	}
+}
+
 func (m *controller) GetSmsGatewayConfig(c echo.Context) error {
 	u, ctx, err := auth.GetUserDataAndContext(c)
 	if err != nil {
@@ -19,6 +25,8 @@ func (m *controller) GetSmsGatewayConfig(c echo.Context) error {
 	if err != nil {
 		return echo.ErrInternalServerError.WithInternal(err)
 	}
+
+	populateEmptySettings(&sts)
 
 	return c.JSON(http.StatusOK, sts)
 }

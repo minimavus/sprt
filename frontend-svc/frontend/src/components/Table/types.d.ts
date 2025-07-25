@@ -2,16 +2,16 @@
 import { ColumnDefBase } from "@tanstack/react-table";
 
 declare module "@tanstack/react-table" {
-  export interface ColumnDefBase<TData extends RowData, TValue> {
-    className?: string;
-  }
+	export interface ColumnDefBase<_TData extends RowData, _TValue> {
+		className?: string;
+	}
 
-  export interface ColumnMeta<TData extends RowData, TValue> {
-    align?: "center" | "left" | "right" | "justify" | "char" | undefined;
-    isHidden?: boolean;
-  }
+	export interface ColumnMeta<_TData extends RowData, _TValue> {
+		align?: "center" | "left" | "right" | "justify" | "char" | undefined;
+		isHidden?: boolean;
+	}
 
-  export interface TableMeta<TData extends RowData> {
-    disableMoreRowSelection?: boolean;
-  }
+	export interface TableMeta<_TData extends RowData> {
+		disableMoreRowSelection?: boolean;
+	}
 }

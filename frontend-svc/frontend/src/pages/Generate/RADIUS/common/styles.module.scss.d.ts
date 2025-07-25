@@ -1,6 +1,6 @@
 // Generated file, DO NOT EDIT. Check DEV.md on how to regenerate
 export type Styles = {
-  "how-it-works": string;
+	"how-it-works": string;
 };
 
 export type ClassNames = keyof Styles;
