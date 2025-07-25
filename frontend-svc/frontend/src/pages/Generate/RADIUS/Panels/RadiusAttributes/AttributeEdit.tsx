@@ -1,4 +1,3 @@
-import type { FC, RefAttributes } from "react";
 import { use$ } from "@legendapp/state/react";
 import {
   ActionIcon,
@@ -14,6 +13,7 @@ import { IconBinary, IconTrash } from "@tabler/icons-react";
 import Hex from "hex-encoding";
 import { Base64 } from "js-base64";
 import { ok } from "neverthrow";
+import type { FC, RefAttributes } from "react";
 import { useController } from "react-hook-form";
 
 import { useDynamicConfirmation } from "@/components/Modals/Confirmation";

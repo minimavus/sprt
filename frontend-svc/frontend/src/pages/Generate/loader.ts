@@ -1,7 +1,7 @@
-import { DefaultError } from "@tanstack/react-query";
-import { LoaderFunction } from "react-router-dom";
+import type { DefaultError } from "@tanstack/react-query";
+import type { LoaderFunction } from "react-router-dom";
 
-import { ProtoDefinition } from "@/hooks/generate/schemas";
+import type { ProtoDefinition } from "@/hooks/generate/schemas";
 import { getProtoDefaultsKeyAndEnsureDefaults } from "@/hooks/generate/useProtoDefaults";
 import { getProtoSpecificParametersKeyAndEnsureDefaults } from "@/hooks/generate/useProtoSpecificParams";
 import { queryClient } from "@/hooks/queryClient";

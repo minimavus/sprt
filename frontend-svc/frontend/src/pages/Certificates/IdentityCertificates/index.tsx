@@ -1,4 +1,3 @@
-import { FC, useState } from "react";
 import { Button, Checkbox, Menu, Stack } from "@mantine/core";
 import {
   IconBarcode,
@@ -7,7 +6,8 @@ import {
   IconPlus,
   IconStepOut,
 } from "@tabler/icons-react";
-import { RowSelectionState } from "@tanstack/react-table";
+import type { RowSelectionState } from "@tanstack/react-table";
+import { type FC, useState } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 
 import { DisplayError } from "@/components/Error";
@@ -15,7 +15,7 @@ import { PageLayout } from "@/components/Layout/PageLayout";
 import { DefaultLoaderFallback } from "@/components/Loader";
 import { CheckboxColumnId, Table } from "@/components/Table";
 import { FilterBar } from "@/components/Table/FilterBar";
-import { CertType, useCertificatesOfType } from "@/hooks/certificates";
+import { type CertType, useCertificatesOfType } from "@/hooks/certificates";
 import { useQueryUser } from "@/hooks/useQueryUser";
 
 import { ActionsProvider, useCertificateActions } from "../actionsContext";

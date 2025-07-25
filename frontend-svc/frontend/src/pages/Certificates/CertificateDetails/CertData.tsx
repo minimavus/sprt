@@ -1,4 +1,3 @@
-import { type FC, type ReactNode } from "react";
 import {
   Box,
   getThemeColor,
@@ -9,9 +8,10 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import { IconAlertTriangle, IconCircleFilled } from "@tabler/icons-react";
+import type { FC, ReactNode } from "react";
 
 import { FormatTime } from "@/components/Time";
-import { type Certificate } from "@/hooks/certificates";
+import type { Certificate } from "@/hooks/certificates";
 
 import styles from "./CertData.module.scss";
 

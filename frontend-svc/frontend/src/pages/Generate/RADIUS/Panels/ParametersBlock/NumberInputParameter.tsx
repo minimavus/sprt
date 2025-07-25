@@ -7,7 +7,7 @@ import { getErrorMessage } from "@/utils/errors";
 
 import { useFieldState } from "../../formStateContext";
 import { useIsInline } from "./blockContext";
-import { ParameterComponent } from "./types";
+import type { ParameterComponent } from "./types";
 import { withPrefix } from "./utils";
 
 export const NumberInputParameter: ParameterComponent<"number_input"> = ({

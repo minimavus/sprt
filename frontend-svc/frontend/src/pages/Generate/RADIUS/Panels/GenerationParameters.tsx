@@ -1,5 +1,5 @@
-import { type FC } from "react";
 import { Stack, Switch, TextInput, Title } from "@mantine/core";
+import type { FC } from "react";
 import { Controller, useWatch } from "react-hook-form";
 
 import { DisableableNumberInput } from "@/components/Inputs/DisableableNumberInput";

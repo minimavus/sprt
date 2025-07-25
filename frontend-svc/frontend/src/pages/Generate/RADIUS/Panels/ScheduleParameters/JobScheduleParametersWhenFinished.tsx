@@ -1,4 +1,3 @@
-import { FC } from "react";
 import {
   Group,
   InputLabel,
@@ -9,12 +8,13 @@ import {
   Switch,
   TextInput,
 } from "@mantine/core";
+import type { FC } from "react";
 import { useController } from "react-hook-form";
 
 import { DisableableNumberInput } from "@/components/Inputs/DisableableNumberInput";
 import styles from "@/components/Inputs/styles.module.scss";
 
-import { RadiusForm } from "../../form";
+import type { RadiusForm } from "../../form";
 
 export const JobScheduleParametersWhenFinished: FC = () => {
   const { field: timesField } = useController<

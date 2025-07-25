@@ -1,4 +1,3 @@
-import { FC } from "react";
 import {
   ActionIcon,
   Box,
@@ -14,12 +13,13 @@ import {
   IconTrash,
   IconUpload,
 } from "@tabler/icons-react";
-import { ColumnDef } from "@tanstack/react-table";
+import type { ColumnDef } from "@tanstack/react-table";
+import type { FC } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { RowActionsButton } from "@/components/Table/RowActionsButton";
 import { FormatTime } from "@/components/Time";
-import { Certificate } from "@/hooks/certificates";
+import type { Certificate } from "@/hooks/certificates";
 import { formatTime } from "@/utils/time";
 
 import { useCertificateActions } from "./actionsContext";

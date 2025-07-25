@@ -1,4 +1,4 @@
-import { CertTemplate } from "@/hooks/certificates/templates";
+import type { CertTemplate } from "@/hooks/certificates/templates";
 
 export type LoaderData = {
   template: CertTemplate | Promise<CertTemplate>;

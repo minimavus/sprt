@@ -2,7 +2,7 @@ import { Checkbox, Group, InputLabel, Stack } from "@mantine/core";
 import { Controller } from "react-hook-form";
 
 import { useFieldState } from "../../formStateContext";
-import { ParameterComponent } from "./types";
+import type { ParameterComponent } from "./types";
 import { withPrefix } from "./utils";
 
 export const CheckBoxesParameter: ParameterComponent<"checkboxes"> = ({

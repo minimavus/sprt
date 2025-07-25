@@ -1,10 +1,10 @@
-import { type FC } from "react";
 import { Group, NumberInput, Select } from "@mantine/core";
+import type { FC } from "react";
 import { Controller, useWatch } from "react-hook-form";
 
 import { getErrorMessage } from "@/utils/errors";
 
-import { DropFormData } from "../Drop";
+import type { DropFormData } from "../Drop";
 import { SessionTimeVariants } from "../types";
 
 export const AcctSessionTime: FC = () => {

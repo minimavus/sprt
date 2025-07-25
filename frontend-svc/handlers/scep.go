@@ -26,6 +26,10 @@ func (m *controller) GetScepServers(c echo.Context) error {
 		return echo.ErrInternalServerError.WithInternal(err)
 	}
 
+	if scepServers == nil {
+		scepServers = []*models.ScepServer{}
+	}
+
 	return c.JSON(http.StatusOK, map[string]any{
 		"servers": scepServers,
 	})

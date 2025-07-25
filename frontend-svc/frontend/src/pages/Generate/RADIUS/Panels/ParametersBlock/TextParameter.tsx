@@ -1,12 +1,12 @@
-import { Fragment } from "react/jsx-runtime";
 import { Anchor, Text } from "@mantine/core";
+import { Fragment } from "react/jsx-runtime";
 import Markdown from "react-markdown";
 
 import { Warning } from "@/components/Alerts";
 import { Link } from "@/components/Link";
 
 import { HowItWorks } from "../../common/HowItWorks";
-import { ParameterComponent } from "./types";
+import type { ParameterComponent } from "./types";
 
 export const TextParameter: ParameterComponent<"text"> = ({ p }) => {
   if (p.name === "how_works") {

@@ -1,4 +1,3 @@
-import { FC, ReactNode } from "react";
 import {
   ActionIcon,
   Box,
@@ -13,6 +12,7 @@ import {
   Tooltip,
 } from "@mantine/core";
 import { IconDeviceFloppy, IconDownload } from "@tabler/icons-react";
+import type { FC, ReactNode } from "react";
 import { Controller, FormProvider, useForm, useWatch } from "react-hook-form";
 import { useParams } from "react-router-dom";
 import sanitize from "sanitize-filename";
@@ -25,13 +25,13 @@ import { ModalFooter } from "@/components/Modals/Parts/ModalFooter";
 import { StatusIcon } from "@/components/StatusIcon";
 import { useCertificatesOfType } from "@/hooks/certificates";
 import {
-  ScepCaCertificate,
-  ScepServerWithParsedCerts,
+  type ScepCaCertificate,
+  type ScepServerWithParsedCerts,
   useScepServer,
   useScepServerUpsert,
 } from "@/hooks/certificates/scep";
 import { useDelayedModalState } from "@/hooks/useDelayedModalState";
-import { QueryUser, useQueryUser } from "@/hooks/useQueryUser";
+import { type QueryUser, useQueryUser } from "@/hooks/useQueryUser";
 import { download } from "@/utils/download";
 import { getErrorMessage } from "@/utils/errors";
 import { formatTime } from "@/utils/time";

@@ -1,4 +1,4 @@
-import { type FC } from "react";
+import type { FC } from "react";
 
 import { DisplayError } from "@/components/Error";
 import { DefaultLoaderFallback } from "@/components/Loader";

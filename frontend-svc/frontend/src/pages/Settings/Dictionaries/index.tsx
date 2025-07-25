@@ -1,5 +1,5 @@
-import { FC } from "react";
 import { Tabs } from "@mantine/core";
+import type { FC } from "react";
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { DisplayError } from "@/components/Error";

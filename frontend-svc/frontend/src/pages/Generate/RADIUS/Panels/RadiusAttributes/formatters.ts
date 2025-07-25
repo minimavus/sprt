@@ -1,6 +1,6 @@
 import { RadiusDictionaryAttributeType } from "@/hooks/generate/useRadiusDictionaries";
 
-import { RadiusAttributeLocation } from "../../form";
+import type { RadiusAttributeLocation } from "../../form";
 
 export const attrTypeToString = (
   type: RadiusDictionaryAttributeType,

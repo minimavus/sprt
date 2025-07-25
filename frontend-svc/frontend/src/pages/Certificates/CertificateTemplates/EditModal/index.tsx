@@ -1,4 +1,3 @@
-import { Suspense, useEffect, useState, type FC } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Button,
@@ -10,26 +9,27 @@ import {
   TextInput,
   Title,
 } from "@mantine/core";
+import { type FC, Suspense, useEffect, useState } from "react";
 import {
   Controller,
+  type DeepPartial,
   FormProvider,
   useForm,
   useWatch,
-  type DeepPartial,
 } from "react-hook-form";
 import {
   Await,
+  type LoaderFunction,
   useLoaderData,
   useParams,
-  type LoaderFunction,
 } from "react-router-dom";
 
 import { AwaitError, DisplayError } from "@/components/Error";
 import { LabeledSegmentedControl } from "@/components/Inputs/LabeledSegmentedControl";
 import {
+  type CertTemplate,
   getCertTemplateKeyAndEnsureDefaults,
   useCertTemplateUpsert,
-  type CertTemplate,
 } from "@/hooks/certificates/templates";
 import { queryClient } from "@/hooks/queryClient";
 import { useDelayedModalState } from "@/hooks/useDelayedModalState";

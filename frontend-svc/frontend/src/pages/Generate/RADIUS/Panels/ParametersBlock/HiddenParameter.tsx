@@ -1,6 +1,6 @@
 import { useController } from "react-hook-form";
 
-import { ParameterComponent } from "./types";
+import type { ParameterComponent } from "./types";
 import { withPrefix } from "./utils";
 
 export const HiddenParameter: ParameterComponent<"hidden"> = ({

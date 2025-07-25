@@ -1,12 +1,12 @@
-import { type FC } from "react";
 import { Button, Menu } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconChevronDown } from "@tabler/icons-react";
 import { useQueryClient } from "@tanstack/react-query";
+import type { FC } from "react";
 import { useFormContext } from "react-hook-form";
 
 import {
-  CertTemplate,
+  type CertTemplate,
   getCertTemplateKeyAndEnsureDefaults,
   useCertTemplates,
 } from "@/hooks/certificates/templates";
@@ -15,7 +15,7 @@ import { getErrorMessage } from "@/utils/errors";
 import { toast } from "@/utils/toasts";
 
 import { prepDefaultValues } from "./formHelpers";
-import { FormValues } from "./types";
+import type { FormValues } from "./types";
 
 export const LoadTemplate: FC = () => {
   const [user] = useQueryUser();

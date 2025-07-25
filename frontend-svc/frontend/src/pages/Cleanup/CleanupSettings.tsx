@@ -1,4 +1,3 @@
-import { useEffect, type FC } from "react";
 import {
   Button,
   Divider,
@@ -11,11 +10,12 @@ import {
 } from "@mantine/core";
 import cronstrue from "cronstrue";
 import { AnimatePresence } from "framer-motion";
+import { type FC, useEffect } from "react";
 import {
   Controller,
   FormProvider,
-  useForm,
   type SubmitHandler,
+  useForm,
 } from "react-hook-form";
 
 import { fadeInClampOut } from "@/animations";
@@ -25,8 +25,8 @@ import { DisplayError } from "@/components/Error";
 import { MotionedFlex } from "@/components/Motioned/MotionedFlex";
 import { FormatTime } from "@/components/Time";
 import {
-  CleanerConfig,
-  CleanerStatus,
+  type CleanerConfig,
+  type CleanerStatus,
   defaultCleanerCfgIFEmpty,
   useCleanerStatus,
   useCleanerUpdate,

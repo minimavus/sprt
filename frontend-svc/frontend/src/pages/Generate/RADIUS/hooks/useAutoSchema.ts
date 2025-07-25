@@ -1,10 +1,13 @@
-import { useEffect } from "react";
-import { Observable } from "@legendapp/state";
+import type { Observable } from "@legendapp/state";
 import { useObservable } from "@legendapp/state/react";
+import { useEffect } from "react";
 import { useAsyncValue } from "react-router-dom";
-import { z } from "zod/v4";
+import type { z } from "zod/v4";
 
-import { ProtoDefinition, VariableDefinition } from "@/hooks/generate/schemas";
+import type {
+  ProtoDefinition,
+  VariableDefinition,
+} from "@/hooks/generate/schemas";
 import { jsonSchemaToZod } from "@/utils/jsonSchemaToZod";
 
 import { radiusForm } from "../form";

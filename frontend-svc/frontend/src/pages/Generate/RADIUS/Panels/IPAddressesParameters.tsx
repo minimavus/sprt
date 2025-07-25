@@ -1,9 +1,8 @@
-import { useMemo, type FC } from "react";
 import {
   Button,
   Menu,
   rem,
-  SegmentedControlItem,
+  type SegmentedControlItem,
   Stack,
   Switch,
   Textarea,
@@ -11,6 +10,7 @@ import {
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconChevronDown } from "@tabler/icons-react";
+import { type FC, useMemo } from "react";
 import { Controller, useController, useWatch } from "react-hook-form";
 
 import { DictionarySelect } from "@/components/Inputs/DictionarySelect";
@@ -21,7 +21,7 @@ import { getErrorMessage } from "@/utils/errors";
 
 import { HowItWorks } from "../common/HowItWorks";
 import { ListControls } from "../common/ListControls";
-import { RadiusForm } from "../form";
+import type { RadiusForm } from "../form";
 import { useIPAddressesRanges } from "../hooks/useIPAddressesRanges";
 
 const IPAddressesVariants: SegmentedControlItem[] = [

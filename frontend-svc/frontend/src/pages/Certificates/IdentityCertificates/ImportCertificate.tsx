@@ -1,4 +1,3 @@
-import { FC, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Button,
@@ -8,6 +7,7 @@ import {
   Textarea,
   TextInput,
 } from "@mantine/core";
+import { type FC, useState } from "react";
 import { Controller, FormProvider, useForm } from "react-hook-form";
 import { z } from "zod/v4";
 

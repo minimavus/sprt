@@ -112,7 +112,7 @@ var (
 										WithColumn(NewNumberInputParameter("minLength", "Min username length", 5)).
 										WithColumn(NewNumberInputParameter("maxLength", "Max username length", 20)),
 								),
-						).Watch(NewWatch(".identityCertificates.variant").
+						).WithValue("from-cert-cn").Watch(NewWatch(".identityCertificates.variant").
 							When("selected",
 								act{A: UseActionHideValues, T: ".usernames", V: []string{"random"}},
 								act{A: UseActionSetValue, T: ".usernames", V: "from-cert-cn"}).

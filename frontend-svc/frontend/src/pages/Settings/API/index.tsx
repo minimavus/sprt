@@ -1,6 +1,6 @@
-import { type FC } from "react";
 import { Button, Group, Stack, Switch, TextInput, Title } from "@mantine/core";
 import { AnimatePresence } from "framer-motion";
+import type { FC } from "react";
 
 import { fadeInClampOut } from "@/animations";
 import { CopyToClipboard } from "@/components/CopyToClipboard";
@@ -8,9 +8,9 @@ import { PageLayout } from "@/components/Layout/PageLayout";
 import { Loader } from "@/components/Loader";
 import { MotionedFlex } from "@/components/Motioned/MotionedFlex";
 import {
+  type APISettings,
   useAPISettings,
   useAPISettingsUpdate,
-  type APISettings,
 } from "@/hooks/settings/api";
 import { useQueryUser } from "@/hooks/useQueryUser";
 

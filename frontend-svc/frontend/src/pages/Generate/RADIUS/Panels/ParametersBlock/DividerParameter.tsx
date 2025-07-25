@@ -1,6 +1,6 @@
 import { Divider } from "@mantine/core";
 
-import { ParameterComponent } from "./types";
+import type { ParameterComponent } from "./types";
 
 export const DividerParameter: ParameterComponent<"divider"> = ({
   p,

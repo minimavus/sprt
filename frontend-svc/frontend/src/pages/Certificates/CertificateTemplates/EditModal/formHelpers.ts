@@ -1,14 +1,14 @@
 import { z } from "zod/v4";
 
 import {
-  CertTemplate,
+  type CertTemplate,
   CertTemplateContentSchema,
   CertTemplateSchema,
   RDNOrder,
   SANKeysOrder,
 } from "@/hooks/certificates/templates";
 
-import { FormValues } from "./types";
+import type { FormValues } from "./types";
 
 export const formSchemaResolver = CertTemplateSchema.merge(
   z.object({

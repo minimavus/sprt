@@ -1,9 +1,9 @@
-import { useState, type FC } from "react";
 import { Button, Menu, VisuallyHidden } from "@mantine/core";
 import { IconChevronDown, IconTrash } from "@tabler/icons-react";
+import { type FC, useState } from "react";
 
 import { useActionsContext } from "../actionsContext";
-import { ActionsProps } from "../types";
+import type { ActionsProps } from "../types";
 
 export const RemoveActions: FC<
   Pick<ActionsProps, "selected" | "collapsed">

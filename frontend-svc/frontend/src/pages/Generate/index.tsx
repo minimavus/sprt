@@ -1,4 +1,4 @@
-import { type FC } from "react";
+import type { FC } from "react";
 import { Outlet, useParams } from "react-router-dom";
 
 import { PageLayout } from "@/components/Layout/PageLayout";

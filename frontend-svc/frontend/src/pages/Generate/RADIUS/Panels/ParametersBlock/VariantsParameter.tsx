@@ -1,13 +1,13 @@
-import { FC, useCallback, useMemo, useState } from "react";
 import {
   Box,
-  BoxProps,
+  type BoxProps,
   Group,
-  PolymorphicComponentProps,
+  type PolymorphicComponentProps,
   Select,
   Stack,
 } from "@mantine/core";
 import cx from "classnames";
+import { type FC, useCallback, useMemo, useState } from "react";
 import { useController, useFormContext } from "react-hook-form";
 
 import { DropdownSelect } from "@/components/Inputs/DropdownSelect";
@@ -15,7 +15,7 @@ import { LabeledSegmentedControl } from "@/components/Inputs/LabeledSegmentedCon
 import { log } from "@/utils/log";
 
 import { useFieldState } from "../../formStateContext";
-import { ParameterComponent } from "./types";
+import type { ParameterComponent } from "./types";
 import { useWatchActions } from "./useWatchActions";
 import { getVariantOptions, withPrefix } from "./utils";
 import styles from "./VariantsParameter.module.scss";
@@ -41,7 +41,7 @@ export const VariantsParameter: ParameterComponent<"variants"> = ({
     field: { value, onChange: fieldOnChange, ...field },
   } = useController({
     name: withPrefix(name, "variant"),
-    defaultValue: p.value || p.variants[0]?.name,
+    defaultValue: p.value ?? p.variants[0]?.name,
   });
 
   const onChange = useCallback(

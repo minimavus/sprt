@@ -1,11 +1,11 @@
-import { type FC } from "react";
-import { SegmentedControlItem } from "@mantine/core";
+import type { SegmentedControlItem } from "@mantine/core";
+import type { FC } from "react";
 import { useController } from "react-hook-form";
 
 import { Info } from "@/components/Alerts";
 import { LabeledSegmentedControl } from "@/components/Inputs/LabeledSegmentedControl";
 
-import { RadiusForm } from "../../form";
+import type { RadiusForm } from "../../form";
 import { InterimUpdatesScheduleParameters } from "./InterimUpdatesScheduleParameters";
 import { JobScheduleParametersSchedule } from "./JobScheduleParametersSchedule";
 import { JobScheduleParametersWhenFinished } from "./JobScheduleParametersWhenFinished";

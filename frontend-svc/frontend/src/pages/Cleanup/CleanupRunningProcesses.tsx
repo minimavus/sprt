@@ -1,5 +1,5 @@
-import { FC } from "react";
 import { Text } from "@mantine/core";
+import type { FC } from "react";
 
 import { ColumnHeading } from "@/components/Columns";
 

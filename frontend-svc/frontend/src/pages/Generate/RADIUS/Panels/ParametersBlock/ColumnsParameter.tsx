@@ -1,7 +1,7 @@
 import { SimpleGrid, Stack } from "@mantine/core";
 
 import { useIsInline } from "./blockContext";
-import { ParameterComponent } from "./types";
+import type { ParameterComponent } from "./types";
 
 export const ColumnsParameter: ParameterComponent<"columns"> = ({
   p,

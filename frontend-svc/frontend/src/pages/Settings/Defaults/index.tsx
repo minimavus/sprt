@@ -1,9 +1,9 @@
-import { FC } from "react";
 import { Stack } from "@mantine/core";
+import type { FC } from "react";
 
 import { PageLayout } from "@/components/Layout/PageLayout";
 import { Loader } from "@/components/Loader";
-import { UserDefaults, useUserDefaults } from "@/hooks/settings/defaults";
+import { type UserDefaults, useUserDefaults } from "@/hooks/settings/defaults";
 import { useQueryUser } from "@/hooks/useQueryUser";
 
 const DefaultsSettings: FC<{ data: UserDefaults }> = ({ data }) => {

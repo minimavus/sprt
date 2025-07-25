@@ -1,16 +1,16 @@
-import { useEffect, useMemo } from "react";
 import { path } from "rambda";
+import { useEffect, useMemo } from "react";
 import { useController, useFormContext } from "react-hook-form";
-import { z } from "zod/v4";
+import type { z } from "zod/v4";
 
 import { DisplayError } from "@/components/Error";
 import {
   DrawerSelect,
-  DrawerSelectOptionGroup,
+  type DrawerSelectOptionGroup,
 } from "@/components/Inputs/DrawerSelect";
 import { TableSelect } from "@/components/Inputs/TableSelect";
 import {
-  LoadableValueGroups,
+  type LoadableValueGroups,
   LoadableValueGroupsSchema,
   LoadableValueTableSchema,
   LoadResultType,
@@ -18,7 +18,7 @@ import {
 import { log } from "@/utils/log";
 
 import { useFieldState } from "../../formStateContext";
-import { ParameterComponent } from "./types";
+import type { ParameterComponent } from "./types";
 import { useLoadableParamData } from "./useLoadableParamData";
 import { useWatchActions } from "./useWatchActions";
 import { normalizeKeyPath, normalizeLabel, withPrefix } from "./utils";

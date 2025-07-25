@@ -1,6 +1,6 @@
-import { useRef, useState } from "react";
 import { TextInput } from "@mantine/core";
 import { useMergedRef } from "@mantine/hooks";
+import { useRef, useState } from "react";
 import { useController } from "react-hook-form";
 
 import { InputHelp } from "@/components/Inputs/InputHelp";
@@ -13,7 +13,7 @@ import { getErrorMessage } from "@/utils/errors";
 
 import { useFieldState } from "../../formStateContext";
 import { useIsInline } from "./blockContext";
-import { ParameterComponent } from "./types";
+import type { ParameterComponent } from "./types";
 import { withPrefix } from "./utils";
 
 export const TextInputParameter: ParameterComponent<"text_input"> = ({

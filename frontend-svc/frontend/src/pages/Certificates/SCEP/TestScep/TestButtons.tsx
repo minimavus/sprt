@@ -1,9 +1,9 @@
-import { FC, useEffect, useState } from "react";
 import { Group } from "@mantine/core";
 import { IconArrowRight } from "@tabler/icons-react";
+import { type FC, useEffect, useState } from "react";
 import { useWatch } from "react-hook-form";
 
-import { ScepServerWithParsedCerts } from "@/hooks/certificates/scep";
+import type { ScepServerWithParsedCerts } from "@/hooks/certificates/scep";
 
 import { isValidUrl } from "../isValidUrl";
 import { TestConnectionButton } from "./TestConnectionButton";

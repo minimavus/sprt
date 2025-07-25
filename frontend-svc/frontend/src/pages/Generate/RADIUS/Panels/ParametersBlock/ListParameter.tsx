@@ -5,7 +5,7 @@ import { getErrorMessage } from "@/utils/errors";
 
 import { ListControls } from "../../common/ListControls";
 import { useFieldState } from "../../formStateContext";
-import { ParameterComponent } from "./types";
+import type { ParameterComponent } from "./types";
 import { withPrefix } from "./utils";
 
 export const ListParameter: ParameterComponent<"list"> = ({

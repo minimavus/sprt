@@ -1,14 +1,14 @@
-import { FC } from "react";
 import { Button } from "@mantine/core";
 import { IconCircleNumber1 } from "@tabler/icons-react";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
+import type { FC } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import { z } from "zod/v4";
 
 import {
   ScepCaCertificateSchema,
-  ScepServerWithParsedCerts,
+  type ScepServerWithParsedCerts,
 } from "@/hooks/certificates/scep";
 import { api } from "@/utils/apiCompose";
 import { getErrorMessage } from "@/utils/errors";

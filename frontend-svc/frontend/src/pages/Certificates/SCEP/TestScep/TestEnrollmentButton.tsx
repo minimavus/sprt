@@ -1,23 +1,23 @@
-import { FC } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Modal, Stack } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconCircleNumber2 } from "@tabler/icons-react";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
+import type { FC } from "react";
 import { FormProvider, useForm, useWatch } from "react-hook-form";
 
 import { DisplayError } from "@/components/Error";
 import { ModalFooter } from "@/components/Modals/Parts/ModalFooter";
-import { ScepServerWithParsedCerts } from "@/hooks/certificates/scep";
-import { CertTemplate } from "@/hooks/certificates/templates";
+import type { ScepServerWithParsedCerts } from "@/hooks/certificates/scep";
+import type { CertTemplate } from "@/hooks/certificates/templates";
 import { useQueryUser } from "@/hooks/useQueryUser";
 import { TemplateForm } from "@/pages/Certificates/CertificateTemplates/EditModal";
 import {
   prepDefaultValues,
   formSchemaResolver as templateFormResolver,
 } from "@/pages/Certificates/CertificateTemplates/EditModal/formHelpers";
-import { FormValues as TemplateFormValues } from "@/pages/Certificates/CertificateTemplates/EditModal/types";
+import type { FormValues as TemplateFormValues } from "@/pages/Certificates/CertificateTemplates/EditModal/types";
 import { api } from "@/utils/apiCompose";
 import { getErrorMessage } from "@/utils/errors";
 import { toast } from "@/utils/toasts";

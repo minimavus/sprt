@@ -134,7 +134,7 @@ func coaVariants(event string, title string, params coaVariantsParams) Parameter
 							WhenNot(CoaActionAfterDoNothing, act{A: UseActionShow, T: ".dropOld"}))),
 			NewVariant(string(CoaActionDrop)).
 				WithShort("Drop"),
-		)
+		).WithValue(string(CoaActionAck))
 
 	return v
 }

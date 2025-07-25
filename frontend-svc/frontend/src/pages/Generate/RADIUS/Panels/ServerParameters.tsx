@@ -1,4 +1,3 @@
-import { Fragment, type FC } from "react";
 import {
   Badge,
   Button,
@@ -14,15 +13,19 @@ import {
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconCheck, IconChevronDown, IconForbid2 } from "@tabler/icons-react";
+import { type FC, Fragment } from "react";
+import { ErrorBoundary } from "react-error-boundary";
 import { Controller, useWatch } from "react-hook-form";
-
 import { Info } from "@/components/Alerts";
+import { DisplayError } from "@/components/Error";
 import { Link } from "@/components/Link";
 import { Family } from "@/hooks/generate/schemas";
-import { ServerSettings, useServersSettings } from "@/hooks/settings/servers";
+import {
+  type ServerSettings,
+  useServersSettings,
+} from "@/hooks/settings/servers";
 import { useQueryUser } from "@/hooks/useQueryUser";
 import { getErrorMessage } from "@/utils/errors";
-
 import type { RadiusForm } from "../form";
 import { useNadFamily } from "../hooks/useNadFamily";
 import { useSetServerCb } from "../hooks/useServerForm";
@@ -195,21 +198,30 @@ export const ServerParameters: FC = () => {
         <Link to="/settings/servers">saved servers</Link> which have "Handle
         Dynamic Authorization" enabled.
       </Info>
-      <Controller<RadiusForm, "general.server.address">
-        name="general.server.address"
-        render={({ field: { onChange, ...field }, fieldState: { error } }) => (
-          <TextInput
-            {...field}
-            onChange={(e) => {
-              dropLoaded();
-              onChange(e);
-            }}
-            label="Address"
-            error={getErrorMessage(error)}
-            id="address"
-          />
+      <ErrorBoundary
+        fallbackRender={({ resetErrorBoundary, error }) => (
+          <DisplayError onReset={() => resetErrorBoundary()} error={error} />
         )}
-      />
+      >
+        <Controller<RadiusForm, "general.server.address">
+          name="general.server.address"
+          render={({
+            field: { onChange, ...field },
+            fieldState: { error },
+          }) => (
+            <TextInput
+              {...field}
+              onChange={(e) => {
+                dropLoaded();
+                onChange(e);
+              }}
+              label="Address"
+              error={getErrorMessage(error)}
+              id="address"
+            />
+          )}
+        />
+      </ErrorBoundary>
       <Grid gutter="xs">
         <Grid.Col span={6}>
           <Controller<RadiusForm, "general.server.authPort">

@@ -1,4 +1,3 @@
-import { type FC } from "react";
 import {
   Grid,
   NumberInput,
@@ -7,13 +6,14 @@ import {
   TextInput,
   Title,
 } from "@mantine/core";
+import type { FC } from "react";
+import { ErrorBoundary } from "react-error-boundary";
 import { Controller, useController } from "react-hook-form";
-
+import { DisplayError } from "@/components/Error";
 import { useNADSourcesCombined } from "@/hooks/generate/useNADSources";
 import { useQueryUser } from "@/hooks/useQueryUser";
 import styles from "@/styles/TextInput.module.scss";
 import { getErrorMessage } from "@/utils/errors";
-
 import { useIsVisible } from "../common/visibilityContext";
 import type { RadiusForm } from "../form";
 import { useConnectionTypes } from "../hooks/useConnectionTypes";
@@ -82,26 +82,44 @@ export const NADParameters: FC = () => {
   return (
     <Stack gap="sm">
       <Title order={3}>Network Access Device</Title>
-      <NADSourceAddress />
-      <ConnectionType />
-      <Controller<RadiusForm, "general.nas.mtu">
-        name="general.nas.mtu"
-        render={({ field, fieldState: { error } }) =>
-          isVisible ? (
-            <TextInput
-              {...field}
-              label="MTU"
-              description="Framed-MTU"
-              type="number"
-              error={getErrorMessage(error)}
-              id="mtu"
-              className={styles.compact}
-            />
-          ) : (
-            <></>
-          )
-        }
-      />
+      <ErrorBoundary
+        fallbackRender={({ resetErrorBoundary, error }) => (
+          <DisplayError onReset={() => resetErrorBoundary()} error={error} />
+        )}
+      >
+        <NADSourceAddress />
+      </ErrorBoundary>
+      <ErrorBoundary
+        fallbackRender={({ resetErrorBoundary, error }) => (
+          <DisplayError onReset={() => resetErrorBoundary()} error={error} />
+        )}
+      >
+        <ConnectionType />
+      </ErrorBoundary>
+      <ErrorBoundary
+        fallbackRender={({ resetErrorBoundary, error }) => (
+          <DisplayError onReset={() => resetErrorBoundary()} error={error} />
+        )}
+      >
+        <Controller<RadiusForm, "general.nas.mtu">
+          name="general.nas.mtu"
+          render={({ field, fieldState: { error } }) =>
+            isVisible ? (
+              <TextInput
+                {...field}
+                label="MTU"
+                description="Framed-MTU"
+                type="number"
+                error={getErrorMessage(error)}
+                id="mtu"
+                className={styles.compact}
+              />
+            ) : (
+              <></>
+            )
+          }
+        />
+      </ErrorBoundary>
       <Controller<RadiusForm, "general.nas.sessionIdTemplate">
         name="general.nas.sessionIdTemplate"
         render={({ field, fieldState: { error } }) =>

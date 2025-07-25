@@ -1,8 +1,8 @@
-import { useEffect, useMemo } from "react";
 import { pascalCase } from "change-case";
-import { Control, useWatch } from "react-hook-form";
+import { useEffect, useMemo } from "react";
+import { type Control, useWatch } from "react-hook-form";
 
-import { Watch, WatchAction } from "@/hooks/generate/schemas";
+import { type Watch, WatchAction } from "@/hooks/generate/schemas";
 
 import { useFormState } from "../../formStateContext";
 import { withPrefix } from "./utils";

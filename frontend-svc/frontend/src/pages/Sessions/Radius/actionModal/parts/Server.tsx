@@ -1,12 +1,12 @@
-import { type FC } from "react";
 import { Collapse, Select, Stack, Switch, TextInput } from "@mantine/core";
+import type { FC } from "react";
 import { Controller, useController } from "react-hook-form";
 
 import { useNADSourcesCombined } from "@/hooks/generate/useNADSources";
 import { useQueryUser } from "@/hooks/useQueryUser";
 import { maybeError } from "@/utils/errors";
 
-import { FormDataFlags, ServerProps } from "../types";
+import type { FormDataFlags, ServerProps } from "../types";
 
 export const Server: FC = () => {
   const [u] = useQueryUser();

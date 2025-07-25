@@ -1,7 +1,7 @@
-import { useCallback, useMemo, useRef, useState, type FC } from "react";
 import { Button, InputBase, NumberInput, Stack } from "@mantine/core";
 import { useDebouncedCallback } from "@mantine/hooks";
 import Hex from "hex-encoding";
+import { type FC, useCallback, useMemo, useRef, useState } from "react";
 
 import { HexEditor } from "@/components/HexEditor";
 import { ModalFooter } from "@/components/Modals/Parts/ModalFooter";

@@ -1,5 +1,5 @@
-import { FC } from "react";
 import { Card, Code } from "@mantine/core";
+import type { FC } from "react";
 
 export const Placeholders: FC = () => {
   return (

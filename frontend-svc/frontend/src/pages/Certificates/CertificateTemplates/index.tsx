@@ -1,8 +1,8 @@
-import { useState, type FC } from "react";
 import { ActionIcon, Button, Menu, Stack, Text, Tooltip } from "@mantine/core";
 import { IconPencil, IconPlus, IconTrash } from "@tabler/icons-react";
 import type { ColumnDef, RowSelectionState } from "@tanstack/react-table";
 import { ok } from "neverthrow";
+import { type FC, useState } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 
 import { ButtonWithConfirm } from "@/components/Buttons/ButtonWithConfirm";
@@ -14,9 +14,9 @@ import { Table } from "@/components/Table";
 import { FilterBar } from "@/components/Table/FilterBar";
 import { RowActionsButton } from "@/components/Table/RowActionsButton";
 import {
+  type CertTemplate,
   useCertTemplateDelete,
   useCertTemplates,
-  type CertTemplate,
 } from "@/hooks/certificates/templates";
 import { useQueryUser } from "@/hooks/useQueryUser";
 

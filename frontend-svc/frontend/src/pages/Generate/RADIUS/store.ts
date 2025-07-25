@@ -8,10 +8,10 @@ import {
 import { equals } from "rambda";
 
 import type { ProtoRadiusAttribute } from "@/hooks/generate/schemas";
-import {
-  type RadiusDictionaryAttribute,
-  type RadiusDictionaryBody,
-  type RadiusDictionaryValue,
+import type {
+  RadiusDictionaryAttribute,
+  RadiusDictionaryBody,
+  RadiusDictionaryValue,
 } from "@/hooks/generate/useRadiusDictionaries";
 
 import type { RadiusAttributeLocation, RadiusForm } from "./form";

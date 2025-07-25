@@ -1,10 +1,10 @@
-import { useEffect, useMemo } from "react";
 import { use$, useObservable } from "@legendapp/state/react";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { Control, useFormContext, useWatch } from "react-hook-form";
+import { useEffect, useMemo } from "react";
+import { type Control, useFormContext, useWatch } from "react-hook-form";
 
-import { LoadParams } from "@/hooks/generate/schemas";
+import type { LoadParams } from "@/hooks/generate/schemas";
 import { useQueryUser } from "@/hooks/useQueryUser";
 import { api } from "@/utils/apiCompose";
 import { orMe } from "@/utils/orMe";

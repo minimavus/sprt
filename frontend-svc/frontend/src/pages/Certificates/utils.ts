@@ -1,6 +1,6 @@
 import {
   isExtendedUploadRequestError,
-  UploadRequestError,
+  type UploadRequestError,
 } from "@/hooks/certificates";
 import { isProblemJson } from "@/utils/guards/isProblemJson";
 

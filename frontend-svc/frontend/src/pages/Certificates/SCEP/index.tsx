@@ -1,18 +1,23 @@
-import { FC, Suspense } from "react";
 import { Stack } from "@mantine/core";
-import { DefaultError } from "@tanstack/react-query";
-import { Await, LoaderFunction, Outlet, useLoaderData } from "react-router-dom";
+import type { DefaultError } from "@tanstack/react-query";
+import { type FC, Suspense } from "react";
+import {
+  Await,
+  type LoaderFunction,
+  Outlet,
+  useLoaderData,
+} from "react-router-dom";
 
 import { AwaitError } from "@/components/Error";
 import { PageLayout } from "@/components/Layout/PageLayout";
 import { DefaultLoaderFallback } from "@/components/Loader";
 import {
-  CertificatesByTypeResponse,
+  type CertificatesByTypeResponse,
   getCertificatesOfTypeKeyAndEnsureDefaults,
 } from "@/hooks/certificates";
 import {
   getScepServersKeyAndEnsureDefaults,
-  ScepServers,
+  type ScepServers,
 } from "@/hooks/certificates/scep";
 import { queryClient } from "@/hooks/queryClient";
 

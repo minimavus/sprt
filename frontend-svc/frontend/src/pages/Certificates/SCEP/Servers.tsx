@@ -1,4 +1,3 @@
-import { FC, useState } from "react";
 import {
   ActionIcon,
   Box,
@@ -12,8 +11,9 @@ import {
   Tooltip,
 } from "@mantine/core";
 import { IconPencil, IconPlus, IconTrash } from "@tabler/icons-react";
-import { ColumnDef, RowSelectionState } from "@tanstack/react-table";
+import type { ColumnDef, RowSelectionState } from "@tanstack/react-table";
 import { err, ok } from "neverthrow";
+import { type FC, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { ButtonWithConfirm } from "@/components/Buttons/ButtonWithConfirm";
@@ -23,7 +23,7 @@ import { useDynamicConfirmation } from "@/components/Modals/Confirmation";
 import { Table } from "@/components/Table";
 import { RowActionsButton } from "@/components/Table/RowActionsButton";
 import {
-  ScepServer,
+  type ScepServer,
   useScepServerDelete,
   useScepServers,
 } from "@/hooks/certificates/scep";

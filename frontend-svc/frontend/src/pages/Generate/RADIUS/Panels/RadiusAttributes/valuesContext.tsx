@@ -1,10 +1,15 @@
-import { createContext, FC, PropsWithChildren, useContext } from "react";
-import { Observable } from "@legendapp/state";
+import type { Observable } from "@legendapp/state";
 import { useObservable } from "@legendapp/state/react";
+import {
+  createContext,
+  type FC,
+  type PropsWithChildren,
+  useContext,
+} from "react";
 
-import { RadiusAttributeLocation } from "../../form";
-import { AttributeKey, radiusParamsStore$ } from "../../store";
-import { attrValuesToItems, Item } from "./formatters";
+import type { RadiusAttributeLocation } from "../../form";
+import { type AttributeKey, radiusParamsStore$ } from "../../store";
+import { attrValuesToItems, type Item } from "./formatters";
 
 type store = Observable<{
   key: AttributeKey;

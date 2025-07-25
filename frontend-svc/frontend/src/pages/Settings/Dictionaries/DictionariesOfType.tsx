@@ -1,4 +1,3 @@
-import { type FC } from "react";
 import {
   ActionIcon,
   Badge,
@@ -11,8 +10,9 @@ import {
   VisuallyHidden,
 } from "@mantine/core";
 import { IconPlus, IconTrash } from "@tabler/icons-react";
-import type { ColumnDef } from "@tanstack/react-table";
+import type { AccessorKeyColumnDef, ColumnDef } from "@tanstack/react-table";
 import { ok } from "neverthrow";
+import type { FC } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { DisplayError } from "@/components/Error";
@@ -21,10 +21,10 @@ import { useDynamicConfirmation } from "@/components/Modals/Confirmation";
 import { SkeletonLines } from "@/components/Skeleton";
 import { Table } from "@/components/Table";
 import {
+  type DictionaryMeta,
   useDictionariesOfType,
   useDictionaryDelete,
   useDictionaryTypes,
-  type DictionaryMeta,
 } from "@/hooks/settings/dictionaries";
 import { useQueryUser } from "@/hooks/useQueryUser";
 import { usePermission } from "@/hooks/useUser";
@@ -37,7 +37,7 @@ const columns: ColumnDef<DictionaryMeta>[] = [
     cell: ({ row }) => <DictionaryLink {...row.original} />,
     size: undefined,
     enableSorting: false,
-  },
+  } as AccessorKeyColumnDef<DictionaryMeta>,
   {
     id: "actions",
     cell: ({ row }) => <DictionaryActions {...row.original} />,

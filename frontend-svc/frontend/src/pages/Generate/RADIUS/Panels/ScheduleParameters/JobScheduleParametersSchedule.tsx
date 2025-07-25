@@ -1,10 +1,10 @@
-import { FC } from "react";
+import type { FC } from "react";
 import { useController } from "react-hook-form";
 
 import { Cron } from "@/components/Inputs/Cron";
 import { getErrorMessage } from "@/utils/errors";
 
-import { RadiusForm } from "../../form";
+import type { RadiusForm } from "../../form";
 
 export const JobScheduleParametersSchedule: FC = () => {
   const {

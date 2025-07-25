@@ -1,13 +1,13 @@
-import { FC, useState } from "react";
 import { Box, Button, Group, Paper, Stack, Title } from "@mantine/core";
 import { IconPlus } from "@tabler/icons-react";
-import { ColumnDef, RowSelectionState } from "@tanstack/react-table";
+import type { ColumnDef, RowSelectionState } from "@tanstack/react-table";
+import { type FC, useState } from "react";
 
 import { DisplayError } from "@/components/Error";
 import { DefaultLoaderFallback } from "@/components/Loader";
 import { CheckboxColumnId, Table } from "@/components/Table";
 import { FormatTime } from "@/components/Time";
-import { Certificate, useCertificatesOfType } from "@/hooks/certificates";
+import { type Certificate, useCertificatesOfType } from "@/hooks/certificates";
 import { useQueryUser } from "@/hooks/useQueryUser";
 import { formatTime } from "@/utils/time";
 

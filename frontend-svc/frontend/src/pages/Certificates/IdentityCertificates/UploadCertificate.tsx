@@ -1,5 +1,5 @@
-import { FC, useState } from "react";
 import { Button, Group, Modal, Stack } from "@mantine/core";
+import { type FC, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 
 import { DisplayError } from "@/components/Error";

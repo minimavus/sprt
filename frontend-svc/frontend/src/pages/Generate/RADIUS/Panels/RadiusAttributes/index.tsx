@@ -1,6 +1,6 @@
-import { FC } from "react";
 import { useObserve } from "@legendapp/state/react";
 import { Group, SimpleGrid, Stack, Title } from "@mantine/core";
+import type { FC } from "react";
 import { useFieldArray } from "react-hook-form";
 
 import type {

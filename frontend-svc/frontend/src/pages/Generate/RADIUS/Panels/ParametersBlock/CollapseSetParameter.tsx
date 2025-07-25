@@ -1,6 +1,6 @@
 import { Accordion, Stack } from "@mantine/core";
 
-import { ParameterComponent } from "./types";
+import type { ParameterComponent } from "./types";
 
 export const CollapseSetParameter: ParameterComponent<"collapse_set"> = ({
   p,

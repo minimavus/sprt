@@ -1,4 +1,3 @@
-import { ComponentProps, useMemo, type FC } from "react";
 import {
   Button,
   Group,
@@ -15,6 +14,7 @@ import {
   IconDeviceFloppy,
   IconTrash,
 } from "@tabler/icons-react";
+import { type ComponentProps, type FC, useMemo } from "react";
 import { Controller, FormProvider, useForm, useWatch } from "react-hook-form";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 
@@ -22,11 +22,11 @@ import { ButtonWithConfirm } from "@/components/Buttons/ButtonWithConfirm";
 import { DisplayError } from "@/components/Error";
 import { SkeletonLines } from "@/components/Skeleton";
 import {
+  type FullDictionary,
   useDictionaryByID,
   useDictionaryDelete,
   useDictionaryTypes,
   useDictionaryUpsert,
-  type FullDictionary,
 } from "@/hooks/settings/dictionaries";
 import { useQueryUser } from "@/hooks/useQueryUser";
 import { usePermission, useUser } from "@/hooks/useUser";

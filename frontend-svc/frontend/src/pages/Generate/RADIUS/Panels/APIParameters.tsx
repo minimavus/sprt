@@ -1,6 +1,6 @@
-import { ComponentProps, useMemo, type FC } from "react";
 import { CodeHighlight } from "@mantine/code-highlight";
 import { Paper } from "@mantine/core";
+import { type ComponentProps, type FC, useMemo } from "react";
 import { useFormContext } from "react-hook-form";
 
 import { Warning } from "@/components/Alerts";

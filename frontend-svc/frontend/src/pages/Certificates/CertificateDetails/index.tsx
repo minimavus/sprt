@@ -1,16 +1,9 @@
 import {
-  useMemo,
-  useState,
-  type Dispatch,
-  type FC,
-  type SetStateAction,
-} from "react";
-import {
   Anchor,
   Box,
   Button,
-  getThemeColor,
   Group,
+  getThemeColor,
   List,
   Modal,
   rem,
@@ -19,14 +12,21 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import { IconAlertTriangle, IconCornerDownRight } from "@tabler/icons-react";
+import {
+  type Dispatch,
+  type FC,
+  type SetStateAction,
+  useMemo,
+  useState,
+} from "react";
 import { useParams } from "react-router-dom";
 
 import { DisplayError } from "@/components/Error";
 import { DefaultLoaderFallback } from "@/components/Loader";
 import {
-  useCertificate,
   type Certificate,
   type CertType,
+  useCertificate,
 } from "@/hooks/certificates";
 import { useDelayedModalState } from "@/hooks/useDelayedModalState";
 import { useQueryUser } from "@/hooks/useQueryUser";

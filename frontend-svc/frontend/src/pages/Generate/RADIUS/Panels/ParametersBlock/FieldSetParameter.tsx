@@ -1,8 +1,8 @@
-import { Fragment } from "react";
 import { Fieldset, Stack, Text } from "@mantine/core";
+import { Fragment } from "react";
 import Markdown from "react-markdown";
 
-import { ParameterComponent } from "./types";
+import type { ParameterComponent } from "./types";
 
 export const FieldSetParameter: ParameterComponent<"field_set"> = ({
   p,

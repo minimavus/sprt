@@ -4,7 +4,7 @@ import { useController } from "react-hook-form";
 import { getErrorMessage } from "@/utils/errors";
 
 import { useFieldState } from "../../formStateContext";
-import { ParameterComponent } from "./types";
+import type { ParameterComponent } from "./types";
 import { useWatchActions } from "./useWatchActions";
 import { withPrefix } from "./utils";
 

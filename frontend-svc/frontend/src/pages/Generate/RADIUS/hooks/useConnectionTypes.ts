@@ -1,4 +1,4 @@
-import { ComboboxData } from "@mantine/core";
+import type { ComboboxData } from "@mantine/core";
 
 const connectionTypes = [
   {

@@ -1,4 +1,4 @@
-import { Variant } from "@/hooks/generate/schemas";
+import type { Variant } from "@/hooks/generate/schemas";
 
 export const withPrefix = (prefix: string, name: string) =>
   prefix ? `${prefix}.${name}` : name;

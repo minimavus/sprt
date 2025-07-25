@@ -1,4 +1,3 @@
-import { useEffect, useState, type FC } from "react";
 import {
   ActionIcon,
   Card,
@@ -11,6 +10,7 @@ import {
 } from "@mantine/core";
 import { IconChevronDown, IconTrash } from "@tabler/icons-react";
 import { ok } from "neverthrow";
+import { type FC, useEffect, useState } from "react";
 import { useController, useFieldArray } from "react-hook-form";
 
 import { useDynamicConfirmation } from "@/components/Modals/Confirmation";

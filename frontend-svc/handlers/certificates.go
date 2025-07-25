@@ -537,6 +537,10 @@ func (m *controller) GetCertTemplates(c echo.Context) error {
 		return echo.ErrInternalServerError.WithInternal(err)
 	}
 
+	if templates == nil {
+		templates = []*models.Template{}
+	}
+
 	return c.JSON(http.StatusOK, map[string]any{
 		"templates":   templates,
 		"_pagination": pagination.MapWithTotal(int64(len(templates))),

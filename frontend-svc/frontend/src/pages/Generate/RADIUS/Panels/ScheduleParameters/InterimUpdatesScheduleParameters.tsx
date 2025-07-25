@@ -1,21 +1,21 @@
-import { FC } from "react";
 import {
   Accordion,
-  ComboboxData,
-  noop,
+  type ComboboxData,
   NumberInput,
+  noop,
   Select,
   SimpleGrid,
   Stack,
   Textarea,
   TextInput,
 } from "@mantine/core";
+import type { FC } from "react";
 import { Controller, useController } from "react-hook-form";
 
 import { Cron } from "@/components/Inputs/Cron";
 import { getErrorMessage } from "@/utils/errors";
 
-import { RadiusForm } from "../../form";
+import type { RadiusForm } from "../../form";
 
 const AcctSessionTimeOptions: ComboboxData = [
   { value: "since-start", label: "Seconds since start" },

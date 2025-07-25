@@ -1,5 +1,5 @@
-import { type FC } from "react";
 import { Checkbox, Collapse, SimpleGrid, Switch } from "@mantine/core";
+import type { FC } from "react";
 import { Controller, useWatch } from "react-hook-form";
 
 import type { FormValues } from "./types";

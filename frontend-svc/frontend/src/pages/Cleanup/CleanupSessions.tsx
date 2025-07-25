@@ -1,4 +1,3 @@
-import { useState, type FC, type ReactNode } from "react";
 import {
   Anchor,
   Divider,
@@ -9,6 +8,7 @@ import {
   Title,
   useMantineTheme,
 } from "@mantine/core";
+import { type FC, type ReactNode, useState } from "react";
 
 import { Info } from "@/components/Alerts";
 import { ButtonWithConfirm } from "@/components/Buttons/ButtonWithConfirm";
@@ -16,9 +16,9 @@ import { ColumnHeading } from "@/components/Columns";
 import { DisplayError } from "@/components/Error";
 import { useFixedLink } from "@/components/Link/useFixedLink";
 import {
+  type OldSessions,
   useOldSessions,
   useOldSessionsDelete,
-  type OldSessions,
 } from "@/hooks/cleanups";
 import type { Protos } from "@/hooks/zodProto";
 

@@ -1,7 +1,6 @@
-import { FC, useState } from "react";
 import {
   Button,
-  ComboboxData,
+  type ComboboxData,
   Divider,
   Modal,
   Select,
@@ -9,20 +8,21 @@ import {
   TextInput,
   Title,
 } from "@mantine/core";
+import { type FC, useState } from "react";
 import { Controller, FormProvider, useForm, useWatch } from "react-hook-form";
 
 import { DisplayError } from "@/components/Error";
 import { InputHelp } from "@/components/Inputs/InputHelp";
 import { ModalFooter } from "@/components/Modals/Parts/ModalFooter";
 import { useCertificateUpload } from "@/hooks/certificates";
-import { ScepServer, useScepServers } from "@/hooks/certificates/scep";
+import { type ScepServer, useScepServers } from "@/hooks/certificates/scep";
 import { useDelayedModalState } from "@/hooks/useDelayedModalState";
 import { useQueryUser } from "@/hooks/useQueryUser";
 import { getErrorMessage } from "@/utils/errors";
 
 import { TemplateForm } from "../CertificateTemplates/EditModal";
 import { prepDefaultValues } from "../CertificateTemplates/EditModal/formHelpers";
-import { FormValues as TemplateFormValues } from "../CertificateTemplates/EditModal/types";
+import type { FormValues as TemplateFormValues } from "../CertificateTemplates/EditModal/types";
 
 interface FromScepFormValues {
   scep_server: string;

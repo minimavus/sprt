@@ -1,15 +1,15 @@
+import { Stack, type StackProps } from "@mantine/core";
 import {
-  useEffect,
-  useMemo,
   type ComponentProps,
   type FC,
   type ReactNode,
+  useEffect,
+  useMemo,
 } from "react";
-import { Stack, StackProps } from "@mantine/core";
 import { useController } from "react-hook-form";
 
 import { DictionarySelect } from "@/components/Inputs/DictionarySelect";
-import { SelectFromDictionary } from "@/hooks/generate/schemas";
+import type { SelectFromDictionary } from "@/hooks/generate/schemas";
 import {
   useDictionariesOfType,
   useDictionaryByName,

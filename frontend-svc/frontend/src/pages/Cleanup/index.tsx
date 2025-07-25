@@ -1,14 +1,20 @@
-import { type FC, type ReactNode } from "react";
-import { Divider, Loader, Tabs, TabsTabProps, Tooltip } from "@mantine/core";
+import {
+  Divider,
+  Loader,
+  Tabs,
+  type TabsTabProps,
+  Tooltip,
+} from "@mantine/core";
 import { IconSettings } from "@tabler/icons-react";
+import type { FC, ReactNode } from "react";
 import { Outlet, useLocation, useMatch, useNavigate } from "react-router-dom";
 
 import { PageLayout } from "@/components/Layout/PageLayout";
 import { StatusIcon } from "@/components/StatusIcon";
 import {
-  useCleanupSectionStatus,
   type CleanupSection,
   type StatusLevel,
+  useCleanupSectionStatus,
 } from "@/hooks/cleanups";
 
 const statusLevelToIcon = (level: StatusLevel | undefined) => {

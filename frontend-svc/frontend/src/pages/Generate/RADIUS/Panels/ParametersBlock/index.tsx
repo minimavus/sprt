@@ -1,7 +1,5 @@
-import { type FC } from "react";
-
+import type { FC } from "react";
 import { log } from "@/utils/log";
-
 import { useFieldState } from "../../formStateContext";
 import { BlockContext, useIsInline } from "./blockContext";
 import { CheckBoxesParameter } from "./CheckBoxesParameter";
@@ -96,6 +94,8 @@ const ParamsMapped: FC<ParamsMappedProps> = ({
   childrenProps,
   inline,
 }) => {
+  const isAlreadyInline = useIsInline();
+
   if (!params || !Array.isArray(params) || params.length === 0) return null;
 
   const children = params.map((param) => {
@@ -110,8 +110,6 @@ const ParamsMapped: FC<ParamsMappedProps> = ({
       />
     );
   });
-
-  const isAlreadyInline = useIsInline();
 
   return (
     <BlockContext value={{ inline: inline || isAlreadyInline }}>

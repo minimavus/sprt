@@ -2,7 +2,7 @@ import { Checkbox } from "@mantine/core";
 import { useController } from "react-hook-form";
 
 import { useFieldState } from "../../formStateContext";
-import { ParameterComponent } from "./types";
+import type { ParameterComponent } from "./types";
 import { useWatchActions } from "./useWatchActions";
 import { withPrefix } from "./utils";
 

@@ -1,5 +1,5 @@
-import { FC } from "react";
 import { Button, Skeleton, Text, useMantineTheme } from "@mantine/core";
+import type { FC } from "react";
 
 import { Info } from "@/components/Alerts";
 import { ColumnHeading } from "@/components/Columns";

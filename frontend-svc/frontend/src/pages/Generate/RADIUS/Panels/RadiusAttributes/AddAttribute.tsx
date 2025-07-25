@@ -1,15 +1,15 @@
-import { useCallback, useMemo, useState, type FC, type ReactNode } from "react";
 import { isEmpty } from "@legendapp/state";
 import { Button, Group, Loader, Stack, Text } from "@mantine/core";
 import { modals } from "@mantine/modals";
 import { IconCirclePlus } from "@tabler/icons-react";
 import { nanoid } from "nanoid";
-import { useWatch, type UseFieldArrayAppend } from "react-hook-form";
+import { type FC, type ReactNode, useCallback, useMemo, useState } from "react";
+import { type UseFieldArrayAppend, useWatch } from "react-hook-form";
 
 import { DisplayError } from "@/components/Error";
 import { ModalFooter } from "@/components/Modals/Parts/ModalFooter";
 import { TransferList } from "@/components/Transfer";
-import {
+import type {
   TransferTreeBaseDatum,
   TransferTreeData,
   TransferTreeDatum,
@@ -17,13 +17,13 @@ import {
 } from "@/components/Transfer/types";
 import { useTransfer } from "@/components/Transfer/useTransfer";
 import {
-  useRadiusDictionaryBulk,
   type DictionariesMap,
+  useRadiusDictionaryBulk,
 } from "@/hooks/generate/useRadiusDictionaries";
-import { useQueryUser, type QueryUser } from "@/hooks/useQueryUser";
+import { type QueryUser, useQueryUser } from "@/hooks/useQueryUser";
 import { toast } from "@/utils/toasts";
 
-import { RadiusAttributeLocation, RadiusForm } from "../../form";
+import type { RadiusAttributeLocation, RadiusForm } from "../../form";
 
 const dictsMapToTree = (
   dicts: DictionariesMap,

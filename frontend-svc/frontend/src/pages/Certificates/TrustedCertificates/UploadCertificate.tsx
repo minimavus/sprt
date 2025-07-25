@@ -1,11 +1,10 @@
-import { useRef, useState, type FC } from "react";
 import { observable } from "@legendapp/state";
 import { use$ } from "@legendapp/state/react";
 import {
   Button,
   Card,
   CloseButton,
-  DefaultMantineColor,
+  type DefaultMantineColor,
   Group,
   Modal,
   Progress,
@@ -14,9 +13,10 @@ import {
   Text,
   useMantineTheme,
 } from "@mantine/core";
-import { Dropzone, FileWithPath } from "@mantine/dropzone";
+import { Dropzone, type FileWithPath } from "@mantine/dropzone";
 import { IconCloudUpload, IconDownload, IconX } from "@tabler/icons-react";
 import bytes from "bytes";
+import { type FC, useRef, useState } from "react";
 
 import { useCertificateUpload } from "@/hooks/certificates";
 import { useDelayedModalState } from "@/hooks/useDelayedModalState";

@@ -1,4 +1,4 @@
-import { FullDictionary } from "@/hooks/settings/dictionaries";
+import type { FullDictionary } from "@/hooks/settings/dictionaries";
 
 export function getFormDefaultValues(
   type: string,

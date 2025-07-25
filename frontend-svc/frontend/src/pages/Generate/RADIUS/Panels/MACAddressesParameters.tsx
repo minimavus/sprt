@@ -1,11 +1,10 @@
-import { useMemo, type FC } from "react";
 import {
   Box,
   Button,
   Code,
   Menu,
   rem,
-  SegmentedControlItem,
+  type SegmentedControlItem,
   SimpleGrid,
   Stack,
   Switch,
@@ -14,6 +13,7 @@ import {
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconChevronDown } from "@tabler/icons-react";
+import { type FC, useMemo } from "react";
 import { Controller, useController, useWatch } from "react-hook-form";
 
 import { DisableableNumberInput } from "@/components/Inputs/DisableableNumberInput";
@@ -24,7 +24,7 @@ import { getErrorMessage } from "@/utils/errors";
 
 import { HowItWorks } from "../common/HowItWorks";
 import { ListControls } from "../common/ListControls";
-import { RadiusForm } from "../form";
+import type { RadiusForm } from "../form";
 import { useMACAddressesPatterns } from "../hooks/useMACAddressesPatterns";
 import { DictionaryParameter } from "./ParametersBlock/DictionaryParameter";
 

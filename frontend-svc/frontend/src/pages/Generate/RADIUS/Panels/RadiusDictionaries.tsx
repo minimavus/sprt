@@ -1,5 +1,5 @@
-import { useEffect, useMemo, type FC } from "react";
 import { Badge, Stack, Title } from "@mantine/core";
+import { type FC, useEffect, useMemo } from "react";
 import { useController, useWatch } from "react-hook-form";
 
 import { Info } from "@/components/Alerts";
@@ -8,9 +8,9 @@ import {
   type DrawerSelectOptionGroup,
 } from "@/components/Inputs/DrawerSelect";
 import {
+  type RadiusDictionary,
   useRadiusDictionaries,
   useRadiusDictionaryBulk,
-  type RadiusDictionary,
 } from "@/hooks/generate/useRadiusDictionaries";
 import { useDictionariesOfType } from "@/hooks/settings/dictionaries";
 import { useErrorNotification } from "@/hooks/useErrorNotification";

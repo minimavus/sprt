@@ -1,27 +1,30 @@
-import { FC, useEffect, useMemo } from "react";
 import { Memo } from "@legendapp/state/react";
 import {
   Button,
   getThemeColor,
   Menu,
   Tabs,
-  TabsTabProps,
+  type TabsTabProps,
   useMantineTheme,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconCheck, IconChevronDown } from "@tabler/icons-react";
 import { AnimatePresence, motion } from "framer-motion";
+import { type FC, useEffect, useMemo } from "react";
 import { useFormState, useWatch } from "react-hook-form";
 import { useAsyncValue, useNavigate, useParams } from "react-router-dom";
 
 import { fadeInClampOut } from "@/animations";
 import { StatusIcon } from "@/components/StatusIcon";
-import { ParametersBlock, ProtoDefinition } from "@/hooks/generate/schemas";
+import type {
+  ParametersBlock,
+  ProtoDefinition,
+} from "@/hooks/generate/schemas";
 import { useServersSettings } from "@/hooks/settings/servers";
 import { useQueryUser } from "@/hooks/useQueryUser";
 
 import { protoNames, radiusProtos } from "../../../../utils/protos";
-import { RadiusForm } from "../form";
+import type { RadiusForm } from "../form";
 import { radiusParamsStore$ } from "../store";
 
 const mainTabProps: Partial<TabsTabProps> = {
