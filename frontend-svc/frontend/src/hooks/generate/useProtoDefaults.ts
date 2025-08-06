@@ -1,9 +1,13 @@
-import { DefaultError, QueryKey, useQuery } from "@tanstack/react-query";
-import { z } from "zod/v4";
+import {
+  type DefaultError,
+  type QueryKey,
+  useQuery,
+} from "@tanstack/react-query";
+import { z } from "zod";
 
 import { queryClient } from "@/hooks/queryClient";
 import { queryGetFn } from "@/hooks/useGetQuery";
-import { QueryUser } from "@/hooks/useQueryUser";
+import type { QueryUser } from "@/hooks/useQueryUser";
 import { api } from "@/utils/apiCompose";
 import failOrRetry from "@/utils/failOrRetry";
 import { orMe } from "@/utils/orMe";

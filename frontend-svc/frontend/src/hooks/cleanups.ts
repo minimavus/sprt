@@ -1,11 +1,11 @@
 import {
-  DefaultError,
-  QueryKey,
+  type DefaultError,
+  type QueryKey,
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
 import axios from "axios";
-import { z } from "zod/v4";
+import { z } from "zod";
 
 import { api } from "@/utils/apiCompose";
 import { getErrorMessage } from "@/utils/errors";
@@ -20,7 +20,7 @@ import {
 import { zodTime } from "@/utils/zodTime";
 
 import { useGetQuery } from "./useGetQuery";
-import { Protos } from "./zodProto";
+import type { Protos } from "./zodProto";
 
 const getOrphanedFlowsKey = (full?: boolean): QueryKey =>
   full ? ["cleanup", "flows"] : ["cleanup", "flows", "stats"];

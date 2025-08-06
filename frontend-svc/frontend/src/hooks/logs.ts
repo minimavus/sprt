@@ -1,6 +1,10 @@
-import { QueryKey, useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  type QueryKey,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 import axios from "axios";
-import { z } from "zod/v4";
+import { z } from "zod";
 
 import { api } from "@/utils/apiCompose";
 import { getErrorMessage } from "@/utils/errors";

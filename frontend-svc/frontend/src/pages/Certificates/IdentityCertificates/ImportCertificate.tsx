@@ -9,7 +9,7 @@ import {
 } from "@mantine/core";
 import { type FC, useState } from "react";
 import { Controller, FormProvider, useForm } from "react-hook-form";
-import { z } from "zod/v4";
+import { z } from "zod";
 
 import { DisplayError } from "@/components/Error";
 import { ModalFooter } from "@/components/Modals/Parts/ModalFooter";

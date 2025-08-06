@@ -1,4 +1,4 @@
-import { z } from "zod/v4";
+import { z } from "zod";
 
 import { zodBool } from "@/utils/zodBool";
 import { zodJSONString } from "@/utils/zodJSONString";

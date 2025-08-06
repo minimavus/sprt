@@ -1,12 +1,11 @@
-import { useEffect, useState, type FC, type ReactNode } from "react";
 import {
   Button,
   Checkbox,
   Collapse,
-  ComboboxItem,
+  type ComboboxItem,
   Divider,
   Drawer,
-  DrawerProps,
+  type DrawerProps,
   Group,
   rem,
   Stack,
@@ -14,7 +13,8 @@ import {
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconChevronDown } from "@tabler/icons-react";
-import { FieldError } from "react-hook-form";
+import { type FC, type ReactNode, useEffect, useState } from "react";
+import type { FieldError } from "react-hook-form";
 
 import { SelectInput } from "./SelectInput";
 

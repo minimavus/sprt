@@ -26,7 +26,8 @@
         "noExtraNonNullAssertion": "error",
         "noMisleadingInstantiator": "error",
         "noUnsafeDeclarationMerging": "error",
-        "useNamespaceKeyword": "error"
+        "useNamespaceKeyword": "error",
+        "noArrayIndexKey": "warn"
       }
     },
     "includes": [

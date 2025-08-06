@@ -1,7 +1,7 @@
 import {
-  DefaultError,
-  QueryKey,
-  UndefinedInitialDataOptions,
+  type DefaultError,
+  type QueryKey,
+  type UndefinedInitialDataOptions,
   useMutation,
   useQuery,
   useQueryClient,
@@ -9,13 +9,13 @@ import {
 import axios from "axios";
 import { minutesToMilliseconds, secondsToMilliseconds } from "date-fns";
 import { clone } from "rambda";
-import { Path } from "react-hook-form";
-import { z } from "zod/v4";
+import type { Path } from "react-hook-form";
+import type { z } from "zod";
 
 import {
-  useInitial,
   UserAttributesSchema,
   UserSessionSchema,
+  useInitial,
 } from "@/hooks/useInitial";
 import { usePreferredTheme } from "@/hooks/usePreferredTheme";
 import { api } from "@/utils/apiCompose";

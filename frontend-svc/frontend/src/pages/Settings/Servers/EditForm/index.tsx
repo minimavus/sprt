@@ -1,5 +1,5 @@
-import { FC } from "react";
 import { Tabs } from "@mantine/core";
+import type { FC } from "react";
 
 import { GeneralServerFields } from "./GeneralServerFields";
 import { RadiusFields } from "./RadiusFields";

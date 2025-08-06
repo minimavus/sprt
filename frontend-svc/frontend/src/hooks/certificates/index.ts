@@ -1,23 +1,23 @@
-import { useCallback, useMemo, useState } from "react";
 import {
+  type DefaultError,
   keepPreviousData,
+  type QueryKey,
   useMutation,
   useQuery,
   useQueryClient,
-  type DefaultError,
-  type QueryKey,
 } from "@tanstack/react-query";
 import axios, {
-  AxiosError,
-  isAxiosError,
+  type AxiosError,
   type AxiosProgressEvent,
   type AxiosRequestConfig,
+  isAxiosError,
   type RawAxiosRequestHeaders,
 } from "axios";
 import { saveAs } from "file-saver";
-import { z } from "zod/v4";
+import { useCallback, useMemo, useState } from "react";
+import { z } from "zod";
 
-import { QueryUser } from "@/hooks/useQueryUser";
+import type { QueryUser } from "@/hooks/useQueryUser";
 import { api } from "@/utils/apiCompose";
 import { getErrorMessage } from "@/utils/errors";
 import failOrRetry from "@/utils/failOrRetry";

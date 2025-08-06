@@ -1,16 +1,20 @@
+import type { ComboboxItemGroup } from "@mantine/core";
+import {
+  type DefaultError,
+  type QueryKey,
+  useQuery,
+} from "@tanstack/react-query";
 import { useMemo } from "react";
-import { ComboboxItemGroup } from "@mantine/core";
-import { DefaultError, QueryKey, useQuery } from "@tanstack/react-query";
-import { z } from "zod/v4";
+import { z } from "zod";
 
 import { queryClient } from "@/hooks/queryClient";
 import { queryGetFn } from "@/hooks/useGetQuery";
-import { QueryUser } from "@/hooks/useQueryUser";
+import type { QueryUser } from "@/hooks/useQueryUser";
 import { api } from "@/utils/apiCompose";
 import failOrRetry from "@/utils/failOrRetry";
 import { orMe } from "@/utils/orMe";
 
-import { NADSourceSchema, NADSourcesResponse } from "./schemas";
+import { NADSourceSchema, type NADSourcesResponse } from "./schemas";
 
 const getNADSourcesQueryKey = (includeAll: boolean, user: string): QueryKey => [
   "generate",

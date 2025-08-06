@@ -1,8 +1,8 @@
-import { FC } from "react";
 import { Stack, TextInput } from "@mantine/core";
+import type { FC } from "react";
 import { Controller } from "react-hook-form";
 
-import { ServerSettings } from "@/hooks/settings/servers";
+import type { ServerSettings } from "@/hooks/settings/servers";
 import { getErrorMessage } from "@/utils/errors";
 
 export const GeneralServerFields: FC = () => {

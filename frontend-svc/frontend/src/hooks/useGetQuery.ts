@@ -1,17 +1,17 @@
 import {
-  useQuery,
   type DefaultError,
   type QueryFunction,
   type QueryKey,
   type UndefinedInitialDataOptions,
   type UseQueryOptions,
   type UseQueryResult,
+  useQuery,
 } from "@tanstack/react-query";
 import axios from "axios";
 import { isEmpty } from "rambda";
-import { z } from "zod/v4";
+import type { z } from "zod";
 
-import failOrRetry, { RetryOptions } from "@/utils/failOrRetry";
+import failOrRetry, { type RetryOptions } from "@/utils/failOrRetry";
 
 export type QueryGetParams<
   Url extends string,

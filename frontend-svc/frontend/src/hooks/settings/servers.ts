@@ -1,11 +1,11 @@
 import {
-  useMutation,
-  useQueryClient,
   type DefaultError,
   type QueryKey,
+  useMutation,
+  useQueryClient,
 } from "@tanstack/react-query";
 import axios from "axios";
-import { z } from "zod/v4";
+import { z } from "zod";
 
 import { useGetQuery } from "@/hooks/useGetQuery";
 import { api } from "@/utils/apiCompose";
@@ -16,7 +16,7 @@ import { noNull } from "@/utils/noNull";
 import { orMe } from "@/utils/orMe";
 import { toast } from "@/utils/toasts";
 
-import { QueryUser } from "../useQueryUser";
+import type { QueryUser } from "../useQueryUser";
 
 export const getServersSettingsKey = (user: string): QueryKey => [
   "settings",

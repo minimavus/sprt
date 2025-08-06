@@ -1,9 +1,9 @@
-import { useEffect, useState, type FC, type ReactNode } from "react";
-import { Button, Modal, ModalProps, Stack } from "@mantine/core";
+import { Button, Modal, type ModalProps, Stack } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { ColumnDef, RowSelectionState } from "@tanstack/react-table";
+import type { ColumnDef, RowSelectionState } from "@tanstack/react-table";
 import { path } from "rambda";
-import { FieldError } from "react-hook-form";
+import { type FC, type ReactNode, useEffect, useState } from "react";
+import type { FieldError } from "react-hook-form";
 
 import { ModalFooter } from "@/components/Modals/Parts/ModalFooter";
 import { Table } from "@/components/Table";

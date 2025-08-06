@@ -1,8 +1,8 @@
-import { FC } from "react";
 import { ActionIcon, Tooltip } from "@mantine/core";
 import { IconChevronRight } from "@tabler/icons-react";
-import { CellContext, RowData } from "@tanstack/react-table";
+import type { CellContext, RowData } from "@tanstack/react-table";
 import cx from "classnames";
+import type { FC } from "react";
 
 export const ExpandIndicator: FC<{
   isExpanded: boolean;

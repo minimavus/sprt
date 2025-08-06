@@ -1,7 +1,7 @@
 import type { Duration } from "date-fns";
 import { normalize, toMilliseconds } from "duration-fns";
 import parse from "parse-duration";
-import { z } from "zod/v4";
+import { z } from "zod";
 
 export const millisecondsToDuration = (milliseconds: number): Duration => {
   return normalize({ milliseconds });

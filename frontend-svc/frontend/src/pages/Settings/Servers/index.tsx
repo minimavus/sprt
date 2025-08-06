@@ -1,4 +1,3 @@
-import { useState, type FC, type ReactNode } from "react";
 import { use$ } from "@legendapp/state/react";
 import {
   ActionIcon,
@@ -20,6 +19,7 @@ import {
   IconTrash,
 } from "@tabler/icons-react";
 import type { ColumnDef } from "@tanstack/react-table";
+import { type FC, type ReactNode, useState } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 
 import { PageLayout } from "@/components/Layout/PageLayout";
@@ -29,9 +29,9 @@ import { Table } from "@/components/Table";
 import { FilterBar } from "@/components/Table/FilterBar";
 import { RowActionsButton } from "@/components/Table/RowActionsButton";
 import {
+  type ServerSettings,
   useServerSettingsDelete,
   useServersSettings,
-  type ServerSettings,
 } from "@/hooks/settings/servers";
 import { useQueryUser } from "@/hooks/useQueryUser";
 

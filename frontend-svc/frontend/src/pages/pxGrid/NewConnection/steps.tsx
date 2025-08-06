@@ -1,6 +1,6 @@
-import { ComponentType } from "react";
 import { observable } from "@legendapp/state";
-import { z } from "zod/v4";
+import type { ComponentType } from "react";
+import type { z } from "zod";
 
 import { AuthenticationConfig } from "./AuthenticationConfig";
 import {

@@ -1,17 +1,17 @@
-import { useRef } from "react";
 import {
-  useQueries,
-  useQuery,
   type DefaultError,
   type QueryKey,
   type UndefinedInitialDataOptions,
+  useQueries,
+  useQuery,
 } from "@tanstack/react-query";
 import { symmetricDifference } from "rambda";
-import { z } from "zod/v4";
+import { useRef } from "react";
+import { z } from "zod";
 
 import { queryClient } from "@/hooks/queryClient";
 import { queryGetFn } from "@/hooks/useGetQuery";
-import { QueryUser } from "@/hooks/useQueryUser";
+import type { QueryUser } from "@/hooks/useQueryUser";
 import { api } from "@/utils/apiCompose";
 import failOrRetry from "@/utils/failOrRetry";
 import { orMe } from "@/utils/orMe";

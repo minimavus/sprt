@@ -1,17 +1,19 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { ColumnDefBase } from "@tanstack/react-table";
 
 declare module "@tanstack/react-table" {
-	export interface ColumnDefBase<_TData extends RowData, _TValue> {
-		className?: string;
-	}
+  // biome-ignore lint/correctness/noUnusedVariables: names must match for merge to work
+  export interface ColumnDefBase<TData extends RowData, TValue> {
+    className?: string;
+  }
 
-	export interface ColumnMeta<_TData extends RowData, _TValue> {
-		align?: "center" | "left" | "right" | "justify" | "char" | undefined;
-		isHidden?: boolean;
-	}
+  // biome-ignore lint/correctness/noUnusedVariables: names must match for merge to work
+  export interface ColumnMeta<TData extends RowData, TValue> {
+    align?: "center" | "left" | "right" | "justify" | "char" | undefined;
+    isHidden?: boolean;
+  }
 
-	export interface TableMeta<_TData extends RowData> {
-		disableMoreRowSelection?: boolean;
-	}
+  // biome-ignore lint/correctness/noUnusedVariables: names must match for merge to work
+  export interface TableMeta<TData extends RowData> {
+    disableMoreRowSelection?: boolean;
+  }
 }

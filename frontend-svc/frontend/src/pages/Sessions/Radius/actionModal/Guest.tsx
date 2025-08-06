@@ -1,8 +1,8 @@
-import { type FC } from "react";
 import { Button, Card, Code, Stack, Text, Title } from "@mantine/core";
-import { QueryKey } from "@tanstack/react-query";
+import type { QueryKey } from "@tanstack/react-query";
+import type { FC } from "react";
 import { useParams } from "react-router-dom";
-import { z } from "zod/v4";
+import { z } from "zod";
 
 import { DisplayError } from "@/components/Error";
 import { KeyValue } from "@/components/KeyValue";
@@ -15,7 +15,7 @@ import { orMe } from "@/utils/orMe";
 
 import type { ActionModalProps } from ".";
 import { mapSelectedToIDs } from "./mapSelectedToIDs";
-import { ActionModal } from "./types";
+import type { ActionModal } from "./types";
 
 const guestDataSchema = z.object({
   creds: z.array(

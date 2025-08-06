@@ -1,3 +1,4 @@
+import { z } from "zod";
 import type {
   JsonSchema7AnyType,
   JsonSchema7ArrayType,
@@ -7,7 +8,6 @@ import type {
   JsonSchema7SetType,
   JsonSchema7StringType,
 } from "zod-to-json-schema";
-import { z } from "zod/v4";
 
 import {
   isJsonSchema7AnyOfType,
@@ -149,7 +149,7 @@ function createObjectSchema(jsonSchema: JsonSchema7ObjectType): z.ZodType {
   if (jsonSchema.additionalProperties) {
     schema = z.looseObject({});
   } else {
-    schema = z.strictObject({});
+    schema = z.object({});
   }
 
   if (jsonSchema.properties !== undefined) {

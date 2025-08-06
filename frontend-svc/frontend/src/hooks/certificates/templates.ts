@@ -1,15 +1,15 @@
 import {
-  DefaultError,
-  QueryKey,
+  type DefaultError,
+  type QueryKey,
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
 import axios from "axios";
-import { z } from "zod/v4";
+import { z } from "zod";
 
 import { queryClient } from "@/hooks/queryClient";
 import { queryGetFn, useGetQuery } from "@/hooks/useGetQuery";
-import { QueryUser } from "@/hooks/useQueryUser";
+import type { QueryUser } from "@/hooks/useQueryUser";
 import { api } from "@/utils/apiCompose";
 import { getErrorMessage } from "@/utils/errors";
 import { log } from "@/utils/log";

@@ -1,9 +1,9 @@
-import { FC } from "react";
 import { Pill, PillsInput, Stack, Switch, TextInput } from "@mantine/core";
+import type { FC } from "react";
 import { Controller, useController } from "react-hook-form";
-import { z } from "zod/v4";
+import { z } from "zod";
 
-import { ServerSettings } from "@/hooks/settings/servers";
+import type { ServerSettings } from "@/hooks/settings/servers";
 import { getErrorMessage } from "@/utils/errors";
 import { toast } from "@/utils/toasts";
 

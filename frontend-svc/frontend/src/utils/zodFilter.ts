@@ -1,4 +1,4 @@
-import { z } from "zod/v4";
+import { z } from "zod";
 
 export const zodFilter = z.object({
   filter_value: z.string().optional(),

@@ -4,7 +4,7 @@ import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import type { FC } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
-import { z } from "zod/v4";
+import { z } from "zod";
 
 import {
   ScepCaCertificateSchema,

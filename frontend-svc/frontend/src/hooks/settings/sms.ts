@@ -1,11 +1,11 @@
 import {
-  DefaultError,
-  QueryKey,
+  type DefaultError,
+  type QueryKey,
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
 import axios from "axios";
-import { z } from "zod/v4";
+import { z } from "zod";
 
 import { api } from "@/utils/apiCompose";
 import { getErrorMessage } from "@/utils/errors";
@@ -14,7 +14,7 @@ import { orMe } from "@/utils/orMe";
 import { toast } from "@/utils/toasts";
 
 import { useGetQuery } from "../useGetQuery";
-import { QueryUser } from "../useQueryUser";
+import type { QueryUser } from "../useQueryUser";
 
 const getSMSGatewaySettingsKey = (user: string): QueryKey => [
   "settings",

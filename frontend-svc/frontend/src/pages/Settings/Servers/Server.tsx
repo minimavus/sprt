@@ -1,11 +1,11 @@
-import { useEffect, type FC } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Modal, Stack } from "@mantine/core";
 import { useQueryClient } from "@tanstack/react-query";
+import { type FC, useEffect } from "react";
 import {
   FormProvider,
-  SubmitErrorHandler,
-  SubmitHandler,
+  type SubmitErrorHandler,
+  type SubmitHandler,
   useForm,
 } from "react-hook-form";
 import { useParams } from "react-router-dom";
@@ -16,10 +16,10 @@ import { SkeletonLines } from "@/components/Skeleton";
 import {
   getServerSettingsKey,
   NewServerSchema,
+  type ServerSettings,
   ServerSettingsSchema,
   useServerSettings,
   useServerSettingsUpsert,
-  type ServerSettings,
 } from "@/hooks/settings/servers";
 import { useDelayedModalState } from "@/hooks/useDelayedModalState";
 import { queryGetFn } from "@/hooks/useGetQuery";

@@ -473,8 +473,8 @@ func guestSelfRegNames() []Parameter {
 		"guestUser.fieldValues.ui_reason_visit",
 	} {
 		fieldName := strings.TrimPrefix(n, "guestUser.fieldValues.ui_")
-		if strings.HasPrefix(fieldName, "guestUser.") {
-			fieldName = strings.TrimPrefix(fieldName, "guestUser.")
+		if after, ok := strings.CutPrefix(fieldName, "guestUser."); ok {
+			fieldName = after
 		}
 		fieldName = strcase.ToDelimited(fieldName, '_')
 		name := cases.Title(language.English, cases.NoLower).String(strings.ReplaceAll(fieldName, "_", " "))
