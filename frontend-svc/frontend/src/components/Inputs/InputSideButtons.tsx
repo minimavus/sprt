@@ -1,16 +1,16 @@
+import { Button, Menu } from "@mantine/core";
+import { useDisclosure, useElementSize } from "@mantine/hooks";
+import { IconChevronDown } from "@tabler/icons-react";
 import {
   createContext,
-  use,
-  useCallback,
-  useEffect,
   type Dispatch,
   type FC,
   type RefObject,
   type SetStateAction,
+  use,
+  useCallback,
+  useEffect,
 } from "react";
-import { Button, Menu } from "@mantine/core";
-import { useDisclosure, useElementSize } from "@mantine/hooks";
-import { IconChevronDown } from "@tabler/icons-react";
 
 import type { InputSideButton } from "@/hooks/generate/schemas";
 import { log } from "@/utils/log";
@@ -88,7 +88,7 @@ const DropdownButton: FC<{
       <Menu.Dropdown>
         {button.values?.map((v) =>
           v.type === "group" ? (
-            <Menu.Sub>
+            <Menu.Sub key={v.title}>
               <Menu.Sub.Target>
                 <Menu.Sub.Item>{v.title}</Menu.Sub.Item>
               </Menu.Sub.Target>
@@ -104,7 +104,7 @@ const DropdownButton: FC<{
               </Menu.Sub.Dropdown>
             </Menu.Sub>
           ) : v.type === "value" ? (
-            <Menu.Item onClick={() => handleItemValue(v.value)}>
+            <Menu.Item onClick={() => handleItemValue(v.value)} key={v.title}>
               {v.title}
             </Menu.Item>
           ) : null,

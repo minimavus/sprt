@@ -6,7 +6,7 @@ require (
 	github.com/aohorodnyk/mimeheader v0.0.6
 	github.com/bingoohuang/gg v0.0.0-20240822023057-9d953357a953
 	github.com/friendsofgo/errors v0.9.2
-	github.com/go-co-op/gocron/v2 v2.16.2
+	github.com/go-co-op/gocron/v2 v2.16.3
 	github.com/go-kit/kit v0.13.0
 	github.com/go-playground/validator/v10 v10.27.0
 	github.com/gobwas/glob v0.2.3
@@ -26,7 +26,7 @@ require (
 	github.com/pexip/go-openssl v0.2.8
 	github.com/quasoft/memstore v0.0.0-20191010062613-2bce066d2b0b
 	github.com/rbcervilla/redisstore/v9 v9.0.0
-	github.com/redis/go-redis/v9 v9.11.0
+	github.com/redis/go-redis/v9 v9.12.0
 	github.com/rickb777/date v1.21.1
 	github.com/rs/zerolog v1.34.0
 	github.com/rubenv/sql-migrate v1.8.0
@@ -42,8 +42,8 @@ require (
 	github.com/volatiletech/sqlboiler/v4 v4.19.1
 	github.com/volatiletech/strmangle v0.0.8
 	github.com/zmap/zcrypto v0.0.0-20250710172053-7835e31ca584
-	golang.org/x/text v0.27.0
-	google.golang.org/grpc v1.73.0
+	golang.org/x/text v0.28.0
+	google.golang.org/grpc v1.74.2
 	layeh.com/radius v0.0.0-20231213012653-1006025d24f8
 )
 
@@ -92,13 +92,13 @@ require (
 	github.com/volatiletech/randomize v0.0.1 // indirect
 	github.com/weppos/publicsuffix-go v0.40.3-0.20250708083804-25ff8f86d8b3 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
-	golang.org/x/crypto v0.39.0 // indirect
+	golang.org/x/crypto v0.40.0 // indirect
 	golang.org/x/net v0.41.0 // indirect
-	golang.org/x/oauth2 v0.28.0 // indirect
-	golang.org/x/sys v0.33.0 // indirect
+	golang.org/x/oauth2 v0.30.0 // indirect
+	golang.org/x/sys v0.34.0 // indirect
 	golang.org/x/time v0.11.0 // indirect
 	golang.org/x/xerrors v0.0.0-20240903120638-7835f813f4da // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20250407143221-ac9807e6c755 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20250528174236-200df99c418a // indirect
 	google.golang.org/protobuf v1.36.6 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
