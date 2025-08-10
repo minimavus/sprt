@@ -1,4 +1,3 @@
-import { type FC } from "react";
 import {
   ActionIcon,
   Group,
@@ -9,6 +8,7 @@ import {
 } from "@mantine/core";
 import { IconTrash } from "@tabler/icons-react";
 import { path } from "rambda";
+import type { FC } from "react";
 import { useFieldArray, useFormContext, useFormState } from "react-hook-form";
 
 export const ListEdit: FC<{

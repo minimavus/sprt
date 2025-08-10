@@ -1,5 +1,5 @@
 # Get workspace root directory (parent of go.work)
-WORKSPACE_ROOT := $(shell dirname $$(go env GOWORK))
+WORKSPACE_ROOT := $(shell dirname $$(go env GOWORK))/go-generator
 
 # Default target
 .PHONY: build

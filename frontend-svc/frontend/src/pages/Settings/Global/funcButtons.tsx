@@ -1,4 +1,4 @@
-import { InputSideButton } from "@/hooks/generate/schemas";
+import type { InputSideButton } from "@/hooks/generate/schemas";
 
 export const funcButtons: InputSideButton[] = [
   {

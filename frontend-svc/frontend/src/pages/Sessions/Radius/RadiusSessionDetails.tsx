@@ -1,7 +1,7 @@
-import { Suspense, useState, type FC } from "react";
 import { Button, Group, Modal, rem, Stack, Tabs, Text } from "@mantine/core";
-import { DefaultError } from "@tanstack/react-query";
-import { Await, LoaderFunction, useLoaderData } from "react-router-dom";
+import type { DefaultError } from "@tanstack/react-query";
+import { type FC, Suspense, useState } from "react";
+import { Await, type LoaderFunction, useLoaderData } from "react-router-dom";
 
 import { Warning } from "@/components/Alerts";
 import { AwaitError } from "@/components/Error";

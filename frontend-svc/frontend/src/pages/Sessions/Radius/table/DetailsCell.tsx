@@ -1,4 +1,3 @@
-import { type FC } from "react";
 import { ActionIcon, ButtonGroup, Menu, Tooltip } from "@mantine/core";
 import {
   IconCancel,
@@ -7,10 +6,11 @@ import {
   IconUserQuestion,
   IconWaveSine,
 } from "@tabler/icons-react";
+import type { FC } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { RowActionsButton } from "@/components/Table/RowActionsButton";
-import { RadiusSession } from "@/hooks/sessions/schemas";
+import type { RadiusSession } from "@/hooks/sessions/schemas";
 
 import { useActionsContext } from "../actionsContext";
 

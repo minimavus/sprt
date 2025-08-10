@@ -6,7 +6,7 @@ import (
 	"github.com/cisco-open/sprt/go-generator/sdk/registry"
 
 	// Import generated plugins so init() runs
-	_ "github.com/cisco-open/sprt/go-generator/generator/internal/plugins"
+	_ "github.com/cisco-open/sprt/go-generator/generator/plugins_gen"
 )
 
 func main() {

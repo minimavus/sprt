@@ -9,24 +9,21 @@ import { queryGetFn } from "@/hooks/useGetQuery";
 import { api } from "@/utils/apiCompose";
 import failOrRetry from "@/utils/failOrRetry";
 
-import { type GlobalConfig, globalConfigSchema } from "./schemas";
+import { type Plugins, pluginsSchema } from "./schemas";
 
-const getUseConfigKey = (): QueryKey => ["globals", "config"];
+const getUsePluginsKey = (): QueryKey => ["globals", "plugins"];
 
-export const getUseConfigKeyAndEnsureDefaults = (): QueryKey => {
-  const queryKey = getUseConfigKey();
+export const getUsePluginsKeyAndEnsureDefaults = (): QueryKey => {
+  const queryKey = getUsePluginsKey();
 
   const def = queryClient.getQueryDefaults(queryKey);
   if (!def || !def.queryFn) {
     queryClient.setQueryDefaults(queryKey, {
       queryFn: queryGetFn({
-        url: api.v2`/config`,
-        schema: globalConfigSchema,
+        url: api.v2`/config/plugins`,
+        schema: pluginsSchema,
         withSignal: true,
       }),
-      select: (data: GlobalConfig) => {
-        return data?.config;
-      },
       retry: failOrRetry(),
     });
   }
@@ -34,7 +31,7 @@ export const getUseConfigKeyAndEnsureDefaults = (): QueryKey => {
   return queryKey;
 };
 
-export const useConfig = () => {
-  const queryKey = getUseConfigKeyAndEnsureDefaults();
-  return useQuery<unknown, DefaultError, GlobalConfig["config"]>({ queryKey });
+export const usePlugins = () => {
+  const queryKey = getUsePluginsKeyAndEnsureDefaults();
+  return useQuery<unknown, DefaultError, Plugins>({ queryKey });
 };

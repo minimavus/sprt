@@ -1,4 +1,5 @@
 import ipaddr from "ipaddr.js";
+import { log } from "@/utils/log";
 
 type matcher = (value: string) => boolean;
 
@@ -20,6 +21,7 @@ export const buildIPMatcher = (pattern: string): matcher => {
       }
       return ip.match(addr, 128);
     } catch (e) {
+      log.error(e, "Invalid IP address", { pattern, value });
       return false;
     }
   };

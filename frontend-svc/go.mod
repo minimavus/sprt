@@ -45,6 +45,7 @@ require (
 	golang.org/x/text v0.28.0
 	google.golang.org/grpc v1.74.2
 	layeh.com/radius v0.0.0-20231213012653-1006025d24f8
+
 )
 
 require (

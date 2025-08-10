@@ -1,9 +1,9 @@
-import { FC, Suspense, useEffect } from "react";
 import { Group, Stack, Tabs } from "@mantine/core";
-import { DefaultError } from "@tanstack/react-query";
+import type { DefaultError } from "@tanstack/react-query";
+import { type FC, Suspense, useEffect } from "react";
 import {
   Await,
-  LoaderFunction,
+  type LoaderFunction,
   Outlet,
   useLoaderData,
   useLocation,
@@ -18,7 +18,7 @@ import { PageLayout } from "@/components/Layout/PageLayout";
 import { DefaultLoaderFallback } from "@/components/Loader";
 import { queryClient } from "@/hooks/queryClient";
 import { getSessionsSummaryKeyAndEnsureDefaults } from "@/hooks/sessions";
-import { SessionsSummary } from "@/hooks/sessions/schemas";
+import type { SessionsSummary } from "@/hooks/sessions/schemas";
 
 import { BulkTabLink } from "../BulkTabLink";
 import { ServersGrid } from "../ServersGrid";

@@ -1,10 +1,3 @@
-import {
-  Suspense,
-  useState,
-  type Dispatch,
-  type FC,
-  type SetStateAction,
-} from "react";
 import { useDebouncedState, useResizeObserver } from "@mantine/hooks";
 import type { DefaultError } from "@tanstack/react-query";
 import type {
@@ -13,11 +6,18 @@ import type {
   SortingState,
 } from "@tanstack/react-table";
 import {
+  type Dispatch,
+  type FC,
+  type SetStateAction,
+  Suspense,
+  useState,
+} from "react";
+import {
   Await,
+  type LoaderFunction,
   Outlet,
   useLoaderData,
   useParams,
-  type LoaderFunction,
 } from "react-router-dom";
 
 import { AwaitError } from "@/components/Error";
@@ -29,7 +29,7 @@ import {
   getSessionInBulkKeyAndEnsureDefaults,
   useSessionInBulk,
 } from "@/hooks/sessions";
-import { type SessionsInBulk } from "@/hooks/sessions/schemas";
+import type { SessionsInBulk } from "@/hooks/sessions/schemas";
 import { useQueryUser } from "@/hooks/useQueryUser";
 import { sortingStateToSort } from "@/utils/toSort";
 

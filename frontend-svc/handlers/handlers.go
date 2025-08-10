@@ -41,25 +41,25 @@ func RegisterRoutes(a *config.AppConfig, e *echo.Echo) {
 
 	v2.POST("/logger", StoreUILogs)
 
-	addLogsApiRoutes(v2.Group("/logs"))
-	addCleanupApiRoutes(v2.Group("/cleanup"))
-	addSettingsApiRoutes(v2.Group("/settings"))
-	addCertificatesApiRoutes(v2.Group("/certificates"))
-	addSessionsApiRoutes(v2.Group("/sessions"))
-	addJobsApiRoutes(v2.Group("/jobs"))
-	addPxGridApiRoutes(v2.Group("/pxgrid"))
-	addGenerateApiRoutes(v2.Group("/generate"))
+	addLogsAPIRoutes(v2.Group("/logs"))
+	addCleanupAPIRoutes(v2.Group("/cleanup"))
+	addSettingsAPIRoutes(v2.Group("/settings"))
+	addCertificatesAPIRoutes(v2.Group("/certificates"))
+	addSessionsAPIRoutes(v2.Group("/sessions"))
+	addJobsAPIRoutes(v2.Group("/jobs"))
+	addPxGridAPIRoutes(v2.Group("/pxgrid"))
+	addGenerateAPIRoutes(v2.Group("/generate"))
 	addScepRoutes(v2.Group("/scep"))
-	addGlobalConfigApiRoutes(v2.Group("/config"))
+	addGlobalConfigAPIRoutes(v2.Group("/config"))
 
-	addUIApiRoutes(api.Group("/ui"))
+	addUIAPIRoutes(api.Group("/ui"))
 
 	v2.RouteNotFound("/*", func(echo.Context) error {
 		return echo.NewHTTPError(404, "Not Found")
 	})
 }
 
-func addSettingsApiRoutes(r shared.EchoRouter) {
+func addSettingsAPIRoutes(r shared.EchoRouter) {
 	r.GET("/servers", rest.GetServersSettings, m.ValidatePermission("settings.read_servers.others"))
 	r.POST("/servers", rest.CreateServerSettings, m.ValidatePermission("settings.create_servers.others"))
 
@@ -90,7 +90,7 @@ func addSettingsApiRoutes(r shared.EchoRouter) {
 	r.PUT("/defaults/generate", rest.UpdateUserGenerateDefaults, m.ValidatePermission("settings.update_defaults.others"))
 }
 
-func addCertificatesApiRoutes(r shared.EchoRouter) {
+func addCertificatesAPIRoutes(r shared.EchoRouter) {
 	r.GET("/identity", rest.GetCertificatesOfType(models.CertTypeIdentity), m.ValidatePermission("certificates.read.others"))
 	r.DELETE("/identity", rest.DeleteMultipleCertificates, m.ValidatePermission("certificates.delete.others"))
 	r.POST("/identity", rest.ImportIdentityCertificate, m.ValidatePermission("certificates.create.others"))
@@ -134,7 +134,7 @@ func addScepRoutes(r shared.EchoRouter) {
 	r.POST("/test/enroll", rest.TestScepEnroll, m.ValidatePermission("scep.test_enroll.others"))
 }
 
-func addLogsApiRoutes(r shared.EchoRouter) {
+func addLogsAPIRoutes(r shared.EchoRouter) {
 	r.GET("", rest.GetLogOwners, m.ValidatePermission("logs.owners.get_all", policy.PoliceAlways()))
 	r.GET("/:owner", rest.GetLogOwnerChunks)
 	r.DELETE("/:owner", rest.DeleteLogs)
@@ -142,7 +142,7 @@ func addLogsApiRoutes(r shared.EchoRouter) {
 	r.DELETE("/:owner/:chunk", rest.DeleteLogs)
 }
 
-func addCleanupApiRoutes(r shared.EchoRouter) {
+func addCleanupAPIRoutes(r shared.EchoRouter) {
 	r.GET("/flows", rest.GetOrphanedFlows, m.ValidatePermission("cleanup.access.flows", policy.PoliceAlways()))
 	r.GET("/flows/status", rest.GetOrphanedFlowsStatus, m.ValidatePermission("cleanup.access.flows", policy.PoliceAlways()))
 	r.DELETE("/flows", rest.DeleteOrphanedFlows, m.ValidatePermission("cleanup.clean.flows", policy.PoliceAlways()))
@@ -167,7 +167,7 @@ func addCleanupApiRoutes(r shared.EchoRouter) {
 	r.DELETE("/scheduled", rest.DeleteScheduledJob, m.ValidatePermission("cleanup.clean.scheduled", policy.PoliceAlways()))
 }
 
-func addSessionsApiRoutes(r shared.EchoRouter) {
+func addSessionsAPIRoutes(r shared.EchoRouter) {
 	r.GET("/summary", rest.GetSessionsPerServerBulked, m.ValidatePermission("sessions.read.others"))
 
 	r.GET("/radius/:server/:bulk", rest.GetSessionsPerBulk(models.ProtosRadius), m.ValidatePermission("sessions.read.others"))
@@ -187,7 +187,7 @@ func addSessionsApiRoutes(r shared.EchoRouter) {
 	r.GET("/session-summary/:id", rest.GetSessionSummary, m.ValidatePermission("sessions.read.others"))
 }
 
-func addPxGridApiRoutes(r shared.EchoRouter) {
+func addPxGridAPIRoutes(r shared.EchoRouter) {
 	r.GET("/status", rest.GetPxGridStatus)
 
 	r.GET("/connections", rest.GetPxGridConnectionsOfUser, m.ValidatePermission("pxgrid.read.others"))
@@ -216,7 +216,7 @@ func addPxGridApiRoutes(r shared.EchoRouter) {
 	r.GET("/connections-total", rest.GetPxGridConnectionsOfUserTotal, m.ValidatePermission("pxgrid.read.others"))
 }
 
-func addJobsApiRoutes(r shared.EchoRouter) {
+func addJobsAPIRoutes(r shared.EchoRouter) {
 	r.GET("/get-users", rest.GetAllUsersWithJobs, m.ValidatePermission("jobs.read.all_users", policy.PoliceAlways()))
 
 	r.GET("", rest.GetJobsOfUser, m.ValidatePermission("jobs.read.others"))
@@ -225,14 +225,14 @@ func addJobsApiRoutes(r shared.EchoRouter) {
 	r.POST("/:id/repeat", rest.RepeatJob, m.ValidatePermission("jobs.repeat.others"))
 }
 
-func addUIApiRoutes(r shared.EchoRouter) {
+func addUIAPIRoutes(r shared.EchoRouter) {
 	r.GET("/me/session", rest.getMySession)
 	r.GET("/me/attributes", rest.getMyAttributes)
 	r.PUT("/me/attributes", rest.putMyAttributes)
 	r.GET("/me/permission", rest.getMyPermission)
 }
 
-func addGenerateApiRoutes(r shared.EchoRouter) {
+func addGenerateAPIRoutes(r shared.EchoRouter) {
 	r.GET("/proto/:proto/parameters", rest.GetProtoSpecificParams)
 	r.GET("/proto/:proto/defaults", rest.GetProtoDefaults, m.ValidatePermission("generate_defaults.read.others"))
 	r.GET("/variables/:variable", rest.GetVariableDefinition)
@@ -242,7 +242,10 @@ func addGenerateApiRoutes(r shared.EchoRouter) {
 	r.GET("/tls/ciphers", rest.GetSupportedTLSCipherSuites)
 }
 
-func addGlobalConfigApiRoutes(r shared.EchoRouter) {
+func addGlobalConfigAPIRoutes(r shared.EchoRouter) {
 	r.GET("", rest.GetGlobalConfig)
 	r.PUT("", rest.UpdateGlobalConfig, m.ValidatePermission("global_config.update", policy.PoliceAlways()))
+
+	r.GET("/plugins", rest.GetLoadedPlugins, m.ValidatePermission("plugins.read"))
+	r.PATCH("/plugins/:name", rest.UpdatePlugin, m.ValidatePermission("plugins.update"))
 }

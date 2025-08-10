@@ -15,6 +15,8 @@ import (
 	"github.com/cisco-open/sprt/frontend-svc/internal/json_serializer"
 	"github.com/cisco-open/sprt/frontend-svc/internal/middleware"
 	"github.com/cisco-open/sprt/frontend-svc/internal/validator"
+
+	_ "github.com/cisco-open/sprt/go-generator/generator/plugins_gen"
 )
 
 func main() {

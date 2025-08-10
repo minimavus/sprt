@@ -1,4 +1,3 @@
-import { Suspense, useRef, useState, type FC } from "react";
 import {
   Button,
   Fieldset,
@@ -11,7 +10,8 @@ import {
 } from "@mantine/core";
 import { useElementSize, useMergedRef } from "@mantine/hooks";
 import { IconDeviceFloppy } from "@tabler/icons-react";
-import { DefaultError } from "@tanstack/react-query";
+import type { DefaultError } from "@tanstack/react-query";
+import { type FC, Suspense, useRef, useState } from "react";
 import {
   Controller,
   FormProvider,
@@ -27,7 +27,7 @@ import {
 } from "@/components/Inputs/InputSideButtons";
 import { PageLayout } from "@/components/Layout/PageLayout";
 import { DefaultLoaderFallback } from "@/components/Loader";
-import { GlobalConfig } from "@/hooks/config/schemas";
+import type { GlobalConfig } from "@/hooks/config/schemas";
 import {
   getUseConfigKeyAndEnsureDefaults,
   useConfig,
@@ -35,9 +35,9 @@ import {
 import { queryClient } from "@/hooks/queryClient";
 import { flattenObject } from "@/utils/flattenObject";
 import set from "@/utils/set";
-
 import { funcButtons } from "./funcButtons";
 import { IPSourcesConfig } from "./IPSourcesConfig";
+import { PluginsView } from "./PluginsView";
 
 const defaultValuesFromInit = (init: GlobalConfig["config"]) => {
   return Object.keys(init).reduce(
@@ -225,6 +225,7 @@ const GlobalSettingsView: FC = () => {
           <RadiusConfig />
           <PatternsConfig />
           <MiscConfigs />
+          <PluginsView />
         </Stack>
         <div
           style={

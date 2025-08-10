@@ -1,7 +1,7 @@
 import type { ColumnDef } from "@tanstack/react-table";
 
 import { FormatTime } from "@/components/Time";
-import { RadiusSession } from "@/hooks/sessions/schemas";
+import type { RadiusSession } from "@/hooks/sessions/schemas";
 import { dateSortingFn } from "@/utils/table/dateSortingFn";
 import { renderOrNone } from "@/utils/table/renderOrNone";
 import { formatTime } from "@/utils/time";

@@ -1,5 +1,4 @@
 import { z } from "zod";
-
 import { zodBool } from "@/utils/zodBool";
 
 const fieldSchema = <Z extends z.ZodType>(value: Z) =>
@@ -45,3 +44,17 @@ export const globalConfigSchema = z.object({
 });
 
 export type GlobalConfig = z.infer<typeof globalConfigSchema>;
+
+export const pluginSchema = z.object({
+  name: z.string(),
+  schema: z.any(),
+});
+
+export const pluginsSchema = z.object({
+  plugins: z.array(pluginSchema),
+  total: z.number().int().nonnegative(),
+});
+
+export type Plugin = z.infer<typeof pluginSchema>;
+
+export type Plugins = z.infer<typeof pluginsSchema>;

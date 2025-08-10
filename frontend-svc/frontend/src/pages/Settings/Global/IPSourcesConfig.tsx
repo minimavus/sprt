@@ -1,6 +1,6 @@
-import { type FC } from "react";
 import { Button, Code, Fieldset, Stack, Switch, Text } from "@mantine/core";
 import { modals } from "@mantine/modals";
+import type { FC } from "react";
 import { Controller, useFormContext, useWatch } from "react-hook-form";
 
 import { DisplayError } from "@/components/Error";
