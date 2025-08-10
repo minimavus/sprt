@@ -15,10 +15,11 @@ import (
 	"layeh.com/radius/dictionary"
 
 	"github.com/cisco-open/sprt/frontend-svc/internal/db"
-	"github.com/cisco-open/sprt/frontend-svc/internal/iputils"
+
 	"github.com/cisco-open/sprt/frontend-svc/internal/variables"
 	"github.com/cisco-open/sprt/frontend-svc/shared"
 
+	"github.com/cisco-open/sprt/go-generator/sdk/iputils"
 	sdk "github.com/cisco-open/sprt/go-generator/sdk/variables"
 	"github.com/cisco-open/sprt/go-generator/sdk/variables/dictionaries/radius"
 )

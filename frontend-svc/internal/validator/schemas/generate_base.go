@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"reflect"
 
-	"github.com/cisco-open/sprt/frontend-svc/internal/json"
+	"github.com/cisco-open/sprt/go-generator/sdk/json"
 )
 
 type GenerateJson struct {

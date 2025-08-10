@@ -6,8 +6,8 @@ import (
 	"github.com/volatiletech/null/v8"
 	"github.com/volatiletech/sqlboiler/v4/queries/qm"
 
-	"github.com/cisco-open/sprt/frontend-svc/internal/json"
 	"github.com/cisco-open/sprt/frontend-svc/models"
+	"github.com/cisco-open/sprt/go-generator/sdk/json"
 )
 
 func (e *execute) getUserSettingsJSON(ctx context.Context, user, propertyName string) (null.JSON, error) {

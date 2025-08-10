@@ -12,7 +12,7 @@ import (
 	"github.com/zmap/zcrypto/x509"
 	"github.com/zmap/zcrypto/x509/pkix"
 
-	"github.com/cisco-open/sprt/frontend-svc/internal/json"
+	"github.com/cisco-open/sprt/go-generator/sdk/json"
 )
 
 func (c Certificate) MarshalJSON() ([]byte, error) {

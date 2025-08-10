@@ -5,8 +5,9 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/cisco-open/sprt/frontend-svc/internal/json"
 	"github.com/labstack/echo/v4"
+
+	"github.com/cisco-open/sprt/go-generator/sdk/json"
 )
 
 // GoJSONSerializer implements JSON encoding using github.com/goccy/go-json.

@@ -4,8 +4,8 @@ import (
 	"strings"
 
 	"github.com/cisco-open/sprt/frontend-svc/internal/db"
-	"github.com/cisco-open/sprt/frontend-svc/internal/json"
 	"github.com/cisco-open/sprt/frontend-svc/models"
+	"github.com/cisco-open/sprt/go-generator/sdk/json"
 )
 
 type PacketType string

@@ -7,8 +7,8 @@ import (
 	"fmt"
 	"slices"
 
-	"github.com/cisco-open/sprt/frontend-svc/internal/json"
 	"github.com/cisco-open/sprt/frontend-svc/models"
+	"github.com/cisco-open/sprt/go-generator/sdk/json"
 	"github.com/mitchellh/mapstructure"
 	"github.com/volatiletech/sqlboiler/v4/boil"
 )

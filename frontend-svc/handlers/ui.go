@@ -7,9 +7,9 @@ import (
 	"github.com/volatiletech/sqlboiler/v4/boil"
 
 	"github.com/cisco-open/sprt/frontend-svc/internal/auth"
-	"github.com/cisco-open/sprt/frontend-svc/internal/json"
 	"github.com/cisco-open/sprt/frontend-svc/internal/policy"
 	"github.com/cisco-open/sprt/frontend-svc/models"
+	"github.com/cisco-open/sprt/go-generator/sdk/json"
 )
 
 func (m *controller) getMySession(c echo.Context) error {

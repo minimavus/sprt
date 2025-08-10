@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net"
 
-	"github.com/cisco-open/sprt/frontend-svc/internal/iputils"
+	"github.com/cisco-open/sprt/go-generator/sdk/iputils"
 )
 
 func (g *generator) GetAvailableIPSources(includeAll bool) ([]iputils.Source, error) {

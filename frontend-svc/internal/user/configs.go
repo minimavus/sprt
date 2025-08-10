@@ -4,8 +4,8 @@ import (
 	"context"
 
 	"github.com/cisco-open/sprt/frontend-svc/internal/auth"
-	"github.com/cisco-open/sprt/frontend-svc/internal/json"
 	"github.com/cisco-open/sprt/frontend-svc/shared"
+	"github.com/cisco-open/sprt/go-generator/sdk/json"
 )
 
 const tempDefaults = `{"general": {

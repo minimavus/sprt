@@ -3,147 +3,185 @@ package variables
 import (
 	"slices"
 
-	"github.com/cisco-open/sprt/frontend-svc/internal/iputils"
+	"github.com/cisco-open/sprt/go-generator/sdk/radius/attributes"
 )
 
 var (
-	copyLatestValue     = value("Copy Latest Value")
-	copyFromResponse    = value("Copy From Response")
-	calculate           = value("Calculate")
-	fromCredentialsList = value("From the credentials list")
-	eapData             = value("EAP and TLS data")
-
-	copyValues = customValues([]string{"Copy Latest Value", "Copy From Response"})
-
-	rfc2865 = dictionary("rfc2865")
-	rfc2866 = dictionary("rfc2866")
-	rfc2869 = dictionary("rfc2869")
-	rfc3579 = dictionary("rfc3579")
-	rfc3162 = dictionary("rfc3162")
-
-	v4Only = familySpecific(iputils.IPv4)
-	v6Only = familySpecific(iputils.IPv6)
-
-	commonRequest = []RadiusAttribute{
-		buildAttribute(id("Acct-Session-Id"), value("$SESSION_ID$"), rfc2866, nonRemovable()),
-		buildAttribute(id("Calling-Station-Id"), value("$MAC$"), rfc2865, overwritable(), customValues([]string{"$MAC$"})),
-		buildAttribute(id("Called-Station-Id"), value("00-00-00-FF-FF-FF"), rfc2865, overwritable()),
-		buildAttribute(id("NAS-IP-Address"), value("$NAS_IP$"), rfc2865, overwritable(), customValues([]string{"$NAS_IP$"}), v4Only),
-		buildAttribute(id("NAS-IPv6-Address"), value("$NAS_IP$"), rfc3162, overwritable(), customValues([]string{"$NAS_IP$"}), v6Only),
-		buildAttribute(id("NAS-Port-Type"), value("$PORT_TYPE$"), rfc2865, overwritable(), customValues([]string{"$PORT_TYPE$"})),
-		buildAttribute(id("Message-Authenticator"), calculate, rfc2869, overwritable(), customValues([]string{"Calculate"})),
-		buildAttribute(id("Framed-MTU"), value("$MTU$"), rfc2865, overwritable(), customValues([]string{"$MTU$"})),
+	commonRequest = []attributes.RadiusAttribute{
+		attributes.Build(attributes.ID("Acct-Session-Id"),
+			attributes.Value("$SESSION_ID$"),
+			attributes.RFC2866,
+			attributes.NonRemovable()),
+		attributes.Build(attributes.ID("Calling-Station-Id"),
+			attributes.Value("$MAC$"),
+			attributes.RFC2865,
+			attributes.Overridable(),
+			attributes.CustomValues([]string{"$MAC$"})),
+		attributes.Build(attributes.ID("Called-Station-Id"),
+			attributes.Value("00-00-00-FF-FF-FF"),
+			attributes.RFC2865,
+			attributes.Overridable()),
+		attributes.Build(attributes.ID("NAS-IP-Address"),
+			attributes.Value("$NAS_IP$"),
+			attributes.RFC2865,
+			attributes.Overridable(),
+			attributes.CustomValues([]string{"$NAS_IP$"}),
+			attributes.V4Only),
+		attributes.Build(attributes.ID("NAS-IPv6-Address"),
+			attributes.Value("$NAS_IP$"),
+			attributes.RFC3162,
+			attributes.Overridable(),
+			attributes.CustomValues([]string{"$NAS_IP$"}),
+			attributes.V6Only),
+		attributes.Build(attributes.ID("NAS-Port-Type"),
+			attributes.Value("$PORT_TYPE$"),
+			attributes.RFC2865,
+			attributes.Overridable(),
+			attributes.CustomValues([]string{"$PORT_TYPE$"})),
+		attributes.Build(attributes.ID("Message-Authenticator"),
+			attributes.Calculate,
+			attributes.RFC2869,
+			attributes.Overridable(),
+			attributes.CustomValues([]string{"Calculate"})),
+		attributes.Build(attributes.ID("Framed-MTU"),
+			attributes.Value("$MTU$"),
+			attributes.RFC2865,
+			attributes.Overridable(),
+			attributes.CustomValues([]string{"$MTU$"})),
 	}
 
-	commonAccounting = []RadiusAttribute{
-		buildAttribute(id("Acct-Authentic"), value("RADIUS"), rfc2866, overwritable()),
-		buildAttribute(id("Acct-Session-Id"), copyLatestValue, rfc2866, overwritable(), copyValues),
-		buildAttribute(id("Acct-Status-Type"), value("Start"), rfc2866, overwritable()),
-		buildAttribute(id("Called-Station-Id"), copyLatestValue, rfc2865, overwritable(), copyValues),
-		buildAttribute(id("Calling-Station-Id"), copyLatestValue, rfc2865, overwritable(), copyValues),
-		buildAttribute(id("Class"), copyFromResponse, rfc2865, overwritable(), copyValues),
-		buildAttribute(id("Framed-IP-Address"), value("$IP$"), rfc2865, overwritable(), customValues([]string{"$IP$"})),
-		buildAttribute(id("NAS-IP-Address"), copyLatestValue, rfc2865, overwritable(), copyValues, v4Only),
-		buildAttribute(id("NAS-IPv6-Address"), copyLatestValue, rfc3162, overwritable(), copyValues, v6Only),
-		buildAttribute(id("NAS-Port-Type"), copyLatestValue, rfc2865, overwritable(), copyValues),
-		buildAttribute(id("Service-Type"), copyLatestValue, rfc2865, overwritable(), copyValues),
-		buildAttribute(id("User-Name"), copyFromResponse, rfc2865, overwritable(), copyValues),
+	commonAccounting = []attributes.RadiusAttribute{
+		attributes.Build(attributes.ID("Acct-Authentic"),
+			attributes.Value("RADIUS"),
+			attributes.RFC2866,
+			attributes.Overridable()),
+		attributes.Build(attributes.ID("Acct-Session-Id"),
+			attributes.CopyLatestValue,
+			attributes.RFC2866,
+			attributes.Overridable(),
+			attributes.CopyValues),
+		attributes.Build(attributes.ID("Acct-Status-Type"),
+			attributes.Value("Start"),
+			attributes.RFC2866,
+			attributes.Overridable()),
+		attributes.Build(attributes.ID("Called-Station-Id"),
+			attributes.CopyLatestValue,
+			attributes.RFC2865,
+			attributes.Overridable(),
+			attributes.CopyValues),
+		attributes.Build(attributes.ID("Calling-Station-Id"),
+			attributes.CopyLatestValue,
+			attributes.RFC2865,
+			attributes.Overridable(),
+			attributes.CopyValues),
+		attributes.Build(attributes.ID("Class"),
+			attributes.CopyFromResponse,
+			attributes.RFC2865,
+			attributes.Overridable(),
+			attributes.CopyValues),
+		attributes.Build(attributes.ID("Framed-IP-Address"),
+			attributes.Value("$IP$"),
+			attributes.RFC2865,
+			attributes.Overridable(),
+			attributes.CustomValues([]string{"$IP$"})),
+		attributes.Build(attributes.ID("NAS-IP-Address"),
+			attributes.CopyLatestValue,
+			attributes.RFC2865,
+			attributes.Overridable(),
+			attributes.CopyValues,
+			attributes.V4Only),
+		attributes.Build(attributes.ID("NAS-IPv6-Address"),
+			attributes.CopyLatestValue,
+			attributes.RFC3162,
+			attributes.Overridable(),
+			attributes.CopyValues,
+			attributes.V6Only),
+		attributes.Build(attributes.ID("NAS-Port-Type"),
+			attributes.CopyLatestValue,
+			attributes.RFC2865,
+			attributes.Overridable(),
+			attributes.CopyValues),
+		attributes.Build(attributes.ID("Service-Type"),
+			attributes.CopyLatestValue,
+			attributes.RFC2865,
+			attributes.Overridable(),
+			attributes.CopyValues),
+		attributes.Build(attributes.ID("User-Name"),
+			attributes.CopyFromResponse,
+			attributes.RFC2865,
+			attributes.Overridable(),
+			attributes.CopyValues),
 	}
 
 	MABAccessRequest = slices.Concat(
-		[]RadiusAttribute{
-			buildAttribute(id("Service-Type"), value("Call-Check"), rfc2865, nonRemovable()),
-			buildAttribute(id("User-Name"), value("Same as MAC address"), rfc2865, nonRemovable()),
+		[]attributes.RadiusAttribute{
+			attributes.Build(attributes.ID("Service-Type"),
+				attributes.Value("Call-Check"),
+				attributes.RFC2865,
+				attributes.NonRemovable()),
+			attributes.Build(attributes.ID("User-Name"),
+				attributes.Value("Same as MAC address"),
+				attributes.RFC2865,
+				attributes.NonRemovable()),
 		},
 		commonRequest)
 
 	MABAccountingStart = slices.Concat(commonAccounting)
 
 	PAPAccessRequest = slices.Concat(
-		[]RadiusAttribute{
-			buildAttribute(id("Service-Type"), value("Framed-User"), rfc2865, nonRemovable()),
-			buildAttribute(id("User-Name"), fromCredentialsList, rfc2865, nonRemovable()),
-			buildAttribute(id("User-Password"), fromCredentialsList, rfc2865, nonRemovable()),
+		[]attributes.RadiusAttribute{
+			attributes.Build(attributes.ID("Service-Type"),
+				attributes.Value("Framed-User"),
+				attributes.RFC2865,
+				attributes.NonRemovable()),
+			attributes.Build(attributes.ID("User-Name"),
+				attributes.FromCredentialsList,
+				attributes.RFC2865,
+				attributes.NonRemovable()),
+			attributes.Build(attributes.ID("User-Password"),
+				attributes.FromCredentialsList,
+				attributes.RFC2865,
+				attributes.NonRemovable()),
 		},
 		commonRequest)
 
 	PAPAccountingStart = slices.Concat(commonAccounting)
 
 	PEAPAccessRequest = slices.Concat(
-		[]RadiusAttribute{
-			buildAttribute(id("Service-Type"), value("Framed-User"), rfc2865, nonRemovable()),
-			buildAttribute(id("User-Name"), value("$USERNAME$"), rfc2865, nonRemovable()),
-			buildAttribute(id("EAP-Message"), eapData, rfc3579, nonRemovable()),
+		[]attributes.RadiusAttribute{
+			attributes.Build(attributes.ID("Service-Type"),
+				attributes.Value("Framed-User"),
+				attributes.RFC2865,
+				attributes.NonRemovable()),
+			attributes.Build(attributes.ID("User-Name"),
+				attributes.Value("$USERNAME$"),
+				attributes.RFC2865,
+				attributes.NonRemovable()),
+			attributes.Build(attributes.ID("EAP-Message"),
+				attributes.EAPData,
+				attributes.RFC3579,
+				attributes.NonRemovable()),
 		},
 		commonRequest)
 
 	PEAPAccountingStart = slices.Concat(commonAccounting)
 
 	EAPTLSAccessRequest = slices.Concat(
-		[]RadiusAttribute{
-			buildAttribute(id("Service-Type"), value("Framed-User"), rfc2865, nonRemovable()),
-			buildAttribute(id("User-Name"), value("$USERNAME$"), rfc2865, nonRemovable()),
-			buildAttribute(id("EAP-Message"), eapData, rfc3579, nonRemovable()),
+		[]attributes.RadiusAttribute{
+			attributes.Build(attributes.ID("Service-Type"),
+				attributes.Value("Framed-User"),
+				attributes.RFC2865,
+				attributes.NonRemovable()),
+			attributes.Build(attributes.ID("User-Name"),
+				attributes.Value("$USERNAME$"),
+				attributes.RFC2865,
+				attributes.NonRemovable()),
+			attributes.Build(attributes.ID("EAP-Message"),
+				attributes.EAPData,
+				attributes.RFC3579,
+				attributes.NonRemovable()),
 		},
 		commonRequest)
 
 	EAPTLSAccountingStart = slices.Concat(commonAccounting)
 )
-
-type buildOption func(*RadiusAttribute)
-
-func id(id string) buildOption {
-	return func(ra *RadiusAttribute) {
-		ra.ID = id
-	}
-}
-
-func value(value string) buildOption {
-	return func(ra *RadiusAttribute) {
-		ra.Value = value
-	}
-}
-
-func dictionary(dictionary string) buildOption {
-	return func(ra *RadiusAttribute) {
-		ra.Dictionary = dictionary
-	}
-}
-
-func overwritable() buildOption {
-	return func(ra *RadiusAttribute) {
-		ra.Overwrite = true
-	}
-}
-
-func nonRemovable() buildOption {
-	return func(ra *RadiusAttribute) {
-		ra.NonRemovable = true
-	}
-}
-
-func vendor(vendor string) buildOption {
-	return func(ra *RadiusAttribute) {
-		ra.Vendor = vendor
-	}
-}
-
-func customValues(customValues []string) buildOption {
-	return func(ra *RadiusAttribute) {
-		ra.CustomValues = customValues
-	}
-}
-
-func familySpecific(family iputils.IPFamily) buildOption {
-	return func(ra *RadiusAttribute) {
-		ra.FamilySpecific = family
-	}
-}
-
-func buildAttribute(opts ...buildOption) RadiusAttribute {
-	ra := RadiusAttribute{}
-	for _, opt := range opts {
-		opt(&ra)
-	}
-	return ra
-}

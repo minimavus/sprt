@@ -9,10 +9,10 @@ import (
 	"github.com/labstack/echo/v4"
 
 	"github.com/cisco-open/sprt/frontend-svc/internal/config"
-	"github.com/cisco-open/sprt/frontend-svc/internal/json"
 	"github.com/cisco-open/sprt/frontend-svc/internal/user"
 	"github.com/cisco-open/sprt/frontend-svc/internal/utils"
 	"github.com/cisco-open/sprt/frontend-svc/shared"
+	"github.com/cisco-open/sprt/go-generator/sdk/json"
 )
 
 type TemplateRegistry struct {

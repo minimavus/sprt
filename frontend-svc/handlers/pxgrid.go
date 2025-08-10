@@ -10,9 +10,9 @@ import (
 	pxgrider_proto "github.com/vkumov/go-pxgrider/pkg"
 
 	"github.com/cisco-open/sprt/frontend-svc/internal/auth"
-	"github.com/cisco-open/sprt/frontend-svc/internal/json"
 	"github.com/cisco-open/sprt/frontend-svc/internal/middleware"
 	"github.com/cisco-open/sprt/frontend-svc/internal/pxgrid"
+	"github.com/cisco-open/sprt/go-generator/sdk/json"
 )
 
 func (m *controller) GetPxGridStatus(c echo.Context) error {

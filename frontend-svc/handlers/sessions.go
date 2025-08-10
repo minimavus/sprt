@@ -8,9 +8,9 @@ import (
 
 	"github.com/cisco-open/sprt/frontend-svc/internal/auth"
 	"github.com/cisco-open/sprt/frontend-svc/internal/db"
-	"github.com/cisco-open/sprt/frontend-svc/internal/json"
 	"github.com/cisco-open/sprt/frontend-svc/internal/sessions"
 	"github.com/cisco-open/sprt/frontend-svc/models"
+	"github.com/cisco-open/sprt/go-generator/sdk/json"
 )
 
 func (m *controller) GetSessionsPerServerBulked(c echo.Context) error {
