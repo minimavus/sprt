@@ -12,9 +12,10 @@ import (
 
 	"github.com/cisco-open/sprt/frontend-svc/internal/auth"
 	"github.com/cisco-open/sprt/frontend-svc/internal/db"
-	"github.com/cisco-open/sprt/frontend-svc/internal/dictionaries"
 	"github.com/cisco-open/sprt/frontend-svc/internal/policy"
 	"github.com/cisco-open/sprt/frontend-svc/models"
+
+	"github.com/cisco-open/sprt/go-generator/sdk/variables/dictionaries"
 )
 
 type (
@@ -106,7 +107,7 @@ func (m *controller) DeleteDictionariesOfType(c echo.Context) error {
 	})
 }
 
-func (m *controller) GetDictionaryById(c echo.Context) error {
+func (m *controller) GetDictionaryByID(c echo.Context) error {
 	u, ctx, err := auth.GetUserDataAndContext(c)
 	if err != nil {
 		return err
@@ -157,7 +158,7 @@ func (m *controller) GetDictionaryById(c echo.Context) error {
 	return c.JSON(http.StatusOK, res)
 }
 
-func (m *controller) DeleteDictionaryById(c echo.Context) error {
+func (m *controller) DeleteDictionaryByID(c echo.Context) error {
 	u, ctx, err := auth.GetUserDataAndContext(c)
 	if err != nil {
 		return err

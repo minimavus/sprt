@@ -5,14 +5,14 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/cisco-open/sprt/frontend-svc/internal/json"
+	"github.com/cisco-open/sprt/go-generator/sdk/json"
 )
 
-func (b *infoParameter) ToJsonSchema() (any, error) {
+func (b *infoParameter) ToJSONSchema() (any, error) {
 	return nil, nil
 }
 
-func (b *basicValueInputParameter[T]) ToJsonSchema() (any, error) {
+func (b *basicValueInputParameter[T]) ToJSONSchema() (any, error) {
 	var t string
 
 	switch any(b.Value).(type) {
@@ -33,20 +33,20 @@ func (b *basicValueInputParameter[T]) ToJsonSchema() (any, error) {
 	return m, nil
 }
 
-func (b *checkboxParameter) ToJsonSchema() (any, error) {
+func (b *checkboxParameter) ToJSONSchema() (any, error) {
 	return map[string]any{
 		"type": "boolean",
 	}, nil
 }
 
-func (b *hiddenParameter) ToJsonSchema() (any, error) {
+func (b *hiddenParameter) ToJSONSchema() (any, error) {
 	return map[string]any{
 		"type":  "string",
 		"const": b.Value,
 	}, nil
 }
 
-func (b *selectParameter[T]) ToJsonSchema() (any, error) {
+func (b *selectParameter[T]) ToJSONSchema() (any, error) {
 	enum := make([]string, 0, len(b.Options))
 	for _, o := range b.Options {
 		enum = append(enum, o.Value)
@@ -71,7 +71,7 @@ func (b *selectParameter[T]) ToJsonSchema() (any, error) {
 	return m, nil
 }
 
-func (b *loadableSelectParameter) ToJsonSchema() (any, error) {
+func (b *loadableSelectParameter) ToJSONSchema() (any, error) {
 	m := map[string]any{
 		"type": "array",
 		"items": map[string]any{
@@ -85,7 +85,7 @@ func (b *loadableSelectParameter) ToJsonSchema() (any, error) {
 	return m, nil
 }
 
-func (b *radioParameter) ToJsonSchema() (any, error) {
+func (b *radioParameter) ToJSONSchema() (any, error) {
 	m := make(map[string]any)
 	options := make([]any, 0, len(b.Options))
 	for _, o := range b.Options {
@@ -98,14 +98,14 @@ func (b *radioParameter) ToJsonSchema() (any, error) {
 	return m, nil
 }
 
-func (b *columnsParameter) ToJsonSchema() (any, error) {
+func (b *columnsParameter) ToJSONSchema() (any, error) {
 	return nil, nil
 }
 
-func (b *variantsParameter) ToJsonSchema() (any, error) {
+func (b *variantsParameter) ToJSONSchema() (any, error) {
 	options := make([]any, 0, len(b.Variants))
 	for _, v := range b.Variants {
-		vv := v.(variant)
+		vv := v.(*variant)
 		option := make(map[string]any)
 		option["type"] = "object"
 		option["properties"] = make(map[string]any)
@@ -125,7 +125,7 @@ func (b *variantsParameter) ToJsonSchema() (any, error) {
 	}, nil
 }
 
-func (b *dictionaryParameter) ToJsonSchema() (any, error) {
+func (b *dictionaryParameter) ToJSONSchema() (any, error) {
 	m := make(map[string]any)
 	m["type"] = "object"
 	m["additionalProperties"] = false
@@ -148,7 +148,7 @@ func (b *dictionaryParameter) ToJsonSchema() (any, error) {
 	return m, nil
 }
 
-func (b *checkboxesParameter[T]) ToJsonSchema() (any, error) {
+func (b *checkboxesParameter[T]) ToJSONSchema() (any, error) {
 	m := make(map[string]any)
 	m["type"] = "object"
 	m["additionalProperties"] = false
@@ -161,13 +161,13 @@ func (b *checkboxesParameter[T]) ToJsonSchema() (any, error) {
 	return m, nil
 }
 
-func (b *listParameter) ToJsonSchema() (any, error) {
+func (b *listParameter) ToJSONSchema() (any, error) {
 	return map[string]any{
 		"type": "string",
 	}, nil
 }
 
-func (b *fieldSet) ToJsonSchema() (any, error) {
+func (b *fieldSet) ToJSONSchema() (any, error) {
 	return nil, nil
 }
 
@@ -186,17 +186,16 @@ func addProperties(m map[string]any, p []Parameter) {
 		case paramText, paramDivider:
 			continue
 		default:
-			b, err := pr.ToJsonSchema()
+			b, err := pr.ToJSONSchema()
 			if err != nil {
 				log.Fatalf("Failed to convert parameters to json schema: %v", err)
-				continue
 			}
 			m[pr.GetName()] = b
 		}
 	}
 }
 
-func (pb *ParametersBlock) ToJsonSchema() (j.RawMessage, error) {
+func (pb *ParametersBlock) ToJSONSchema() (j.RawMessage, error) {
 	m := make(map[string]any)
 
 	m["type"] = "object"
@@ -208,13 +207,12 @@ func (pb *ParametersBlock) ToJsonSchema() (j.RawMessage, error) {
 	return json.Marshal(m)
 }
 
-func (p *Params) ToJsonSchema() []j.RawMessage {
+func (p *Params) ToJSONSchema() []j.RawMessage {
 	schemas := make([]j.RawMessage, 0, len(*p))
 	for _, pb := range *p {
-		b, err := pb.ToJsonSchema()
+		b, err := pb.ToJSONSchema()
 		if err != nil {
 			log.Fatalf("Failed to convert proto params to json schema: %v", err)
-			continue
 		}
 		schemas = append(schemas, b)
 	}

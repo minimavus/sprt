@@ -3,7 +3,7 @@ package dictionaries
 import (
 	"fmt"
 
-	"github.com/cisco-open/sprt/frontend-svc/internal/dictionaries/radius"
+	"github.com/cisco-open/sprt/go-generator/sdk/variables/dictionaries/radius"
 )
 
 type (
@@ -71,8 +71,5 @@ func IsValid(r ValidationRequest) error {
 	if err := isValidType(r.Type); err != nil {
 		return err
 	}
-	if err := DictionaryType(r.Type).isValidContent(r.Content); err != nil {
-		return err
-	}
-	return nil
+	return DictionaryType(r.Type).isValidContent(r.Content)
 }

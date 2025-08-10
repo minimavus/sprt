@@ -287,7 +287,7 @@ func (m *controller) DeleteRadiusSessions(c echo.Context) error {
 		Server string  `param:"server" validate:"required"`
 		Bulk   string  `param:"bulk" validate:"omitempty"`
 		Select string  `query:"select" validate:"required,oneof=all dropped-failed older-than-5d ids"`
-		Ids    []int64 `query:"ids[]" validate:"omitempty,required_if=Select ids,gt=0,dive,gt=0"`
+		IDs    []int64 `query:"ids[]" validate:"omitempty,required_if=Select ids,gt=0,dive,gt=0"`
 	})
 	if err = m.bindAndValidate(c, req); err != nil {
 		return err

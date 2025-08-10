@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/cisco-open/sprt/frontend-svc/internal/iputils"
+	"github.com/cisco-open/sprt/go-generator/sdk/variables"
 )
 
 type (
@@ -20,9 +21,9 @@ type (
 	}
 
 	ParametersBlock struct {
-		Title      string      `json:"title"`
-		Parameters []Parameter `json:"parameters"`
-		PropName   string      `json:"prop_name"`
+		Title      string                `json:"title"`
+		Parameters []variables.Parameter `json:"parameters"`
+		PropName   string                `json:"prop_name"`
 	}
 
 	ProtoRadius struct {
@@ -30,24 +31,22 @@ type (
 		AccountingStart []RadiusAttribute `json:"accounting_start"`
 	}
 
-	Params []ParametersBlock
-
 	ProtoDefinition struct {
-		ProtoName  string      `json:"proto_name"`
-		Radius     ProtoRadius `json:"radius"`
-		Parameters Params      `json:"parameters"`
-		Schema     any         `json:"schema,omitempty"`
+		ProtoName  string           `json:"proto_name"`
+		Radius     ProtoRadius      `json:"radius"`
+		Parameters variables.Params `json:"parameters"`
+		Schema     any              `json:"schema,omitempty"`
 	}
 )
 
 var (
-	identityCertificatesLoad = NewLoadParams("/certificates/identity", http.MethodGet).
-					WithApiPrefix().
-					SetResultType(LoadParamsResultTypeTable).
+	identityCertificatesLoad = variables.NewLoadParams("/certificates/identity", http.MethodGet).
+					WithAPIPrefix().
+					SetResultType(variables.LoadParamsResultTypeTable).
 					SetResultPaging(false).
 					SetResultAttribute("certificates").
 					SetResultFields("friendly_name", "id").
-					SetResultColumns([]LoadableResultColumn{
+					SetResultColumns([]variables.LoadableResultColumn{
 			{Title: "Friendly Name", Field: "friendly_name"},
 			{Title: "Subject", Field: "subject"},
 			{Title: "Issuer", Field: "issuer"},
@@ -60,7 +59,7 @@ var (
 			AccessRequest:   MABAccessRequest,
 			AccountingStart: MABAccountingStart,
 		},
-		Parameters: Params{},
+		Parameters: variables.Params{},
 	}
 )
 

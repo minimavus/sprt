@@ -6,7 +6,8 @@ import (
 	"layeh.com/radius/dictionary"
 
 	"github.com/cisco-open/sprt/frontend-svc/internal/iputils"
-	"github.com/cisco-open/sprt/frontend-svc/internal/variables"
+
+	"github.com/cisco-open/sprt/go-generator/sdk/variables"
 )
 
 type Generator interface {

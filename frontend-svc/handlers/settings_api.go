@@ -83,13 +83,13 @@ func (m *controller) EnableAPISettings(c echo.Context) error {
 		return c.JSON(http.StatusOK, map[string]any{"affected": 0})
 	}
 
-	newId, err := uuid.NewRandom()
+	newID, err := uuid.NewRandom()
 	if err != nil {
 		return echo.ErrInternalServerError.WithInternal(err)
 	}
 
 	rows, err := db.Exec(m.App).SetAPISettingsOfUser(ctx, u.ForUser, map[string]string{
-		"token": newId.String(),
+		"token": newID.String(),
 	})
 	if err != nil {
 		return echo.ErrInternalServerError.WithInternal(err)
@@ -146,13 +146,13 @@ func (m *controller) RegenAPISettingsToken(c echo.Context) error {
 		return err
 	}
 
-	newId, err := uuid.NewRandom()
+	newID, err := uuid.NewRandom()
 	if err != nil {
 		return echo.ErrInternalServerError.WithInternal(err)
 	}
 
 	rows, err := db.Exec(m.App).SetAPISettingsOfUser(ctx, u.ForUser, map[string]string{
-		"token": newId.String(),
+		"token": newID.String(),
 	})
 	if err != nil {
 		return echo.ErrInternalServerError.WithInternal(err)

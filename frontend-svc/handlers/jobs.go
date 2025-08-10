@@ -12,13 +12,6 @@ import (
 	"github.com/cisco-open/sprt/frontend-svc/internal/policy"
 )
 
-const (
-	testIdStr     = "123"
-	newTestIdStr  = "100"
-	roundIdStr    = "42"
-	newRoundIdStr = "43"
-)
-
 func (m *controller) GetAllUsersWithJobs(c echo.Context) error {
 	_, ctx, err := auth.GetUserDataAndContext(c)
 	if err != nil {

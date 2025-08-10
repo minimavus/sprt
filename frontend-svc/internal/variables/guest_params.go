@@ -3,108 +3,110 @@ package variables
 import (
 	"strings"
 
-	"github.com/cisco-open/sprt/frontend-svc/internal/dictionaries"
 	"github.com/iancoleman/strcase"
 	"github.com/icrowley/fake"
 	"golang.org/x/text/cases"
 	"golang.org/x/text/language"
+
+	"github.com/cisco-open/sprt/go-generator/sdk/variables"
+	"github.com/cisco-open/sprt/go-generator/sdk/variables/dictionaries"
 )
 
 var (
-	guestTokenForm = NewTextInputParameter("tokenFormName", "Token form name", "tokenForm")
+	guestTokenForm = variables.NewTextInputParameter("tokenFormName", "Token form name", "tokenForm")
 
-	uaDictionary = NewDictionaryParameter("userAgents", nil, []dictionaries.DictionaryType{dictionaries.UA, dictionaries.Unclassified}).
+	uaDictionary = variables.NewDictionaryParameter("userAgents", nil, []dictionaries.DictionaryType{dictionaries.UA, dictionaries.Unclassified}).
 			PreselectAllOfType(dictionaries.UA).
-			WithLabel("User Agents").WithAllowRepeats(true).WithSelect(DictionarySelectRandom).
-			Watch(NewWatch(".guestFlow.variant").
-				When(GuestFlowNone, act{A: UseActionHide, T: ".userAgents"}).
-				WhenNot(GuestFlowNone, act{A: UseActionShow, T: ".userAgents"}))
+			WithLabel("User Agents").WithAllowRepeats(true).WithRandomSelect().
+			Watch(variables.NewWatch(".guestFlow.variant").
+				When(GuestFlowNone, variables.ActionHide(".userAgents")).
+				WhenNot(GuestFlowNone, variables.ActionShow(".userAgents")))
 
-	hotSpotParams = NewVariant(GuestFlowHotspot).WithShort("Hotspot").
+	hotSpotParams = variables.NewVariant(GuestFlowHotspot).WithShort("Hotspot").
 			WithField(
-			NewInfoParameter("how_works", "Redirect to hotspot page for authentication is expected"),
-			NewTextInputParameter("accessCode", "Access code", "").SetHint("Leave empty if not needed"),
-			NewCollapseSetParameter("fineTune", "Fine tune").WithFields(
-				NewColumnsParameter("fineTuneColumns").
-					WithColumn(ParamsSlice{}.
-						With(NewDivider().WithLabel("Conditions")).
+			variables.NewInfoParameter("how_works", "Redirect to hotspot page for authentication is expected"),
+			variables.NewTextInputParameter("accessCode", "Access code", "").SetHint("Leave empty if not needed"),
+			variables.NewCollapseSetParameter("fineTune", "Fine tune").WithFields(
+				variables.NewColumnsParameter("fineTuneColumns").
+					WithColumn(variables.ParamsSlice{}.
+						With(variables.NewDivider().WithLabel("Conditions")).
 						With(getGuestFlowSuccessCondition(GuestFlowHotspot)).
-						With(NewDivider().WithLabel("Forms")).
-						With(NewTextInputParameter("formName", "AUP form name", "aupForm"), guestTokenForm)...).
-					WithColumn(ParamsSlice{}.
-						With(NewDivider().WithLabel("Hotspot fields")).
-						With(NewTextInputParameter("hotspotField:accessCode", "Access code field name", "accessCode"))...),
+						With(variables.NewDivider().WithLabel("Forms")).
+						With(variables.NewTextInputParameter("formName", "AUP form name", "aupForm"), guestTokenForm)...).
+					WithColumn(variables.ParamsSlice{}.
+						With(variables.NewDivider().WithLabel("Hotspot fields")).
+						With(variables.NewTextInputParameter("hotspotField:accessCode", "Access code field name", "accessCode"))...),
 			),
-			NewInfoParameter("info",
+			variables.NewInfoParameter("info",
 				"Do not forget to switch from Guest Flow check to GuestEndpoints check. "+
 					"Otherwise you can end up in infinite loop.").WithSubType("warning"),
 		)
 
-	guestLoginNames = ParamsSlice{
-		NewTextInputParameter("loginFields:username", "Username field name", "user.username"),
-		NewTextInputParameter("loginFields:password", "Password field name", "user.password"),
-		NewTextInputParameter("loginFields:accessCode", "Access code field name", "user.accessCode"),
+	guestLoginNames = variables.ParamsSlice{
+		variables.NewTextInputParameter("loginFields:username", "Username field name", "user.username"),
+		variables.NewTextInputParameter("loginFields:password", "Password field name", "user.password"),
+		variables.NewTextInputParameter("loginFields:accessCode", "Access code field name", "user.accessCode"),
 	}
 
-	withCredsParams = NewVariant(GuestFlowWithCreds).WithShort("Provided credentials").
+	withCredsParams = variables.NewVariant(GuestFlowWithCreds).WithShort("Provided credentials").
 			WithField(
-			NewInfoParameter("how_works", "Will attempt to login on a guest portal with provided credentials"),
-			NewVariantsParameter("credentials", "Credentials").
+			variables.NewInfoParameter("how_works", "Will attempt to login on a guest portal with provided credentials"),
+			variables.NewVariantsParameter("credentials", "Credentials").
 				WithVariants(
-					NewVariant("list").WithShort("From list").
+					variables.NewVariant("list").WithShort("From list").
 						WithDescription("Credentials from the list").
-						WithField(NewListParameter("credentialsList", "Credentials list", "").
+						WithField(variables.NewListParameter("credentialsList", "Credentials list", "").
 							SetHint("Format user:password. One record per line").
 							SetAllowFromFile(true)),
-					NewVariant("dictionaries").WithShort("From dictionaries").WithField(
-						NewDictionaryParameter("credentialsDictionary", []string{},
+					variables.NewVariant("dictionaries").WithShort("From dictionaries").WithField(
+						variables.NewDictionaryParameter("credentialsDictionary", []string{},
 							[]dictionaries.DictionaryType{dictionaries.Credentials, dictionaries.Unclassified}).
-							WithSelect(DictionarySelectRandom).
+							WithRandomSelect().
 							WithAllowRepeats(true),
 					),
 				),
-			NewTextInputParameter("accessCode", "Access code", "").SetHint("Leave empty if not needed"),
-			NewCollapseSetParameter("fineTune", "Fine tune").WithFields(
-				NewColumnsParameter("fineTuneColumns").
-					WithColumn(ParamsSlice{}.
-						With(NewDivider().WithLabel("Conditions")).
+			variables.NewTextInputParameter("accessCode", "Access code", "").SetHint("Leave empty if not needed"),
+			variables.NewCollapseSetParameter("fineTune", "Fine tune").WithFields(
+				variables.NewColumnsParameter("fineTuneColumns").
+					WithColumn(variables.ParamsSlice{}.
+						With(variables.NewDivider().WithLabel("Conditions")).
 						With(getGuestFlowSuccessCondition(GuestFlowWithCreds)).
-						With(NewDivider().WithLabel("Forms")).
+						With(variables.NewDivider().WithLabel("Forms")).
 						With(
-							NewTextInputParameter("loginFormName", "Login form name", "loginForm"),
-							NewTextInputParameter("aupFormName", "AUP form name", "aupForm"),
+							variables.NewTextInputParameter("loginFormName", "Login form name", "loginForm"),
+							variables.NewTextInputParameter("aupFormName", "AUP form name", "aupForm"),
 							guestTokenForm)...).
-					WithColumn(ParamsSlice{}.
-						With(NewDivider().WithLabel("Login fields")).
+					WithColumn(variables.ParamsSlice{}.
+						With(variables.NewDivider().WithLabel("Login fields")).
 						With(guestLoginNames...)...),
 			),
 		)
 
-	selfRegParams = NewVariant(GuestFlowSelfReg).WithShort("Self-registration").
+	selfRegParams = variables.NewVariant(GuestFlowSelfReg).WithShort("Self-registration").
 			WithField(
-			NewInfoParameter("how_works", "Will attempt to self-register on a guest portal and login"),
-			NewVariantsParameter("userNameRule", "Username").WithInline(true).
+			variables.NewInfoParameter("how_works", "Will attempt to self-register on a guest portal and login"),
+			variables.NewVariantsParameter("userNameRule", "Username").WithInline(true).
 				WithVariants(getSelfRegRuleVariants(getGuestSelfRegRuleVariantsOptions{
 					Username: true,
 				})...).
 				WithValue("others"),
-			NewVariantsParameter("firstNameRule", "First name").WithInline(true).
+			variables.NewVariantsParameter("firstNameRule", "First name").WithInline(true).
 				WithVariants(
 					getSelfRegRuleVariants(getGuestSelfRegRuleVariantsOptions{
-						Dictionary: dictionaryPrefixByName + "First Names",
+						Dictionary: variables.DictionaryPrefixByName + "First Names",
 						Faker:      fakerFirstName,
 					})...,
 				).
 				WithValue("faker"),
-			NewVariantsParameter("lastNameRule", "Last name").WithInline(true).
+			variables.NewVariantsParameter("lastNameRule", "Last name").WithInline(true).
 				WithVariants(
 					getSelfRegRuleVariants(getGuestSelfRegRuleVariantsOptions{
-						Dictionary: dictionaryPrefixByName + "Last Names",
+						Dictionary: variables.DictionaryPrefixByName + "Last Names",
 						Faker:      fakerLastName,
 					})...,
 				).
 				WithValue("faker"),
-			NewVariantsParameter("emailAddressRule", "Email address").WithInline(true).
+			variables.NewVariantsParameter("emailAddressRule", "Email address").WithInline(true).
 				WithVariants(
 					getSelfRegRuleVariants(getGuestSelfRegRuleVariantsOptions{
 						Email: true,
@@ -112,48 +114,48 @@ var (
 					})...,
 				).
 				WithValue("faker"),
-			NewVariantsParameter("companyRule", "Company").WithInline(true).
+			variables.NewVariantsParameter("companyRule", "Company").WithInline(true).
 				WithVariants(
 					getSelfRegRuleVariants(getGuestSelfRegRuleVariantsOptions{
-						Dictionary: dictionaryPrefixByName + "Companies",
+						Dictionary: variables.DictionaryPrefixByName + "Companies",
 						Faker:      fakerCompany,
 					})...,
 				).
 				WithValue("faker"),
-			NewVariantsParameter("locationRule", "Location").WithInline(true).
+			variables.NewVariantsParameter("locationRule", "Location").WithInline(true).
 				WithVariants(
-					NewVariant("static").WithShort("Specify").
-						WithField(NewTextInputParameter("value", "Location name", "").
+					variables.NewVariant("static").WithShort("Specify").
+						WithField(variables.NewTextInputParameter("value", "Location name", "").
 							SetHint("First found will be used if nothing specified here")),
 				),
-			NewVariantsParameter("smsProviderRule", "SMS provider").WithInline(true).
+			variables.NewVariantsParameter("smsProviderRule", "SMS provider").WithInline(true).
 				WithVariants(
-					NewVariant("static").WithShort("Specify").
-						WithField(NewTextInputParameter("value", "SMS provider name", "").
+					variables.NewVariant("static").WithShort("Specify").
+						WithField(variables.NewTextInputParameter("value", "SMS provider name", "").
 							SetHint("First found will be used if nothing specified here")),
 				),
-			NewVariantsParameter("personVisitedRule", "Person visited").WithInline(true).
+			variables.NewVariantsParameter("personVisitedRule", "Person visited").WithInline(true).
 				WithVariants(
 					getSelfRegRuleVariants(getGuestSelfRegRuleVariantsOptions{
 						Email: true,
 						Faker: fakerEmail,
 					})...,
 				),
-			NewVariantsParameter("reasonVisitRule", "Reason visit").WithInline(true).
+			variables.NewVariantsParameter("reasonVisitRule", "Reason visit").WithInline(true).
 				WithVariants(
 					getSelfRegRuleVariants(getGuestSelfRegRuleVariantsOptions{
 						Faker: fakerSentence,
 					})...,
 				),
-			NewTextInputParameter("registrationCode", "Registration code", "").SetHint("Leave empty if not needed"),
-			NewTextInputParameter("accessCode", "Access code", "").SetHint("Leave empty if not needed"),
-			NewCollapseSetParameter("fineTune", "Fine tune").WithFields(ParamsSlice{}.
+			variables.NewTextInputParameter("registrationCode", "Registration code", "").SetHint("Leave empty if not needed"),
+			variables.NewTextInputParameter("accessCode", "Access code", "").SetHint("Leave empty if not needed"),
+			variables.NewCollapseSetParameter("fineTune", "Fine tune").WithFields(variables.ParamsSlice{}.
 				With(
-					NewColumnsParameter("fineTuneColumns").
+					variables.NewColumnsParameter("fineTuneColumns").
 						WithColumn(
-							NewNumberInputParameter("reauthAfterTimeout", "Perform full re-authentication "+
+							variables.NewNumberInputParameter("reauthAfterTimeout", "Perform full re-authentication "+
 								"if SMS is received after N minutes", 5).WithAdditionalRules("min:0"),
-							NewDivider().WithLabel("Conditions"),
+							variables.NewDivider().WithLabel("Conditions"),
 							getGuestFlowSuccessCondition(GuestFlowSelfReg, guestFlowSuccessConditionOptions{
 								Title: "Success condition of registration",
 							}),
@@ -161,32 +163,32 @@ var (
 								Title:  "Success condition of login",
 								Prefix: "login-",
 							}),
-							NewDivider().WithLabel("Forms"),
-							NewTextInputParameter("selfRegFormName", "Self Registration form name", "selfRegForm"),
-							NewTextInputParameter("selfRegSuccessFormName", "Self Registration success form name", "selfRegSuccessForm"),
-							NewTextInputParameter("loginFormName", "Login form name", "loginForm"),
-							NewTextInputParameter("aupFormName", "AUP form name", "aupForm"),
+							variables.NewDivider().WithLabel("Forms"),
+							variables.NewTextInputParameter("selfRegFormName", "Self Registration form name", "selfRegForm"),
+							variables.NewTextInputParameter("selfRegSuccessFormName", "Self Registration success form name", "selfRegSuccessForm"),
+							variables.NewTextInputParameter("loginFormName", "Login form name", "loginForm"),
+							variables.NewTextInputParameter("aupFormName", "AUP form name", "aupForm"),
 							guestTokenForm,
 						).
-						WithColumn(ParamsSlice{}.
-							With(NewDivider().WithLabel("Self registration fields")).
+						WithColumn(variables.ParamsSlice{}.
+							With(variables.NewDivider().WithLabel("Self registration fields")).
 							With(guestSelfRegNames()...).
-							With(NewDivider().WithLabel("Login fields")).
+							With(variables.NewDivider().WithLabel("Login fields")).
 							With(guestLoginNames...)...),
 				)...),
-			NewInfoParameter("info",
+			variables.NewInfoParameter("info",
 				"Do not forget to configure SMS Gateway on ISE. "+
 					"Check the details at [SMS Configuration page](/settings/sms-gateway)").WithSubType("warning"),
 		)
 
-	guestParams = Params{
+	guestParams = variables.Params{
 		{
 			Title:    "Guest Flow",
 			PropName: "guest",
-			Parameters: []Parameter{
-				NewVariantsParameter("guestFlow", "Expected guest flow").
+			Parameters: []variables.Parameter{
+				variables.NewVariantsParameter("guestFlow", "Expected guest flow").
 					WithVariants(
-						NewVariant(GuestFlowNone).WithShort("None"),
+						variables.NewVariant(GuestFlowNone).WithShort("None"),
 						hotSpotParams,
 						withCredsParams,
 						selfRegParams,
@@ -198,7 +200,7 @@ var (
 
 	guest = VariableDefinition{
 		Parameters: guestParams,
-		Schema:     guestParams.ToJsonSchema(),
+		Schema:     guestParams.ToJSONSchema(),
 	}
 )
 
@@ -221,7 +223,7 @@ type guestFlowSuccessConditionOptions struct {
 	Condition string
 }
 
-func getGuestFlowSuccessCondition(t string, o ...guestFlowSuccessConditionOptions) Parameter {
+func getGuestFlowSuccessCondition(t string, o ...guestFlowSuccessConditionOptions) variables.Parameter {
 	var opts guestFlowSuccessConditionOptions
 	if len(o) > 0 {
 		opts = o[0]
@@ -243,7 +245,7 @@ func getGuestFlowSuccessCondition(t string, o ...guestFlowSuccessConditionOption
 		opts.Condition = `<[^>]+id="` + c + `"[^>]*>(?<message>[^<]+)`
 	}
 
-	return NewTextInputParameter(opts.Prefix+opts.Name+opts.Postfix, opts.Title, opts.Condition).
+	return variables.NewTextInputParameter(opts.Prefix+opts.Name+opts.Postfix, opts.Title, opts.Condition).
 		SetHint("If matched, authentication considered as successful")
 }
 
@@ -252,7 +254,7 @@ type getGuestSelfRegRuleRandomOptions struct {
 	Max *int
 }
 
-func getGuestSelfRegRuleRandom(o ...getGuestSelfRegRuleRandomOptions) Variant {
+func getGuestSelfRegRuleRandom(o ...getGuestSelfRegRuleRandomOptions) variables.Variant {
 	var opts getGuestSelfRegRuleRandomOptions
 	if len(o) > 0 {
 		opts = o[0]
@@ -265,61 +267,61 @@ func getGuestSelfRegRuleRandom(o ...getGuestSelfRegRuleRandomOptions) Variant {
 		opts.Max = ptr(10)
 	}
 
-	return NewVariant("random").WithShort("Random string").
+	return variables.NewVariant("random").WithShort("Random string").
 		WithField(
-			NewColumnsParameter("randomSpecsColumns").
-				WithColumn(ParamsSlice{}.
-					With(NewNumberInputParameter("minLength", "Min length", *opts.Min))...).
-				WithColumn(ParamsSlice{}.
-					With(NewNumberInputParameter("maxLength", "Max length", *opts.Max))...,
+			variables.NewColumnsParameter("randomSpecsColumns").
+				WithColumn(variables.ParamsSlice{}.
+					With(variables.NewNumberInputParameter("minLength", "Min length", *opts.Min))...).
+				WithColumn(variables.ParamsSlice{}.
+					With(variables.NewNumberInputParameter("maxLength", "Max length", *opts.Max))...,
 				),
 		)
 }
 
-func getGuestSelfRegRulePattern(p string) Variant {
+func getGuestSelfRegRulePattern(p string) variables.Variant {
 	if p == "" {
 		p = `\w{5,10}`
 	}
 
-	return NewVariant("random-pattern").WithShort("Pattern-based").
-		WithField(NewTextInputParameter("pattern", "Pattern", p))
+	return variables.NewVariant("random-pattern").WithShort("Pattern-based").
+		WithField(variables.NewTextInputParameter("pattern", "Pattern", p))
 }
 
-func getGuestSelfRegRuleEmailPattern() Variant {
+func getGuestSelfRegRuleEmailPattern() variables.Variant {
 	return getGuestSelfRegRulePattern(`\w{5,10}@example[.]com`)
 }
 
-func getGuestSelfRegRuleDictionary(value any) Variant {
-	var d DictionaryParameter
+func getGuestSelfRegRuleDictionary(value any) variables.Variant {
+	var d variables.DictionaryParameter
 
 	switch v := value.(type) {
 	case []string:
-		d = NewDictionaryParameter("dictionary", v,
+		d = variables.NewDictionaryParameter("dictionary", v,
 			[]dictionaries.DictionaryType{dictionaries.Form, dictionaries.Unclassified})
 	case nil:
-		d = NewDictionaryParameter("dictionary", []string{},
+		d = variables.NewDictionaryParameter("dictionary", []string{},
 			[]dictionaries.DictionaryType{dictionaries.Form, dictionaries.Unclassified})
 	case string:
 		switch {
-		case strings.HasPrefix(v, dictionaryPrefixByName):
-			d = NewDictionaryParameter("dictionary", []string{},
+		case strings.HasPrefix(v, variables.DictionaryPrefixByName):
+			d = variables.NewDictionaryParameter("dictionary", []string{},
 				[]dictionaries.DictionaryType{dictionaries.Form, dictionaries.Unclassified}).
-				PreselectByName(strings.TrimPrefix(v, dictionaryPrefixByName))
-		case strings.HasPrefix(v, dictionaryPrefixAllByType):
-			d = NewDictionaryParameter("dictionary", []string{},
+				PreselectByName(strings.TrimPrefix(v, variables.DictionaryPrefixByName))
+		case strings.HasPrefix(v, variables.DictionaryPrefixAllByType):
+			d = variables.NewDictionaryParameter("dictionary", []string{},
 				[]dictionaries.DictionaryType{dictionaries.Form, dictionaries.Unclassified}).
-				PreselectAllOfType(dictionaries.DictionaryType(strings.TrimPrefix(v, dictionaryPrefixAllByType)))
+				PreselectAllOfType(dictionaries.DictionaryType(strings.TrimPrefix(v, variables.DictionaryPrefixAllByType)))
 		default:
-			d = NewDictionaryParameter("dictionary", []string{},
+			d = variables.NewDictionaryParameter("dictionary", []string{},
 				[]dictionaries.DictionaryType{dictionaries.Form, dictionaries.Unclassified})
 		}
 	}
 
-	return NewVariant("dictionary").WithShort("From dictionary").WithField(d)
+	return variables.NewVariant("dictionary").WithShort("From dictionary").WithField(d)
 }
 
-func getGuestSelfRegRuleEmpty() Variant {
-	return NewVariant("keep-empty").WithShort("Do not fill").WithField(ParamsSlice{}...)
+func getGuestSelfRegRuleEmpty() variables.Variant {
+	return variables.NewVariant("keep-empty").WithShort("Do not fill").WithField(variables.ParamsSlice{}...)
 }
 
 var (
@@ -359,7 +361,7 @@ type getGuestSelfRegRuleFunctionsBasedOptions struct {
 	Name    string
 }
 
-func getGuestSelfRegRuleFunctionsBased(o ...getGuestSelfRegRuleFunctionsBasedOptions) Variant {
+func getGuestSelfRegRuleFunctionsBased(o ...getGuestSelfRegRuleFunctionsBasedOptions) variables.Variant {
 	var opts getGuestSelfRegRuleFunctionsBasedOptions
 	if len(o) > 0 {
 		opts = o[0]
@@ -369,11 +371,11 @@ func getGuestSelfRegRuleFunctionsBased(o ...getGuestSelfRegRuleFunctionsBasedOpt
 		opts.Name = "others"
 	}
 
-	return NewVariant(opts.Name).WithShort("Functions-based").
+	return variables.NewVariant(opts.Name).WithShort("Functions-based").
 		WithField(
-			NewTextInputParameter("funBasedPattern", "Pattern", opts.Pattern).
+			variables.NewTextInputParameter("funBasedPattern", "Pattern", opts.Pattern).
 				WithButtons(
-					NewDropDownSideButton("Insert", "", "", []any{
+					variables.NewDropDownSideButton("Insert", "", "", []any{
 						map[string]any{
 							"type":   "group",
 							"title":  "Functions",
@@ -412,16 +414,16 @@ var fakers = map[fakerWhat]fakerFn{
 	fakerPhone:     func() string { return fake.Phone() },
 }
 
-func getGuestSelfRegRuleFaker(what fakerWhat) Variant {
+func getGuestSelfRegRuleFaker(what fakerWhat) variables.Variant {
 	fn, ok := fakers[what]
 	if !ok {
 		fn = fakers[fakerSentence]
 	}
 
-	return NewVariant("faker").WithShort("Fake data").
+	return variables.NewVariant("faker").WithShort("Fake data").
 		WithField(
-			NewHiddenParameter("what", string(what)),
-			NewInfoParameter("info", "Example: "+fn()).WithSubType("example"),
+			variables.NewHiddenParameter("what", string(what)),
+			variables.NewInfoParameter("info", "Example: "+fn()).WithSubType("example"),
 		)
 }
 
@@ -433,8 +435,8 @@ type getGuestSelfRegRuleVariantsOptions struct {
 	Faker      fakerWhat
 }
 
-func getSelfRegRuleVariants(o getGuestSelfRegRuleVariantsOptions) []Variant {
-	var res []Variant
+func getSelfRegRuleVariants(o getGuestSelfRegRuleVariantsOptions) []variables.Variant {
+	var res []variables.Variant
 
 	res = append(res, getGuestSelfRegRuleRandom())
 	if o.Email {
@@ -457,8 +459,8 @@ func getSelfRegRuleVariants(o getGuestSelfRegRuleVariantsOptions) []Variant {
 	return res
 }
 
-func guestSelfRegNames() []Parameter {
-	var res []Parameter
+func guestSelfRegNames() []variables.Parameter {
+	var res []variables.Parameter
 	for _, n := range []string{
 		"guestUser.accessCode",
 		"guestUser.fieldValues.ui_user_name",
@@ -478,7 +480,7 @@ func guestSelfRegNames() []Parameter {
 		}
 		fieldName = strcase.ToDelimited(fieldName, '_')
 		name := cases.Title(language.English, cases.NoLower).String(strings.ReplaceAll(fieldName, "_", " "))
-		res = append(res, NewTextInputParameter("selfRegFields:"+fieldName, name+" field name", n))
+		res = append(res, variables.NewTextInputParameter("selfRegFields:"+fieldName, name+" field name", n))
 	}
 	return res
 }

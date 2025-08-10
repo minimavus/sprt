@@ -78,9 +78,9 @@ func addSettingsAPIRoutes(r shared.EchoRouter) {
 	r.GET("/dictionaries", rest.GetDictionariesOfType, m.ValidatePermission("dictionaries.read.others"))
 	r.POST("/dictionaries", rest.CreateDictionary, m.ValidatePermission("dictionaries.create.others"))
 
-	r.GET("/dictionaries/:id", rest.GetDictionaryById)
+	r.GET("/dictionaries/:id", rest.GetDictionaryByID)
 	r.PUT("/dictionaries/:id", rest.UpdateDictionary)
-	r.DELETE("/dictionaries/:id", rest.DeleteDictionaryById)
+	r.DELETE("/dictionaries/:id", rest.DeleteDictionaryByID)
 
 	r.GET("/sms-gateway", rest.GetSmsGatewayConfig, m.ValidatePermission("sms_gateway.read.others"))
 	r.PUT("/sms-gateway", rest.UpdateSmsGatewayConfig, m.ValidatePermission("sms_gateway.update.others"))

@@ -2,6 +2,8 @@ package variables
 
 import (
 	"net/http"
+
+	"github.com/cisco-open/sprt/go-generator/sdk/variables"
 )
 
 const (
@@ -12,46 +14,46 @@ const (
 )
 
 var (
-	tlsParams = []Parameter{
-		NewRadioParameter("tlsVersion", "Allowed TLS versions", []Option[string]{
+	tlsParams = []variables.Parameter{
+		variables.NewRadioParameter("tlsVersion", "Allowed TLS versions", []variables.Option[string]{
 			{Value: TLSVersionTLSv1, Label: "TLS v1.0"},
 			{Value: TLSVersionTLSv11, Label: "TLS v1.1"},
 			{Value: TLSVersionTLSv12, Label: "TLS v1.2"},
 		}, TLSVersionTLSv12).
 			SetUpdateOnChange([]string{"allowedCiphers"}),
-		NewLoadableSelectParameter("allowedCiphers", "Allowed ciphers",
-			NewLoadParams("/generate/tls/ciphers", http.MethodGet).
-				WithApiPrefix().
-				SetResultType(LoadParamsResultTypeGroups).
+		variables.NewLoadableSelectParameter("allowedCiphers", "Allowed ciphers",
+			variables.NewLoadParams("/generate/tls/ciphers", http.MethodGet).
+				WithAPIPrefix().
+				SetResultAsGroups().
 				SetResultPaging(false).
 				SetRequest(map[string]any{"version": "{{.tlsVersion}}"}).
 				SetResultAttribute("ciphers").
 				SetResultFields("name", "id"),
 		).SetMulti(true).SetAdvanced(true),
-		NewCheckboxParameter("validateServer", false, "Validate server"),
-		NewLoadableSelectParameter("trustedCertificates", "Trusted CA/Root certificates",
-			NewLoadParams("/certificates/trusted", http.MethodGet).
-				WithApiPrefix().
-				SetResultType(LoadParamsResultTypeTable).
+		variables.NewCheckboxParameter("validateServer", false, "Validate server"),
+		variables.NewLoadableSelectParameter("trustedCertificates", "Trusted CA/Root certificates",
+			variables.NewLoadParams("/certificates/trusted", http.MethodGet).
+				WithAPIPrefix().
+				SetResultAsTable().
 				SetResultPaging(true).
 				SetResultAttribute("trusted").
 				SetResultFields("friendly_name", "id").
-				SetResultColumns(LoadableResultColumns{
+				SetResultColumns(variables.LoadableResultColumns{
 					{Title: "Friendly Name", Field: "friendly_name"},
 					{Title: "Subject", Field: "subject"},
 				}).
 				SetResultObjectPath(".certificates"),
 		).SetMulti(true).
-			Watch(NewWatch(".validateServer").
-				When(false, act{A: UseActionHide, T: ".trustedCertificates"}).
-				When(true, act{A: UseActionShow, T: ".trustedCertificates"})),
-		NewRadioParameter("validateFailAction", "Action if failed to validate server's certificate", []Option[string]{
+			Watch(variables.NewWatch(".validateServer").
+				When(false, variables.ActionHide(".trustedCertificates")).
+				When(true, variables.ActionShow(".trustedCertificates"))),
+		variables.NewRadioParameter("validateFailAction", "Action if failed to validate server's certificate", []variables.Option[string]{
 			{Value: "drop", Label: "Drop session"},
 			{Value: "inform", Label: "Sent TLS alert to the server"},
 		}, "inform").
-			Watch(NewWatch(".validateServer").
-				When(false, act{A: UseActionHide, T: ".validateFailAction"}).
-				When(true, act{A: UseActionShow, T: ".validateFailAction"})),
+			Watch(variables.NewWatch(".validateServer").
+				When(false, variables.ActionHide(".validateFailAction")).
+				When(true, variables.ActionShow(".validateFailAction"))),
 	}
 )
 
@@ -123,13 +125,13 @@ var cipherSuites = map[string]string{
 	"TLS_AES_128_GCM_SHA256":       "TLS_AES_128_GCM_SHA256",
 }
 
-func opensslToOption(openssl string) OptionWithName[bool] {
+func opensslToOption(openssl string) variables.OptionWithName[bool] {
 	for k, v := range cipherSuites {
 		if v == openssl {
-			return OptionWithName[bool]{Name: openssl, Label: k, Value: true}
+			return variables.OptionWithName[bool]{Name: openssl, Label: k, Value: true}
 		}
 	}
-	return OptionWithName[bool]{Name: openssl, Label: openssl, Value: false}
+	return variables.OptionWithName[bool]{Name: openssl, Label: openssl, Value: false}
 }
 
 var t1 = []string{
@@ -161,15 +163,15 @@ var t1 = []string{
 	"PSK-AES128-CBC-SHA",
 }
 
-func tls1() []OptionWithName[bool] {
-	res := make([]OptionWithName[bool], 0, len(t1))
+func tls1() []variables.OptionWithName[bool] {
+	res := make([]variables.OptionWithName[bool], 0, len(t1))
 	for _, v := range t1 {
 		res = append(res, opensslToOption(v))
 	}
 	return res
 }
 
-var tls1Ciphers = []OptionsGroup[bool]{
+var tls1Ciphers = []variables.OptionsGroup[bool]{
 	{Name: "tls1-ciphers", Label: "TLSv1.0/1.1 cipher suites", Options: tls1()},
 }
 
@@ -205,8 +207,8 @@ var t2 = []string{
 	"AES128-SHA256",
 }
 
-func tls2Specific() []OptionWithName[bool] {
-	res := make([]OptionWithName[bool], 0, len(t2))
+func tls2Specific() []variables.OptionWithName[bool] {
+	res := make([]variables.OptionWithName[bool], 0, len(t2))
 	for _, v := range t2 {
 		res = append(res, opensslToOption(v))
 	}
@@ -214,9 +216,9 @@ func tls2Specific() []OptionWithName[bool] {
 }
 
 var tls2Ciphers = append(tls1Ciphers,
-	OptionsGroup[bool]{Name: "tls12-ciphers", Label: "TLSv1.2 specific", Options: tls2Specific()})
+	variables.OptionsGroup[bool]{Name: "tls12-ciphers", Label: "TLSv1.2 specific", Options: tls2Specific()})
 
-var CiphersMap = map[string][]OptionsGroup[bool]{
+var CiphersMap = map[string][]variables.OptionsGroup[bool]{
 	TLSVersionTLSv1:  tls1Ciphers,
 	TLSVersionTLSv11: tls1Ciphers,
 	TLSVersionTLSv12: tls2Ciphers,

@@ -1,5 +1,7 @@
 package variables
 
+import "github.com/cisco-open/sprt/go-generator/sdk/variables"
+
 type (
 	coaAction string
 
@@ -27,32 +29,32 @@ const (
 )
 
 var (
-	coaParams = Params{
+	coaParams = variables.Params{
 		{
 			Title:    "CoA Parameters",
 			PropName: "coa",
-			Parameters: []Parameter{
-				NewColumnsParameter("coaColumns").
-					WithColumn(ParamsSlice{}.
-						With(NewFieldSetParameter("onBounceHostPortFields", "If **bounce-host-port** received").
+			Parameters: []variables.Parameter{
+				variables.NewColumnsParameter("coaColumns").
+					WithColumn(variables.ParamsSlice{}.
+						With(variables.NewFieldSetParameter("onBounceHostPortFields", "If **bounce-host-port** received").
 							WithFields(coaVariants("onBounceHostPort", "", coaVariantsParams{}))).
-						With(NewFieldSetParameter("onDisableHostPortFields", "If **disable-host-port** received").
+						With(variables.NewFieldSetParameter("onDisableHostPortFields", "If **disable-host-port** received").
 							WithFields(coaVariants("onDisableHostPort", "", coaVariantsParams{}))).
-						With(NewFieldSetParameter("onDefaultFields", "Default CoA action").
+						With(variables.NewFieldSetParameter("onDefaultFields", "Default CoA action").
 							WithFields(coaVariants("onDefault", "", coaVariantsParams{})))...).
-					WithColumn(ParamsSlice{}.
-						With(NewFieldSetParameter("onReauthenticateRerunFields", "If **reauthenticate** of type **rerun** received").
+					WithColumn(variables.ParamsSlice{}.
+						With(variables.NewFieldSetParameter("onReauthenticateRerunFields", "If **reauthenticate** of type **rerun** received").
 							WithFields(coaVariants("onReauthenticateRerun", "", coaVariantsParams{
 								actionAfterAck:      ptr(CoaActionAfterReauthenticateWithMab),
 								generateNewAfterAck: ptr(false),
 								dropOldAfterAck:     ptr(false),
 							}))).
-						With(NewFieldSetParameter("onReauthenticateLastFields", "If **reauthenticate** of type **last** received").
+						With(variables.NewFieldSetParameter("onReauthenticateLastFields", "If **reauthenticate** of type **last** received").
 							WithFields(coaVariants("onReauthenticateLast", "", coaVariantsParams{
 								generateNewAfterAck: ptr(false),
 								dropOldAfterAck:     ptr(false),
 							}))).
-						With(NewFieldSetParameter("onReauthenticateDefaultFields", "If **reauthenticate** w/out type received").
+						With(variables.NewFieldSetParameter("onReauthenticateDefaultFields", "If **reauthenticate** w/out type received").
 							WithFields(coaVariants("onReauthenticateDefault", "", coaVariantsParams{
 								actionAfterAck:      ptr(CoaActionAfterReauthenticateWithMab),
 								generateNewAfterAck: ptr(false),
@@ -64,75 +66,75 @@ var (
 
 	COA = VariableDefinition{
 		Parameters: coaParams,
-		Schema:     coaParams.ToJsonSchema(),
+		Schema:     coaParams.ToJSONSchema(),
 	}
 )
 
-func coaVariants(event string, title string, params coaVariantsParams) Parameter {
-	v := NewVariantsParameter(event, title).
+func coaVariants(event string, title string, params coaVariantsParams) variables.Parameter {
+	v := variables.NewVariantsParameter(event, title).
 		WithVariants(
-			NewVariant(string(CoaActionAck)).
+			variables.NewVariant(string(CoaActionAck)).
 				WithShort("CoA-ACK").
 				WithField(
-					NewSingleSelectParameter("actionAfter", "Action after CoA-ACK", []Option[string]{
-						{CoaActionAfterReauthenticate, "Reauthenticate"},
-						{CoaActionAfterReauthenticateWithMab, "Reauthenticate with MAB"},
-						{CoaActionAfterDoNothing, "Do nothing"},
+					variables.NewSingleSelectParameter("actionAfter", "Action after CoA-ACK", []variables.Option[string]{
+						{Value: CoaActionAfterReauthenticate, Label: "Reauthenticate"},
+						{Value: CoaActionAfterReauthenticateWithMab, Label: "Reauthenticate with MAB"},
+						{Value: CoaActionAfterDoNothing, Label: "Do nothing"},
 					}, withDefault(params.actionAfterAck, CoaActionAfterReauthenticate))).
 				WithField(
-					NewCheckboxParameter("newSessionId",
+					variables.NewCheckboxParameter("newSessionId",
 						withDefault(params.generateNewAfterAck, true), "Generate new session ID for re-authentication").
-						Watch(NewWatch(".actionAfter").
-							When(CoaActionAfterDoNothing, act{A: UseActionHide, T: ".newSessionId"}).
-							WhenNot(CoaActionAfterDoNothing, act{A: UseActionShow, T: ".newSessionId"}))).
+						Watch(variables.NewWatch(".actionAfter").
+							When(CoaActionAfterDoNothing, variables.ActionHide(".newSessionId")).
+							WhenNot(CoaActionAfterDoNothing, variables.ActionShow(".newSessionId")))).
 				WithField(
-					NewCheckboxParameter("dropOld",
+					variables.NewCheckboxParameter("dropOld",
 						withDefault(params.dropOldAfterAck, true), "Drop previous session").
-						Watch(NewWatch(".actionAfter").
-							When(CoaActionAfterDoNothing, act{A: UseActionHide, T: ".dropOld"}).
-							WhenNot(CoaActionAfterDoNothing, act{A: UseActionShow, T: ".dropOld"}))),
-			NewVariant(string(CoaActionNack)).
+						Watch(variables.NewWatch(".actionAfter").
+							When(CoaActionAfterDoNothing, variables.ActionHide(".dropOld")).
+							WhenNot(CoaActionAfterDoNothing, variables.ActionShow(".dropOld")))),
+			variables.NewVariant(string(CoaActionNack)).
 				WithShort("CoA-NACK").
 				WithField(
-					NewSingleSelectParameter("errorCause", "Error-Cause", []Option[string]{
-						{"201", "201 - Residual Session Context Removed"},
-						{"202", "202 - Invalid EAP Packet (Ignored)"},
-						{"401", "401 - Unsupported Attribute"},
-						{"402", "402 - Missing Attribute"},
-						{"403", "403 - NAS Identification Mismatch"},
-						{"404", "404 - Invalid Request"},
-						{"405", "405 - Unsupported Service"},
-						{"406", "406 - Unsupported Extension"},
-						{"407", "407 - Invalid Attribute Value"},
-						{"501", "501 - Administratively Prohibited"},
-						{"502", "502 - Request Not Routable (Proxy)"},
-						{"503", "503 - Session Context Not Found"},
-						{"504", "504 - Session Context Not Removable"},
-						{"505", "505 - Other Proxy Processing Error"},
-						{"506", "506 - Resources Unavailable"},
-						{"507", "507 - Request Initiated"},
-						{"508", "508 - Multiple Session Selection Unsupported"},
-						{"000", "No Error-Cause"},
+					variables.NewSingleSelectParameter("errorCause", "Error-Cause", []variables.Option[string]{
+						{Value: "201", Label: "201 - Residual Session Context Removed"},
+						{Value: "202", Label: "202 - Invalid EAP Packet (Ignored)"},
+						{Value: "401", Label: "401 - Unsupported Attribute"},
+						{Value: "402", Label: "402 - Missing Attribute"},
+						{Value: "403", Label: "403 - NAS Identification Mismatch"},
+						{Value: "404", Label: "404 - Invalid Request"},
+						{Value: "405", Label: "405 - Unsupported Service"},
+						{Value: "406", Label: "406 - Unsupported Extension"},
+						{Value: "407", Label: "407 - Invalid Attribute Value"},
+						{Value: "501", Label: "501 - Administratively Prohibited"},
+						{Value: "502", Label: "502 - Request Not Routable (Proxy)"},
+						{Value: "503", Label: "503 - Session Context Not Found"},
+						{Value: "504", Label: "504 - Session Context Not Removable"},
+						{Value: "505", Label: "505 - Other Proxy Processing Error"},
+						{Value: "506", Label: "506 - Resources Unavailable"},
+						{Value: "507", Label: "507 - Request Initiated"},
+						{Value: "508", Label: "508 - Multiple Session Selection Unsupported"},
+						{Value: "000", Label: "No Error-Cause"},
 					}, "503")).
 				WithField(
-					NewSingleSelectParameter("actionAfter", "Action after CoA-NACK", []Option[string]{
-						{CoaActionAfterReauthenticate, "Reauthenticate"},
-						{CoaActionAfterReauthenticateWithMab, "Reauthenticate with MAB"},
-						{CoaActionAfterDoNothing, "Do nothing"},
+					variables.NewSingleSelectParameter("actionAfter", "Action after CoA-NACK", []variables.Option[string]{
+						{Value: CoaActionAfterReauthenticate, Label: "Reauthenticate"},
+						{Value: CoaActionAfterReauthenticateWithMab, Label: "Reauthenticate with MAB"},
+						{Value: CoaActionAfterDoNothing, Label: "Do nothing"},
 					}, withDefault(params.actionAfterNack, CoaActionAfterDoNothing))).
 				WithField(
-					NewCheckboxParameter("newSessionId",
+					variables.NewCheckboxParameter("newSessionId",
 						withDefault(params.generateNewAfterNack, true), "Generate new session ID for re-authentication").
-						Watch(NewWatch(".actionAfter").
-							When(CoaActionAfterDoNothing, act{A: UseActionHide, T: ".newSessionId"}).
-							WhenNot(CoaActionAfterDoNothing, act{A: UseActionShow, T: ".newSessionId"}))).
+						Watch(variables.NewWatch(".actionAfter").
+							When(CoaActionAfterDoNothing, variables.ActionHide(".newSessionId")).
+							WhenNot(CoaActionAfterDoNothing, variables.ActionShow(".newSessionId")))).
 				WithField(
-					NewCheckboxParameter("dropOld",
+					variables.NewCheckboxParameter("dropOld",
 						withDefault(params.dropOldAfterNack, true), "Drop previous session").
-						Watch(NewWatch(".actionAfter").
-							When(CoaActionAfterDoNothing, act{A: UseActionHide, T: ".dropOld"}).
-							WhenNot(CoaActionAfterDoNothing, act{A: UseActionShow, T: ".dropOld"}))),
-			NewVariant(string(CoaActionDrop)).
+						Watch(variables.NewWatch(".actionAfter").
+							When(CoaActionAfterDoNothing, variables.ActionHide(".dropOld")).
+							WhenNot(CoaActionAfterDoNothing, variables.ActionShow(".dropOld")))),
+			variables.NewVariant(string(CoaActionDrop)).
 				WithShort("Drop"),
 		).WithValue(string(CoaActionAck))
 

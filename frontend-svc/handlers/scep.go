@@ -43,7 +43,7 @@ func (m *controller) CreateScepServer(c echo.Context) error {
 
 	req := new(struct {
 		Name           string   `json:"name" validate:"required"`
-		Url            string   `json:"url" validate:"required"`
+		URL            string   `json:"url" validate:"required"`
 		SigningCert    string   `json:"signer" validate:"required"`
 		CaCertificates []string `json:"ca_certificates" validate:"required,gt=0"`
 		Challenge      string   `json:"challenge"`
@@ -64,7 +64,7 @@ func (m *controller) CreateScepServer(c echo.Context) error {
 
 	scepServer := &models.ScepServer{
 		Name:           null.StringFrom(req.Name),
-		URL:            req.Url,
+		URL:            req.URL,
 		Signer:         null.StringFrom(req.SigningCert),
 		CaCertificates: certs,
 	}
@@ -177,7 +177,7 @@ func (m *controller) UpdateScepServer(c echo.Context) error {
 	req := new(struct {
 		ID             string    `param:"id" validate:"required"`
 		Name           *string   `json:"name"`
-		Url            *string   `json:"url"`
+		URL            *string   `json:"url"`
 		CaCertificates *[]string `json:"ca_certificates"`
 		Challenge      *string   `json:"challenge"`
 		SigningCert    *string   `json:"signer"`
@@ -197,8 +197,8 @@ func (m *controller) UpdateScepServer(c echo.Context) error {
 	if req.Name != nil {
 		scepServer.Name = null.StringFromPtr(req.Name)
 	}
-	if req.Url != nil {
-		scepServer.URL = *req.Url
+	if req.URL != nil {
+		scepServer.URL = *req.URL
 	}
 	if req.CaCertificates != nil {
 		var certs types.JSON
@@ -235,16 +235,16 @@ func (m *controller) TestScepConnection(c echo.Context) error {
 
 	req := new(struct {
 		Name string `json:"name" validate:"required"`
-		Url  string `json:"url" validate:"required"`
+		URL  string `json:"url" validate:"required"`
 	})
 	if err := m.bindAndValidate(c, req); err != nil {
 		return echo.ErrBadRequest.WithInternal(err)
 	}
 
-	m.App.Logger().Debug().Str("id", req.Name).Str("url", req.Url).Str("owner", u.ForUser).
+	m.App.Logger().Debug().Str("id", req.Name).Str("url", req.URL).Str("owner", u.ForUser).
 		Ctx(ctx).Msg("Testing scep connection")
 
-	cl, err := scep.NewClient(m.App, req.Url)
+	cl, err := scep.NewClient(m.App, req.URL)
 	if err != nil {
 		return echo.ErrInternalServerError.WithInternal(err)
 	}
@@ -294,7 +294,7 @@ func (m *controller) TestScepEnroll(c echo.Context) error {
 
 	req := new(struct {
 		Name           string                    `json:"name" validate:"required"`
-		Url            string                    `json:"url" validate:"required"`
+		URL            string                    `json:"url" validate:"required"`
 		SigningCert    string                    `json:"signer" validate:"required"`
 		CsrTemplate    CertTemplateUpsertRequest `json:"csr_template" validate:"required"`
 		CaCertificates []string                  `json:"ca_certificates" validate:"required"`
@@ -304,7 +304,7 @@ func (m *controller) TestScepEnroll(c echo.Context) error {
 		return echo.ErrBadRequest.WithInternal(err)
 	}
 
-	m.App.Logger().Debug().Str("id", req.Name).Str("url", req.Url).Str("owner", u.ForUser).
+	m.App.Logger().Debug().Str("id", req.Name).Str("url", req.URL).Str("owner", u.ForUser).
 		Ctx(ctx).Msg("Testing scep enroll")
 
 	signCertRaw, err := db.Exec(m.App).GetCertificate(ctx, u.ForUser, req.SigningCert)
@@ -323,7 +323,7 @@ func (m *controller) TestScepEnroll(c echo.Context) error {
 		return echo.ErrInternalServerError.WithInternal(err)
 	}
 
-	client, err := scep.NewClient(m.App, req.Url)
+	client, err := scep.NewClient(m.App, req.URL)
 	if err != nil {
 		return echo.ErrInternalServerError.WithInternal(err)
 	}

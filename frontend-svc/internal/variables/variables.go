@@ -1,11 +1,15 @@
 package variables
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/cisco-open/sprt/go-generator/sdk/variables"
+)
 
 type (
 	VariableDefinition struct {
-		Parameters Params `json:"parameters"`
-		Schema     any    `json:"schema,omitempty"`
+		Parameters variables.Params `json:"parameters"`
+		Schema     any              `json:"schema,omitempty"`
 	}
 )
 

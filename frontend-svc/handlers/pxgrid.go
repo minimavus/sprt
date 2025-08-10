@@ -114,8 +114,8 @@ func (m *controller) CheckPxFqdn(c echo.Context) error {
 	req := new(struct {
 		Fqdn     string                          `json:"fqdn" validate:"required"`
 		Strategy pxgrider_proto.FamilyPreference `json:"strategy"`
-		DnsIP    string                          `json:"dns_ip" validate:"required"`
-		DnsPort  uint32                          `json:"dns_port" validate:"required"`
+		DNSIP    string                          `json:"dns_ip" validate:"required"`
+		DNSPort  uint32                          `json:"dns_port" validate:"required"`
 	})
 	if err = m.bindAndValidate(c, req); err != nil {
 		return err
@@ -127,12 +127,12 @@ func (m *controller) CheckPxFqdn(c echo.Context) error {
 
 	uid := prefixedPxGridUser(u)
 	m.App.Logger().Debug().
-		Str("full_uid", uid).Str("fqdn", req.Fqdn).Str("dns_ip", req.DnsIP).
-		Uint32("dns_port", req.DnsPort).Msg("Checking pxGrid FQDN")
+		Str("full_uid", uid).Str("fqdn", req.Fqdn).Str("dns_ip", req.DNSIP).
+		Uint32("dns_port", req.DNSPort).Msg("Checking pxGrid FQDN")
 
 	r, err := m.App.PX().CheckFQDN(ctx, &pxgrider_proto.CheckFQDNRequest{
 		Fqdn:             req.Fqdn,
-		Dns:              &pxgrider_proto.DNS{Ip: req.DnsIP, Port: req.DnsPort},
+		Dns:              &pxgrider_proto.DNS{Ip: req.DNSIP, Port: req.DNSPort},
 		FamilyPreference: req.Strategy,
 	})
 	if err != nil {

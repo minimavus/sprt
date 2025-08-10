@@ -78,13 +78,13 @@ func (m *controller) GetServerSettings(c echo.Context) error {
 	}
 
 	req := new(struct {
-		Id string `param:"id" validate:"required,uuid"`
+		ID string `param:"id" validate:"required,uuid"`
 	})
 	if err = m.bindAndValidate(c, req); err != nil {
 		return err
 	}
 
-	svr, err := db.Exec(m.App).GetServerSettingsOfUser(ctx, u.ForUser, req.Id)
+	svr, err := db.Exec(m.App).GetServerSettingsOfUser(ctx, u.ForUser, req.ID)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return echo.ErrNotFound
@@ -112,13 +112,13 @@ func (m *controller) DeleteServerSettings(c echo.Context) error {
 	}
 
 	req := new(struct {
-		Id string `param:"id" validate:"required,uuid"`
+		ID string `param:"id" validate:"required,uuid"`
 	})
 	if err = m.bindAndValidate(c, req); err != nil {
 		return err
 	}
 
-	d, err := db.Exec(m.App).DeleteServerSettingsOfUser(ctx, u.ForUser, req.Id)
+	d, err := db.Exec(m.App).DeleteServerSettingsOfUser(ctx, u.ForUser, req.ID)
 	if err != nil {
 		return echo.ErrInternalServerError.WithInternal(err)
 	}
@@ -171,7 +171,7 @@ func (m *controller) UpdateServerSettings(c echo.Context) error {
 	}
 
 	req := new(struct {
-		Id   string            `param:"id" validate:"required,uuid"`
+		ID   string            `param:"id" validate:"required,uuid"`
 		Body ServerRequestBody `json:"server" validate:"required"`
 	})
 	if err = m.bindAndValidate(c, req); err != nil {
@@ -180,7 +180,7 @@ func (m *controller) UpdateServerSettings(c echo.Context) error {
 
 	var s models.Server
 	s.Owner = u.ForUser
-	s.ID = req.Id
+	s.ID = req.ID
 	if err = req.Body.MapTo(&s); err != nil {
 		return echo.ErrBadRequest.WithInternal(err)
 	}
@@ -218,11 +218,11 @@ func (m *controller) CreateServerSettings(c echo.Context) error {
 
 	var s models.Server
 	s.Owner = u.ForUser
-	newId, err := uuid.NewV7()
+	newID, err := uuid.NewV7()
 	if err != nil {
 		return echo.ErrInternalServerError.WithInternal(err)
 	}
-	s.ID = newId.String()
+	s.ID = newID.String()
 	if err = req.Body.MapTo(&s); err != nil {
 		return echo.ErrBadRequest.WithInternal(err)
 	}

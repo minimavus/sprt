@@ -1,32 +1,35 @@
 package variables
 
-import "github.com/cisco-open/sprt/frontend-svc/internal/dictionaries"
+import (
+	"github.com/cisco-open/sprt/go-generator/sdk/variables"
+	"github.com/cisco-open/sprt/go-generator/sdk/variables/dictionaries"
+)
 
 var (
-	papParams = Params{
+	papParams = variables.Params{
 		{
 			Title:    "PAP/CHAP Parameters",
 			PropName: "papChap",
-			Parameters: []Parameter{
-				NewCheckboxParameter("chap", false, "Use CHAP not PAP"),
-				NewCheckboxParameter("limitSessionsToCredentials", false, "Amount of sessions equals to amount of credentials").
-					Watch(NewWatch(".limitSessionsToCredentials").
-						When(true, act{A: UseActionDisable, T: "general.job.sessionsAmount"}).
-						When(false, act{A: UseActionEnable, T: "general.job.sessionsAmount"})),
-				NewVariantsParameter("credentials", "Credentials").WithVariants(
-					NewVariant("list").
+			Parameters: []variables.Parameter{
+				variables.NewCheckboxParameter("chap", false, "Use CHAP not PAP"),
+				variables.NewCheckboxParameter("limitSessionsToCredentials", false, "Amount of sessions equals to amount of credentials").
+					Watch(variables.NewWatch(".limitSessionsToCredentials").
+						When(true, variables.ActionDisable("general.job.sessionsAmount")).
+						When(false, variables.ActionEnable("general.job.sessionsAmount"))),
+				variables.NewVariantsParameter("credentials", "Credentials").WithVariants(
+					variables.NewVariant("list").
 						WithDescription("Credentials from the list").
 						WithShort("From list").
 						WithField(
-							NewListParameter("credentialsList", "Credentials list", "").
+							variables.NewListParameter("credentialsList", "Credentials list", "").
 								SetHint("Format user:password. One record per line").
 								SetAllowFromFile(true),
 						),
-					NewVariant("dictionary").
+					variables.NewVariant("dictionary").
 						WithDescription("Credentials from the dictionaries").
 						WithShort("From dictionaries").
 						WithField(
-							NewDictionaryParameter("dictionaries", []string{},
+							variables.NewDictionaryParameter("dictionaries", []string{},
 								[]dictionaries.DictionaryType{dictionaries.Credentials, dictionaries.Unclassified}),
 						),
 				),
@@ -41,6 +44,6 @@ var (
 			AccountingStart: PAPAccountingStart,
 		},
 		Parameters: papParams,
-		Schema:     papParams.ToJsonSchema(),
+		Schema:     papParams.ToJSONSchema(),
 	}
 )

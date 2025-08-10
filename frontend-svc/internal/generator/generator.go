@@ -15,10 +15,12 @@ import (
 	"layeh.com/radius/dictionary"
 
 	"github.com/cisco-open/sprt/frontend-svc/internal/db"
-	"github.com/cisco-open/sprt/frontend-svc/internal/dictionaries/radius"
 	"github.com/cisco-open/sprt/frontend-svc/internal/iputils"
 	"github.com/cisco-open/sprt/frontend-svc/internal/variables"
 	"github.com/cisco-open/sprt/frontend-svc/shared"
+
+	sdk "github.com/cisco-open/sprt/go-generator/sdk/variables"
+	"github.com/cisco-open/sprt/go-generator/sdk/variables/dictionaries/radius"
 )
 
 type (
@@ -233,7 +235,7 @@ func sanitizeName(name string) string {
 	return name
 }
 
-func (g *generator) GetTLSCipherSuites(tlsVersion string) ([]variables.OptionsGroup[bool], error) {
+func (g *generator) GetTLSCipherSuites(tlsVersion string) ([]sdk.OptionsGroup[bool], error) {
 	switch tlsVersion {
 	case variables.TLSVersionTLSv1, variables.TLSVersionTLSv11, variables.TLSVersionTLSv12, variables.TLSVersionTLSv13:
 		m := variables.CiphersMap[tlsVersion]

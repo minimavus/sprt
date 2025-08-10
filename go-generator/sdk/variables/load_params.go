@@ -43,13 +43,23 @@ func NewLoadParams(link, method string) *LoadParams {
 	}
 }
 
-func (l *LoadParams) WithApiPrefix() *LoadParams {
+func (l *LoadParams) WithAPIPrefix() *LoadParams {
 	l.Link = "{{API_PREFIX}}" + l.Link
 	return l
 }
 
 func (l *LoadParams) SetRequest(request map[string]any) *LoadParams {
 	l.Request = request
+	return l
+}
+
+func (l *LoadParams) SetResultAsTable() *LoadParams {
+	l.Result.Type = LoadParamsResultTypeTable
+	return l
+}
+
+func (l *LoadParams) SetResultAsGroups() *LoadParams {
+	l.Result.Type = LoadParamsResultTypeGroups
 	return l
 }
 
