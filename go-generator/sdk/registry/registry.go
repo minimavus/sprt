@@ -11,17 +11,13 @@ type Plugin interface {
 }
 
 var (
-	plugins     sync.Map
-	pluginsLock sync.Mutex
+	plugins sync.Map
 )
 
 func Register(p Plugin) {
-	pluginsLock.Lock()
-	defer pluginsLock.Unlock()
-	if _, loaded := plugins.Load(p.Name()); loaded {
+	if _, loaded := plugins.LoadOrStore(p.Name(), p); loaded {
 		panic("plugin already registered: " + p.Name())
 	}
-	plugins.Store(p.Name(), p)
 }
 
 func Registered() []Plugin {
