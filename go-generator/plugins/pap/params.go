@@ -1,4 +1,4 @@
-package variables
+package pap
 
 import (
 	"github.com/cisco-open/sprt/go-generator/sdk/variables"
@@ -35,15 +35,5 @@ var (
 				),
 			},
 		},
-	}
-
-	PAP = ProtoDefinition{
-		ProtoName: "PAP/CHAP",
-		Radius: ProtoRadius{
-			AccessRequest:   PAPAccessRequest,
-			AccountingStart: PAPAccountingStart,
-		},
-		Parameters: papParams,
-		Schema:     papParams.ToJSONSchema(),
 	}
 )

@@ -3,11 +3,19 @@ package registry
 import (
 	j "encoding/json"
 	"sync"
+
+	"github.com/cisco-open/sprt/go-generator/sdk/radius"
+	"github.com/cisco-open/sprt/go-generator/sdk/variables"
 )
 
 type Plugin interface {
 	Name() string
 	JSONSchema() []j.RawMessage
+	Parameters() variables.Params
+	Proto() variables.Protos
+
+	RADIUS() *radius.ProtoRadius
+	TACACS() any // FIXME: implement TACACS support
 }
 
 var (
@@ -29,4 +37,13 @@ func Registered() []Plugin {
 		return true
 	})
 	return registered
+}
+
+func Get(name string) (Plugin, bool) {
+	if value, ok := plugins.Load(name); ok {
+		if plugin, ok := value.(Plugin); ok {
+			return plugin, true
+		}
+	}
+	return nil, false
 }

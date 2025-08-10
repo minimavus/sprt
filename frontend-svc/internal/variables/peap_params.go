@@ -1,6 +1,7 @@
 package variables
 
 import (
+	"github.com/cisco-open/sprt/go-generator/sdk/radius"
 	"github.com/cisco-open/sprt/go-generator/sdk/variables"
 	"github.com/cisco-open/sprt/go-generator/sdk/variables/dictionaries"
 )
@@ -82,7 +83,7 @@ var (
 
 	PEAP = ProtoDefinition{
 		ProtoName: "PEAP",
-		Radius: ProtoRadius{
+		Radius: radius.ProtoRadius{
 			AccessRequest:   PEAPAccessRequest,
 			AccountingStart: PEAPAccountingStart,
 		},

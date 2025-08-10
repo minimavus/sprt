@@ -3,6 +3,7 @@ package variables
 import (
 	"net/http"
 
+	"github.com/cisco-open/sprt/go-generator/sdk/radius"
 	"github.com/cisco-open/sprt/go-generator/sdk/variables"
 	"github.com/cisco-open/sprt/go-generator/sdk/variables/dictionaries"
 )
@@ -131,9 +132,9 @@ var (
 		},
 	}
 
-	EapTLS = ProtoDefinition{
+	EAPTLS = ProtoDefinition{
 		ProtoName: "EAP-TLS",
-		Radius: ProtoRadius{
+		Radius: radius.ProtoRadius{
 			AccessRequest:   EAPTLSAccessRequest,
 			AccountingStart: EAPTLSAccountingStart,
 		},
