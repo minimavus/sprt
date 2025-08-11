@@ -1,6 +1,6 @@
 import {
-  DefaultError,
-  QueryKey,
+  type DefaultError,
+  type QueryKey,
   useMutation,
   useQuery,
   useQueryClient,
@@ -9,7 +9,7 @@ import axios from "axios";
 
 import { queryClient } from "@/hooks/queryClient";
 import { queryGetFn, useGetQuery } from "@/hooks/useGetQuery";
-import { QueryUser } from "@/hooks/useQueryUser";
+import type { QueryUser } from "@/hooks/useQueryUser";
 import { api } from "@/utils/apiCompose";
 import { getErrorMessage } from "@/utils/errors";
 import failOrRetry from "@/utils/failOrRetry";
@@ -19,11 +19,11 @@ import { toast } from "@/utils/toasts";
 
 import {
   allJobsUsersSchema,
-  Job,
-  Jobs,
-  jobsSchema,
-  JobStats,
+  type Job,
+  type JobStats,
+  type Jobs,
   jobStatsSchema,
+  jobsSchema,
 } from "./schemas";
 
 export type { Job, Jobs };
@@ -37,7 +37,7 @@ export function useAllJobsUsers() {
   });
 }
 
-const getJobsOfUserKey = (user: string): QueryKey => ["jobs", { user }];
+export const getJobsOfUserKey = (user: string): QueryKey => ["jobs", { user }];
 
 export const getJobsOfUserKeyAndEnsureDefaults = (
   user: string | null | undefined,

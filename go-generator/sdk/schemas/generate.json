@@ -122,6 +122,9 @@
             },
             "withDACL": {
               "type": "boolean"
+            },
+            "proto": {
+              "type": "string"
             }
           },
           "required": [
@@ -133,7 +136,8 @@
             "bulkName",
             "withAcctStart",
             "latencyAcctStart",
-            "withDACL"
+            "withDACL",
+            "proto"
           ],
           "additionalProperties": false
         }

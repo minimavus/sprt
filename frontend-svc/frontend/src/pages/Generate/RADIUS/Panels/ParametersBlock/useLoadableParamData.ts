@@ -91,14 +91,18 @@ const useVariables = (params: LoadParams, control: Control) => {
         }
       }
     }
-    let watchablesKeys = Object.keys(variables$.get()).filter((k) =>
-      k.startsWith("."),
+    let watchablesKeys = Object.keys(variables$.get()).filter(
+      (k) => k.startsWith(".") || k.startsWith("/"),
     );
     let watchables: { key: string; path: string }[] = [];
     if (watchablesKeys.length > 0) {
       const mount = Array.from(control._names.mount);
       watchables = watchablesKeys
-        .map((k) => ({ key: k, path: mount.find((m) => m.endsWith(k)) }))
+        .map((key) =>
+          key.startsWith("/")
+            ? { key, path: key.slice(1) }
+            : { key, path: mount.find((m) => m.endsWith(key)) },
+        )
         .filter((v) => Boolean(v.path)) as { key: string; path: string }[];
     }
     return watchables;

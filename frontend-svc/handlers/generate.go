@@ -3,12 +3,16 @@ package handlers
 import (
 	"net/http"
 
+	"github.com/go-viper/mapstructure/v2"
+	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 
 	"github.com/cisco-open/sprt/frontend-svc/internal/auth"
 	"github.com/cisco-open/sprt/frontend-svc/internal/policy"
 	"github.com/cisco-open/sprt/frontend-svc/internal/user"
 	"github.com/cisco-open/sprt/frontend-svc/internal/variables"
+	"github.com/cisco-open/sprt/go-generator/sdk/json"
+	"github.com/cisco-open/sprt/go-generator/sdk/schemas"
 )
 
 func (m *controller) GetProtoSpecificParams(c echo.Context) error {
@@ -155,4 +159,45 @@ func (m *controller) GetSupportedTLSCipherSuites(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, ciphers)
+}
+
+func (m *controller) Generate(c echo.Context) error {
+	u, ctx, err := auth.GetUserDataAndContext(c)
+	if err != nil {
+		return err
+	}
+
+	m.App.Logger().Debug().Ctx(ctx).Str("uid", u.ForUser).
+		Msg("Generate request received")
+
+	rawBody := map[string]any{}
+	if err = json.NewDecoder(c.Request().Body).Decode(&rawBody); err != nil {
+		m.App.Logger().Error().Err(err).Str("uid", u.ForUser).
+			Msg("Failed to decode request body")
+		return echo.ErrBadRequest.WithInternal(err)
+	}
+
+	decodedBody := schemas.GenerateJSON{}
+	if err = mapstructure.Decode(rawBody, &decodedBody); err != nil {
+		m.App.Logger().Error().Err(err).Str("uid", u.ForUser).
+			Msg("Failed to map request body")
+		return echo.ErrBadRequest.WithInternal(err)
+	}
+
+	reqID, err := uuid.NewV7()
+	if err != nil {
+		m.App.Logger().Error().Err(err).Str("uid", u.ForUser).
+			Msg("Failed to get new request UUID")
+		return echo.ErrInternalServerError.WithInternal(err)
+	}
+
+	m.App.Logger().Debug().Ctx(ctx).
+		Str("uid", u.ForUser).
+		Str("proto", decodedBody.General.Job.Proto).
+		Str("uuid", reqID.String()).
+		Msg("Starting new generate job")
+
+	// TODO: Implement putting to a queue
+
+	return c.JSON(http.StatusOK, map[string]any{"id": reqID})
 }

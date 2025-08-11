@@ -233,6 +233,8 @@ func addUIAPIRoutes(r shared.EchoRouter) {
 }
 
 func addGenerateAPIRoutes(r shared.EchoRouter) {
+	r.POST("", rest.Generate, m.ValidatePermission("generate.create.others"))
+
 	r.GET("/proto/:proto/parameters", rest.GetProtoSpecificParams)
 	r.GET("/proto/:proto/defaults", rest.GetProtoDefaults, m.ValidatePermission("generate_defaults.read.others"))
 	r.GET("/variables/:variable", rest.GetVariableDefinition)

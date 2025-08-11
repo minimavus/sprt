@@ -1,5 +1,5 @@
 import { isAxiosError } from "axios";
-import { FieldError } from "react-hook-form";
+import type { FieldError } from "react-hook-form";
 
 type JSONError = {
   detail?: string;
@@ -40,7 +40,11 @@ export function getErrorMessage(error: unknown): string | undefined {
   }
 
   if (isAxiosError(error) && isJSONError(error.response?.data)) {
-    return cleanupRpcPrefix(error.response?.data?.reason || error.message);
+    return cleanupRpcPrefix(
+      error.response?.data?.reason ||
+        error.response?.data?.detail ||
+        error.message,
+    );
   }
 
   if (isFieldError(error)) {

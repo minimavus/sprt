@@ -39,7 +39,7 @@ var (
 				WithAPIPrefix().
 				SetResultAsGroups().
 				SetResultPaging(false).
-				SetRequest(map[string]any{"version": "{{.tlsVersion}}", "proto": "{{.job.proto}}"}).
+				SetRequest(map[string]any{"version": "{{.tlsVersion}}", "proto": "{{/general.job.proto}}"}).
 				SetResultAttribute("ciphers").
 				SetResultFields("name", "id"),
 		).SetMulti(true).SetAdvanced(true),
