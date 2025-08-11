@@ -8,15 +8,21 @@ import (
 	"github.com/cisco-open/sprt/go-generator/sdk/variables"
 )
 
-type Plugin interface {
-	Name() string
-	JSONSchema() []j.RawMessage
-	Parameters() variables.Params
-	Proto() variables.Protos
+type (
+	Plugin interface {
+		Name() string
+		JSONSchema() []j.RawMessage
+		Parameters() variables.Params
+		Proto() variables.Protos
 
-	RADIUS() *radius.ProtoRadius
-	TACACS() any // FIXME: implement TACACS support
-}
+		RADIUS() *radius.ProtoRadius
+		TACACS() any // FIXME: implement TACACS support
+	}
+
+	CipherSuitesProvider interface {
+		GetTLSCipherSuites(proto, tlsVersion string) ([]variables.OptionsGroup[bool], error)
+	}
+)
 
 var (
 	plugins sync.Map

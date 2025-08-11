@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { useAsyncValue } from "react-router-dom";
+import { useAsyncValue, useParams } from "react-router-dom";
 
 import {
   getDefaultValue,
@@ -9,6 +9,7 @@ import {
 
 export const useDefaultValues = () => {
   const [raw] = useAsyncValue() as [unknown, unknown];
+  const { proto } = useParams<{ proto: string }>();
 
   const cached = useRef<RadiusForm | null>(null);
 
@@ -16,7 +17,11 @@ export const useDefaultValues = () => {
     return cached.current;
   }
 
-  cached.current = (raw as any) ?? getDefaultValue();
+  if ((raw as RadiusForm)?.general?.job) {
+    (raw as RadiusForm).general.job.proto = proto!;
+  }
+
+  cached.current = (raw as any) ?? getDefaultValue(proto!);
 
   // if (raw) {
   // const { success, data, error } = radiusForm.safeParse(raw);

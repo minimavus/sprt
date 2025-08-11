@@ -19,25 +19,25 @@ var (
 	prebuiltSchema = mabParams.ToJSONSchema()
 )
 
-func (f *mabPlugin) Name() string { return "mab" }
+func (*mabPlugin) Name() string { return "mab" }
 
-func (f *mabPlugin) JSONSchema() []json.RawMessage {
+func (*mabPlugin) JSONSchema() []json.RawMessage {
 	return prebuiltSchema
 }
 
-func (f *mabPlugin) Parameters() variables.Params {
+func (*mabPlugin) Parameters() variables.Params {
 	return mabParams
 }
 
-func (f *mabPlugin) Proto() variables.Protos {
+func (*mabPlugin) Proto() variables.Protos {
 	return variables.ProtosRadius
 }
 
-func (f *mabPlugin) RADIUS() *radius.ProtoRadius {
+func (*mabPlugin) RADIUS() *radius.ProtoRadius {
 	return prebuiltProto
 }
 
-func (f *mabPlugin) TACACS() any {
+func (*mabPlugin) TACACS() any {
 	return nil
 }
 

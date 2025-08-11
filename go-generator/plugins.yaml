@@ -1,3 +1,5 @@
 plugins:
   - module: github.com/cisco-open/sprt/go-generator/generator/plugins/mab
   - module: github.com/cisco-open/sprt/go-generator/generator/plugins/pap
+  - module: github.com/cisco-open/sprt/go-generator/generator/plugins/eaptls
+  - module: github.com/cisco-open/sprt/go-generator/generator/plugins/peap

@@ -1,9 +1,8 @@
-package variables
+package eaptls
 
 import (
 	"net/http"
 
-	"github.com/cisco-open/sprt/go-generator/sdk/radius"
 	"github.com/cisco-open/sprt/go-generator/sdk/variables"
 	"github.com/cisco-open/sprt/go-generator/sdk/variables/dictionaries"
 )
@@ -23,7 +22,7 @@ var (
 								WithShowIfChecked(true).
 								WithField(
 									variables.NewInfoParameter("how_works", "Selected certificates will be used for authentication"),
-									variables.NewLoadableSelectParameter("certificates", "Certificates", identityCertificatesLoad).SetMulti(true),
+									variables.NewLoadableSelectParameter("certificates", "Certificates", IdentityCertificatesLoad).SetMulti(true),
 								),
 							variables.NewVariant("scep").
 								WithDescription("Request from SCEP server").
@@ -127,18 +126,8 @@ var (
 							{Value: "but-root", Label: "Full chain w/out root"},
 							{Value: "only-identity", Label: "Only identity certificate"},
 						}, "but-root").SetAdvanced(true),
-					).WithColumn(tlsParams...),
+					).WithColumn(CommonTLSParams...),
 			},
 		},
-	}
-
-	EAPTLS = ProtoDefinition{
-		ProtoName: "EAP-TLS",
-		Radius: radius.ProtoRadius{
-			AccessRequest:   EAPTLSAccessRequest,
-			AccountingStart: EAPTLSAccountingStart,
-		},
-		Parameters: eapTLSParams,
-		Schema:     eapTLSParams.ToJSONSchema(),
 	}
 )

@@ -1,4 +1,4 @@
-package variables
+package eaptls
 
 import (
 	"net/http"
@@ -14,7 +14,20 @@ const (
 )
 
 var (
-	tlsParams = []variables.Parameter{
+	IdentityCertificatesLoad = variables.NewLoadParams("/certificates/identity", http.MethodGet).
+					WithAPIPrefix().
+					SetResultType(variables.LoadParamsResultTypeTable).
+					SetResultPaging(false).
+					SetResultAttribute("certificates").
+					SetResultFields("friendly_name", "id").
+					SetResultColumns([]variables.LoadableResultColumn{
+			{Title: "Friendly Name", Field: "friendly_name"},
+			{Title: "Subject", Field: "subject"},
+			{Title: "Issuer", Field: "issuer"},
+		}).
+		SetResultObjectPath(".certificates")
+
+	CommonTLSParams = []variables.Parameter{
 		variables.NewRadioParameter("tlsVersion", "Allowed TLS versions", []variables.Option[string]{
 			{Value: TLSVersionTLSv1, Label: "TLS v1.0"},
 			{Value: TLSVersionTLSv11, Label: "TLS v1.1"},
@@ -26,7 +39,7 @@ var (
 				WithAPIPrefix().
 				SetResultAsGroups().
 				SetResultPaging(false).
-				SetRequest(map[string]any{"version": "{{.tlsVersion}}"}).
+				SetRequest(map[string]any{"version": "{{.tlsVersion}}", "proto": "{{.job.proto}}"}).
 				SetResultAttribute("ciphers").
 				SetResultFields("name", "id"),
 		).SetMulti(true).SetAdvanced(true),
@@ -57,7 +70,7 @@ var (
 	}
 )
 
-var cipherSuites = map[string]string{
+var CipherSuites = map[string]string{
 	// TLS 1.0/1.1
 	"TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA":  "ECDHE-ECDSA-AES256-SHA",
 	"TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA":    "ECDHE-RSA-AES256-SHA",
@@ -126,7 +139,7 @@ var cipherSuites = map[string]string{
 }
 
 func opensslToOption(openssl string) variables.OptionWithName[bool] {
-	for k, v := range cipherSuites {
+	for k, v := range CipherSuites {
 		if v == openssl {
 			return variables.OptionWithName[bool]{Name: openssl, Label: k, Value: true}
 		}

@@ -1,7 +1,7 @@
-package variables
+package peap
 
 import (
-	"github.com/cisco-open/sprt/go-generator/sdk/radius"
+	"github.com/cisco-open/sprt/go-generator/generator/plugins/eaptls"
 	"github.com/cisco-open/sprt/go-generator/sdk/variables"
 	"github.com/cisco-open/sprt/go-generator/sdk/variables/dictionaries"
 )
@@ -76,18 +76,8 @@ var (
 								),
 							)...,
 					).
-					WithColumn(tlsParams...),
+					WithColumn(eaptls.CommonTLSParams...),
 			},
 		},
-	}
-
-	PEAP = ProtoDefinition{
-		ProtoName: "PEAP",
-		Radius: radius.ProtoRadius{
-			AccessRequest:   PEAPAccessRequest,
-			AccountingStart: PEAPAccountingStart,
-		},
-		Parameters: peapParams,
-		Schema:     peapParams.ToJSONSchema(),
 	}
 )

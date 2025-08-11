@@ -141,6 +141,7 @@ func (m *controller) GetProtoDefaults(c echo.Context) error {
 
 func (m *controller) GetSupportedTLSCipherSuites(c echo.Context) error {
 	req := new(struct {
+		Proto   string `query:"proto" validate:"required"`
 		Version string `query:"version" validate:"omitempty,oneof=TLSv1 TLSv1_1 TLSv1_2 TLSv1_3"`
 	})
 	if err := m.bindAndValidate(c, req); err != nil {
@@ -148,7 +149,7 @@ func (m *controller) GetSupportedTLSCipherSuites(c echo.Context) error {
 
 	}
 
-	ciphers, err := m.App.Generator().GetTLSCipherSuites(req.Version)
+	ciphers, err := m.App.Generator().GetTLSCipherSuites(req.Proto, req.Version)
 	if err != nil {
 		return echo.ErrInternalServerError.WithInternal(err)
 	}

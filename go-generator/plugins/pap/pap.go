@@ -19,25 +19,25 @@ var (
 	prebuiltSchema = papParams.ToJSONSchema()
 )
 
-func (f *papPlugin) Name() string { return "pap" }
+func (*papPlugin) Name() string { return "pap" }
 
-func (f *papPlugin) JSONSchema() []json.RawMessage {
+func (*papPlugin) JSONSchema() []json.RawMessage {
 	return prebuiltSchema
 }
 
-func (f *papPlugin) Parameters() variables.Params {
+func (*papPlugin) Parameters() variables.Params {
 	return papParams
 }
 
-func (f *papPlugin) Proto() variables.Protos {
+func (*papPlugin) Proto() variables.Protos {
 	return variables.ProtosRadius
 }
 
-func (f *papPlugin) RADIUS() *radius.ProtoRadius {
+func (*papPlugin) RADIUS() *radius.ProtoRadius {
 	return prebuiltProto
 }
 
-func (f *papPlugin) TACACS() any {
+func (*papPlugin) TACACS() any {
 	return nil
 }
 

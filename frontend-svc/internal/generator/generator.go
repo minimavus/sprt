@@ -16,10 +16,10 @@ import (
 
 	"github.com/cisco-open/sprt/frontend-svc/internal/db"
 
-	"github.com/cisco-open/sprt/frontend-svc/internal/variables"
 	"github.com/cisco-open/sprt/frontend-svc/shared"
 
 	"github.com/cisco-open/sprt/go-generator/sdk/iputils"
+	"github.com/cisco-open/sprt/go-generator/sdk/registry"
 	sdk "github.com/cisco-open/sprt/go-generator/sdk/variables"
 	"github.com/cisco-open/sprt/go-generator/sdk/variables/dictionaries/radius"
 )
@@ -236,15 +236,17 @@ func sanitizeName(name string) string {
 	return name
 }
 
-func (g *generator) GetTLSCipherSuites(tlsVersion string) ([]sdk.OptionsGroup[bool], error) {
-	switch tlsVersion {
-	case variables.TLSVersionTLSv1, variables.TLSVersionTLSv11, variables.TLSVersionTLSv12, variables.TLSVersionTLSv13:
-		m := variables.CiphersMap[tlsVersion]
-
-		return m, nil
-	default:
-		return nil, fmt.Errorf("unsupported TLS version: %s", tlsVersion)
+func (g *generator) GetTLSCipherSuites(proto, tlsVersion string) ([]sdk.OptionsGroup[bool], error) {
+	plugin, ok := registry.Get(proto)
+	if !ok {
+		return nil, fmt.Errorf("plugin %s not found", proto)
 	}
+
+	if cipherProvider, ok := plugin.(registry.CipherSuitesProvider); ok {
+		return cipherProvider.GetTLSCipherSuites(proto, tlsVersion)
+	}
+
+	return nil, fmt.Errorf("plugin %s does not support TLS cipher suites", proto)
 }
 
 func matchIP(ip string) Matcher {

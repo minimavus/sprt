@@ -56,9 +56,33 @@ func GetProtoDefinition(proto string) (ProtoDefinition, error) {
 			Schema:     params.ToJSONSchema(),
 		}, nil
 	case "eap-tls", "eaptls":
-		return EAPTLS, nil
+		eapTLSPlugin, ok := registry.Get("eap-tls")
+		if !ok {
+			return ProtoDefinition{}, fmt.Errorf("EAP-TLS plugin not found")
+		}
+
+		params := eapTLSPlugin.Parameters()
+
+		return ProtoDefinition{
+			ProtoName:  "EAP-TLS",
+			Radius:     *eapTLSPlugin.RADIUS(),
+			Parameters: params,
+			Schema:     params.ToJSONSchema(),
+		}, nil
 	case "peap":
-		return PEAP, nil
+		peapPlugin, ok := registry.Get("eap-tls")
+		if !ok {
+			return ProtoDefinition{}, fmt.Errorf("PEAP plugin not found")
+		}
+
+		params := peapPlugin.Parameters()
+
+		return ProtoDefinition{
+			ProtoName:  "PEAP",
+			Radius:     *peapPlugin.RADIUS(),
+			Parameters: params,
+			Schema:     params.ToJSONSchema(),
+		}, nil
 	case "mab":
 		mabPlugin, ok := registry.Get("mab")
 		if !ok {

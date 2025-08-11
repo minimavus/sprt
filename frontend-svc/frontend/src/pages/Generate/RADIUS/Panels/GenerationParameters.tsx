@@ -24,6 +24,18 @@ export const GenerationParameters: FC = () => {
   return (
     <Stack gap="sm">
       <Title order={3}>Generation Parameters</Title>
+      <Controller<RadiusForm, "general.job.proto">
+        name="general.job.proto"
+        render={({ field, fieldState: { error } }) => (
+          <TextInput
+            {...field}
+            error={getErrorMessage(error)}
+            id="proto"
+            disabled={useFieldState("general.job.proto") === "disabled"}
+            display="none"
+          />
+        )}
+      />
       <Controller<RadiusForm, "general.job.name">
         name="general.job.name"
         render={({ field, fieldState: { error } }) => (

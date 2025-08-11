@@ -4,6 +4,8 @@ use ./go-generator/generator
 use ./go-generator/sdk
 use ./go-generator/plugins/mab
 use ./go-generator/plugins/pap
+use ./go-generator/plugins/eaptls
+use ./go-generator/plugins/peap
 
 use ./go-generator/tools/plugin-builder
 
