@@ -1,5 +1,5 @@
-import { FC } from "react";
-import { NumberInput, NumberInputProps, TextInput } from "@mantine/core";
+import { NumberInput, type NumberInputProps, TextInput } from "@mantine/core";
+import type { FC } from "react";
 
 interface DisableableNumberInputProps extends NumberInputProps {
   disabledValue?: string;

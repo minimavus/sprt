@@ -41,6 +41,10 @@ func (*mabPlugin) TACACS() any {
 	return nil
 }
 
+func (*mabPlugin) Provides() []string {
+	return []string{"mab"}
+}
+
 func init() {
 	registry.Register(&mabPlugin{})
 }

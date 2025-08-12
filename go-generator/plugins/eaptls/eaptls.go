@@ -45,6 +45,10 @@ func (*eapTLSPlugin) TACACS() any {
 	return nil
 }
 
+func (*eapTLSPlugin) Provides() []string {
+	return []string{"eap-tls", "eaptls", "eapTls"}
+}
+
 func (*eapTLSPlugin) GetTLSCipherSuites(_, tlsVersion string) ([]variables.OptionsGroup[bool], error) {
 	switch tlsVersion {
 	case TLSVersionTLSv1, TLSVersionTLSv11, TLSVersionTLSv12, TLSVersionTLSv13:

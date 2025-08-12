@@ -1,6 +1,6 @@
-import { FC, useEffect } from "react";
 import { Badge, Group, Loader, Tooltip } from "@mantine/core";
 import { useQueryClient } from "@tanstack/react-query";
+import { type FC, useEffect } from "react";
 
 import { Info } from "@/components/Alerts";
 import { DisplayError } from "@/components/Error";
@@ -14,7 +14,7 @@ import type { Protos } from "@/hooks/zodProto";
 import { log } from "@/utils/log";
 
 import { NavSubDivider, NavSubLink, NavSubSection } from "./NavSubLink";
-import { SubMenuComponentProps } from "./types";
+import type { SubMenuComponentProps } from "./types";
 
 const ServerLink: FC<{
   server: ServerWithSessions;

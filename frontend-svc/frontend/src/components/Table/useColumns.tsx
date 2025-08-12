@@ -1,6 +1,6 @@
-import { useMemo } from "react";
 import { Checkbox } from "@mantine/core";
-import { ColumnDef, RowData } from "@tanstack/react-table";
+import type { ColumnDef, RowData } from "@tanstack/react-table";
+import { useMemo } from "react";
 
 import { TableCellWithExpandedIndication } from "./TableCellWithExpandedIndication";
 

@@ -1,6 +1,6 @@
-import { FC } from "react";
 import { Group, Text } from "@mantine/core";
-import { MonthsProps } from "react-cron-headless";
+import type { FC } from "react";
+import type { MonthsProps } from "react-cron-headless";
 
 import { UNIT_MONTHS } from "./constants";
 

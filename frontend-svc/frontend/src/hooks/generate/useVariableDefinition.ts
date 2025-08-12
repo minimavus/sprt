@@ -1,14 +1,18 @@
-import { DefaultError, QueryKey, useQuery } from "@tanstack/react-query";
+import {
+  type DefaultError,
+  type QueryKey,
+  useQuery,
+} from "@tanstack/react-query";
 
 import { queryClient } from "@/hooks/queryClient";
 import { queryGetFn } from "@/hooks/useGetQuery";
-import { QueryUser } from "@/hooks/useQueryUser";
+import type { QueryUser } from "@/hooks/useQueryUser";
 import { api } from "@/utils/apiCompose";
 import failOrRetry from "@/utils/failOrRetry";
 import { orMe } from "@/utils/orMe";
 
 import { isInDev } from "../useInitial";
-import { VariableDefinition, VariableDefinitionSchema } from "./schemas";
+import { type VariableDefinition, VariableDefinitionSchema } from "./schemas";
 
 const getVariableDefKey = (variable: string, user: string): QueryKey => [
   "generate",

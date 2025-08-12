@@ -1,6 +1,6 @@
-import { FC } from "react";
 import { rem, Select } from "@mantine/core";
-import { PeriodProps, PeriodType } from "react-cron-headless";
+import type { FC } from "react";
+import type { PeriodProps, PeriodType } from "react-cron-headless";
 
 export const PeriodField: FC<PeriodProps> = ({
   allowedPeriods,

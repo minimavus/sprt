@@ -1,6 +1,6 @@
-import { FC } from "react";
 import { Tooltip } from "@mantine/core";
 import { IconHelpCircle } from "@tabler/icons-react";
+import type { FC } from "react";
 
 import styles from "@/styles/TextInput.module.scss";
 

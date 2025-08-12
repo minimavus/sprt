@@ -1,6 +1,11 @@
-import { forwardRef, type ReactNode } from "react";
-import { Box, BoxProps, PolymorphicComponentProps, rem } from "@mantine/core";
+import {
+  Box,
+  type BoxProps,
+  type PolymorphicComponentProps,
+  rem,
+} from "@mantine/core";
 import cx from "classnames";
+import { forwardRef, type ReactNode } from "react";
 
 import styles from "./Timeline.module.scss";
 

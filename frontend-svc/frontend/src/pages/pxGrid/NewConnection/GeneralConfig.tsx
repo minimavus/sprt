@@ -1,12 +1,12 @@
-import { FC } from "react";
 import { ActionIcon, Button, Stack, TextInput, Tooltip } from "@mantine/core";
 import { IconPlus, IconTrash } from "@tabler/icons-react";
 import cx from "classnames";
+import type { FC } from "react";
 import { Controller, useFieldArray } from "react-hook-form";
 
 import { getErrorMessage } from "@/utils/errors";
 
-import { NewConnectionFields } from "./form";
+import type { NewConnectionFields } from "./form";
 import styles from "./NewConnection.module.scss";
 
 export const GeneralConfig: FC = () => {

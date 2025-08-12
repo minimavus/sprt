@@ -11,6 +11,7 @@ import (
 type (
 	Plugin interface {
 		Name() string
+		Provides() []string
 		JSONSchema() []j.RawMessage
 		Parameters() variables.Params
 		Proto() variables.Protos
@@ -22,21 +23,32 @@ type (
 	CipherSuitesProvider interface {
 		GetTLSCipherSuites(proto, tlsVersion string) ([]variables.OptionsGroup[bool], error)
 	}
+
+	plugins struct {
+		byName     sync.Map
+		byProvides sync.Map
+	}
 )
 
 var (
-	plugins sync.Map
+	repo plugins
 )
 
 func Register(p Plugin) {
-	if _, loaded := plugins.LoadOrStore(p.Name(), p); loaded {
+	if _, loaded := repo.byName.LoadOrStore(p.Name(), p); loaded {
 		panic("plugin already registered: " + p.Name())
+	}
+
+	for _, provide := range p.Provides() {
+		if _, loaded := repo.byProvides.LoadOrStore(provide, p); loaded {
+			panic("plugin already registered for provides '" + provide + "': " + p.Name())
+		}
 	}
 }
 
 func Registered() []Plugin {
 	var registered []Plugin
-	plugins.Range(func(_, value any) bool {
+	repo.byName.Range(func(_, value any) bool {
 		if plugin, ok := value.(Plugin); ok {
 			registered = append(registered, plugin)
 		}
@@ -45,8 +57,17 @@ func Registered() []Plugin {
 	return registered
 }
 
-func Get(name string) (Plugin, bool) {
-	if value, ok := plugins.Load(name); ok {
+func GetByName(name string) (Plugin, bool) {
+	if value, ok := repo.byName.Load(name); ok {
+		if plugin, ok := value.(Plugin); ok {
+			return plugin, true
+		}
+	}
+	return nil, false
+}
+
+func GetByProvides(provides string) (Plugin, bool) {
+	if value, ok := repo.byProvides.Load(provides); ok {
 		if plugin, ok := value.(Plugin); ok {
 			return plugin, true
 		}

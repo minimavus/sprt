@@ -1,4 +1,3 @@
-import { FC, useCallback, useMemo, useRef } from "react";
 import {
   CloseButton,
   Combobox,
@@ -6,7 +5,12 @@ import {
   SimpleGrid,
   useCombobox,
 } from "@mantine/core";
-import { Clicks, converter, CustomSelectProps } from "react-cron-headless";
+import { type FC, useCallback, useMemo, useRef } from "react";
+import {
+  type Clicks,
+  type CustomSelectProps,
+  converter,
+} from "react-cron-headless";
 
 import styles from "./Cron.module.scss";
 

@@ -1,11 +1,12 @@
 // import { scan } from "react-scan";
 //---
-import { lazy, Suspense } from "react";
+
 import { CodeHighlightAdapterProvider } from "@mantine/code-highlight";
 import { ColorSchemeScript, MantineProvider } from "@mantine/core";
 import { ModalsProvider } from "@mantine/modals";
 import { Notifications } from "@mantine/notifications";
 import { QueryClientProvider } from "@tanstack/react-query";
+import { lazy, Suspense } from "react";
 import { RouterProvider } from "react-router-dom";
 
 import AuthHOC from "@/components/Auth";

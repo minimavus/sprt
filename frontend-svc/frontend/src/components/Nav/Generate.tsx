@@ -1,7 +1,7 @@
-import { FC } from "react";
+import type { FC } from "react";
 
 import { NavSubDivider, NavSubLink, NavSubSection } from "./NavSubLink";
-import { SubMenuComponentProps } from "./types";
+import type { SubMenuComponentProps } from "./types";
 
 export const Generate: FC<SubMenuComponentProps> = ({ asMenu }) => {
   return (

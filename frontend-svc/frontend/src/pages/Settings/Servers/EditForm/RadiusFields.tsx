@@ -1,22 +1,22 @@
-import type { FC } from "react";
 import {
   Collapse,
   Divider,
   Group,
   Select,
-  SelectProps,
+  type SelectProps,
   Stack,
   Switch,
   TextInput,
 } from "@mantine/core";
+import type { FC } from "react";
 import { Controller, useController } from "react-hook-form";
 
 import {
-  ErrCause,
+  type ErrCause,
   ErrCauseList,
-  NoSessionActionValues,
-  NoSessionDmActionValues,
-  ServerSettings,
+  type NoSessionActionValues,
+  type NoSessionDmActionValues,
+  type ServerSettings,
 } from "@/hooks/settings/servers";
 import { getErrorMessage } from "@/utils/errors";
 

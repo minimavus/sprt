@@ -1,5 +1,10 @@
-import { ComponentPropsWithoutRef, FC, ReactNode, useMemo } from "react";
 import { Badge, Button, Group, Paper, Text } from "@mantine/core";
+import {
+  type ComponentPropsWithoutRef,
+  type FC,
+  type ReactNode,
+  useMemo,
+} from "react";
 
 export type ActionBarConfig = ComponentPropsWithoutRef<"div"> & {
   cancelSelectionText?: ReactNode;

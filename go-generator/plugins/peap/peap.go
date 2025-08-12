@@ -46,6 +46,10 @@ func (*peapPlugin) TACACS() any {
 	return nil
 }
 
+func (*peapPlugin) Provides() []string {
+	return []string{"peap"}
+}
+
 func (*peapPlugin) GetTLSCipherSuites(_, tlsVersion string) ([]variables.OptionsGroup[bool], error) {
 	switch tlsVersion {
 	case eaptls.TLSVersionTLSv1, eaptls.TLSVersionTLSv11, eaptls.TLSVersionTLSv12, eaptls.TLSVersionTLSv13:

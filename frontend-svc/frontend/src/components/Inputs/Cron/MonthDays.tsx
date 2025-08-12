@@ -1,6 +1,6 @@
-import { FC, useMemo } from "react";
 import { Group, Text } from "@mantine/core";
-import { MonthDaysProps } from "react-cron-headless";
+import { type FC, useMemo } from "react";
+import type { MonthDaysProps } from "react-cron-headless";
 
 import { UNIT_MONTH_DAYS } from "./constants";
 

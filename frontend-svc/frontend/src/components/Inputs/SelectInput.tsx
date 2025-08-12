@@ -1,4 +1,3 @@
-import { FC, ReactNode } from "react";
 import {
   Button,
   Group,
@@ -7,7 +6,8 @@ import {
   Stack,
   TextInput,
 } from "@mantine/core";
-import { FieldError } from "react-hook-form";
+import type { FC, ReactNode } from "react";
+import type { FieldError } from "react-hook-form";
 
 import styles from "./DrawerSelect.module.scss";
 

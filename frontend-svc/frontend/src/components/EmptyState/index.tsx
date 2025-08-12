@@ -1,4 +1,3 @@
-import { FC, ReactNode } from "react";
 import {
   Box,
   getThemeColor,
@@ -10,9 +9,10 @@ import {
   IconAlertOctagonFilled,
   IconInfoSquareRoundedFilled,
 } from "@tabler/icons-react";
+import type { FC, ReactNode } from "react";
 
 import { Background } from "./Background";
-import { Variant } from "./types";
+import type { Variant } from "./types";
 
 type EmptyStateProps = {
   title?: string;

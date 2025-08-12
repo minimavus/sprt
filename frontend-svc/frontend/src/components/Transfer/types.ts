@@ -1,5 +1,5 @@
-import { Observable } from "@legendapp/state";
-import { ComboboxStore } from "@mantine/core";
+import type { Observable } from "@legendapp/state";
+import type { ComboboxStore } from "@mantine/core";
 
 export type TransferSide = "source" | "target";
 export type TransferTreeKey = string;

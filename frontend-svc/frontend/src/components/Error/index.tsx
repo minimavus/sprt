@@ -1,6 +1,6 @@
-import { ComponentProps, FC, ReactNode } from "react";
-import { AlertProps, Button, Text } from "@mantine/core";
+import { type AlertProps, Button, Text } from "@mantine/core";
 import { AxiosError } from "axios";
+import type { ComponentProps, FC, ReactNode } from "react";
 import { useAsyncError } from "react-router-dom";
 
 import { Warning } from "../Alerts";

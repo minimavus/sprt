@@ -1,13 +1,13 @@
-import { forwardRef, ReactNode } from "react";
 import {
   Box,
-  BoxComponentProps,
-  GroupProps,
-  MantineSize,
-  MantineStyleProp,
-  PolymorphicComponentProps,
+  type BoxComponentProps,
+  type GroupProps,
+  type MantineSize,
+  type MantineStyleProp,
+  type PolymorphicComponentProps,
 } from "@mantine/core";
 import cx from "classnames";
+import { forwardRef, type ReactNode } from "react";
 
 import styles from "./KeyValue.module.scss";
 

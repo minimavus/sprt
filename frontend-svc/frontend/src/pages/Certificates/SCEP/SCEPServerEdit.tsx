@@ -33,7 +33,7 @@ import {
 import { useDelayedModalState } from "@/hooks/useDelayedModalState";
 import { type QueryUser, useQueryUser } from "@/hooks/useQueryUser";
 import { download } from "@/utils/download";
-import { getErrorMessage } from "@/utils/errors";
+import { maybeError } from "@/utils/errors";
 import { formatTime } from "@/utils/time";
 
 import { getSigningCertificatesOptions } from "./getSigningCertificatesOptions";
@@ -63,7 +63,7 @@ const Form: FC = () => {
             label="Name"
             placeholder="Name"
             required
-            error={error ? getErrorMessage(error) : null}
+            error={maybeError(error)}
           />
         )}
       />
@@ -75,7 +75,7 @@ const Form: FC = () => {
             label="SCEP server URL"
             placeholder="URL"
             required
-            error={error ? getErrorMessage(error) : null}
+            error={maybeError(error)}
           />
         )}
       />
@@ -87,7 +87,7 @@ const Form: FC = () => {
             label="Signing certificate"
             placeholder="Select certificate"
             required
-            error={error ? getErrorMessage(error) : null}
+            error={maybeError(error)}
             data={getSigningCertificatesOptions(certificates?.certificates)}
           />
         )}
@@ -111,7 +111,7 @@ const Form: FC = () => {
               </>
             }
             placeholder="Password"
-            error={error ? getErrorMessage(error) : null}
+            error={maybeError(error)}
           />
         )}
       />

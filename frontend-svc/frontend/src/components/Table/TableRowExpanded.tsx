@@ -1,7 +1,7 @@
-import { type ComponentPropsWithRef, type ReactNode, type Ref } from "react";
 import { Table } from "@mantine/core";
 import type { Row, RowData } from "@tanstack/react-table";
 import cx from "classnames";
+import type { ComponentPropsWithRef, ReactNode, Ref } from "react";
 
 import { fixedForwardRef } from "@/utils/fixedForwardRef";
 

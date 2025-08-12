@@ -1,4 +1,3 @@
-import { FC, ReactNode, Ref } from "react";
 import {
   Button,
   Divider,
@@ -9,7 +8,8 @@ import {
   TextInput,
 } from "@mantine/core";
 import cx from "classnames";
-import Cron, { CronProps } from "react-cron-headless";
+import type { FC, ReactNode, Ref } from "react";
+import Cron, { type CronProps } from "react-cron-headless";
 
 import styles from "./Cron.module.scss";
 import { CustomSelect } from "./CustomSelect";

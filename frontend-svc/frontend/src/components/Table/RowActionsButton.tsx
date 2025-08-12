@@ -1,6 +1,6 @@
-import { forwardRef } from "react";
 import { ActionIcon } from "@mantine/core";
 import { IconDotsVertical } from "@tabler/icons-react";
+import { forwardRef } from "react";
 
 export const RowActionsButton = forwardRef<HTMLButtonElement>((props, ref) => {
   return (

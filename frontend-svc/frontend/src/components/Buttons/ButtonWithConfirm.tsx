@@ -1,10 +1,10 @@
-import { forwardRef, type ReactNode } from "react";
-import { Button, ButtonProps } from "@mantine/core";
+import { Button, type ButtonProps } from "@mantine/core";
 import { ok } from "neverthrow";
+import { forwardRef, type ReactNode } from "react";
 
 import {
-  useDynamicConfirmation,
   type ConfirmationProps,
+  useDynamicConfirmation,
 } from "@/components/Modals/Confirmation";
 
 type ButtonWithConfirmProps = Pick<

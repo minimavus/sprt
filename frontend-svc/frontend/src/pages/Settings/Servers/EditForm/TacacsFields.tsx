@@ -4,7 +4,7 @@ import { Controller, useController } from "react-hook-form";
 import { z } from "zod";
 
 import type { ServerSettings } from "@/hooks/settings/servers";
-import { getErrorMessage } from "@/utils/errors";
+import { maybeError } from "@/utils/errors";
 import { toast } from "@/utils/toasts";
 
 const numberSchema = z.coerce.number().min(1).max(65535);
@@ -17,10 +17,7 @@ const GeneralTacacsFields: FC = () => {
 
   return (
     <>
-      <PillsInput
-        label="Ports"
-        error={portsState.error ? getErrorMessage(portsState.error) : undefined}
-      >
+      <PillsInput label="Ports" error={maybeError(portsState.error)}>
         <Pill.Group>
           {Array.isArray(ports.value)
             ? ports.value.map((p) => (
@@ -72,7 +69,7 @@ const GeneralTacacsFields: FC = () => {
         render={({ field, fieldState: { error } }) => (
           <TextInput
             label="Shared secret"
-            error={getErrorMessage(error)}
+            error={maybeError(error)}
             {...field}
           />
         )}

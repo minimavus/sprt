@@ -1,7 +1,7 @@
-import { useCallback, type FC, type ReactNode } from "react";
 import { LoadingOverlay, Stack, Text } from "@mantine/core";
 import { modals } from "@mantine/modals";
 import { err, ok, type Result } from "neverthrow";
+import { type FC, type ReactNode, useCallback } from "react";
 
 import { DisplayError } from "@/components/Error";
 import { getErrorMessage } from "@/utils/errors";
@@ -78,7 +78,7 @@ const useDynamicConfirmation = () => {
               realResult = result;
             }
           } catch (e) {
-            realResult = err(getErrorMessage(e)!);
+            realResult = err(getErrorMessage(e, true)!);
           }
         }
 

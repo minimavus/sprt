@@ -1,6 +1,6 @@
-import { FC, use } from "react";
 import { use$ } from "@legendapp/state/react";
 import { Input, TextInput } from "@mantine/core";
+import { type FC, use } from "react";
 
 import { TransferSideContext } from "./context";
 import classes from "./TransferList.module.scss";

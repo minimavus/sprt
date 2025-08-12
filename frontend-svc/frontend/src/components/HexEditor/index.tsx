@@ -1,8 +1,8 @@
-import { FC, RefAttributes } from "react";
 import { useMantineColorScheme, useMantineTheme } from "@mantine/core";
 import cx from "classnames";
+import type { FC, RefAttributes } from "react";
 import HexEditor from "react-hex-editor";
-import {
+import type {
   AutoSizeHexEditorProps,
   HexEditorHandle,
 } from "react-hex-editor/dist/types";

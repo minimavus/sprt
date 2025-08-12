@@ -84,7 +84,13 @@ const portRefinement: z.core.CheckFn<any> = (ctx) => {
   const p = PortSchema.safeParse(ctx.value);
   if (!p.success) {
     for (const i of p.error.issues) {
-      ctx.issues.push(i);
+      ctx.issues.push({
+        code: "invalid_type",
+        path: i.path,
+        message: i.message,
+        input: undefined,
+        expected: "number",
+      });
     }
     return z.NEVER;
   }

@@ -1,12 +1,12 @@
-import { useState } from "react";
 import { Table, useMantineTheme } from "@mantine/core";
 import {
   IconArrowsSort,
   IconSortAscending2,
   IconSortDescending2,
 } from "@tabler/icons-react";
-import { flexRender, Header } from "@tanstack/react-table";
+import { flexRender, type Header } from "@tanstack/react-table";
 import cx from "classnames";
+import { useState } from "react";
 
 import styles from "./Table.module.scss";
 import { getCommonPinningStyles } from "./utils";

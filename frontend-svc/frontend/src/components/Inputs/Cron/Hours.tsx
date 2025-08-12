@@ -1,6 +1,6 @@
-import { FC } from "react";
 import { Group, Text } from "@mantine/core";
-import { HoursProps } from "react-cron-headless";
+import type { FC } from "react";
+import type { HoursProps } from "react-cron-headless";
 
 import { UNIT_HOURS } from "./constants";
 

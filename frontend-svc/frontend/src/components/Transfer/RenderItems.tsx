@@ -1,4 +1,3 @@
-import { FC, use } from "react";
 import { use$ } from "@legendapp/state/react";
 import {
   ActionIcon,
@@ -10,13 +9,14 @@ import {
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconChevronDown } from "@tabler/icons-react";
+import { type FC, use } from "react";
 
 import { TransferSideContext } from "./context";
 import { RenderItem } from "./RenderItem";
 import {
   isSortedCategoryDatum,
-  SortedTransferTreeCategoryValues,
-  SortedTransferTreeData,
+  type SortedTransferTreeCategoryValues,
+  type SortedTransferTreeData,
 } from "./utils";
 
 const RenderCategory: FC<{

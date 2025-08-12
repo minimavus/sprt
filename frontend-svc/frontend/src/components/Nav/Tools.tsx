@@ -1,10 +1,10 @@
-import { FC } from "react";
 import { IconEraser, IconLogs } from "@tabler/icons-react";
+import type { FC } from "react";
 
 import { usePermission } from "@/hooks/useUser";
 
 import { iconProps, NavSubLink } from "./NavSubLink";
-import { SubMenuComponentProps } from "./types";
+import type { SubMenuComponentProps } from "./types";
 
 export const Tools: FC<SubMenuComponentProps> = ({ asMenu }) => {
   const canAccessLogs = usePermission("logs.owners.get_all");

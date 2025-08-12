@@ -1,5 +1,5 @@
-import { FC } from "react";
 import { Group } from "@mantine/core";
+import type { FC } from "react";
 
 import { EmptyState } from "@/components/EmptyState";
 import type { Protos } from "@/hooks/zodProto";

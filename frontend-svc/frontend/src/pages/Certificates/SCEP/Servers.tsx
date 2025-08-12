@@ -101,7 +101,7 @@ const ServerActions: FC<{ server: ScepServer }> = ({ server }) => {
                     await deleteAsync({ id: [server.id] });
                     ok(undefined);
                   } catch (error) {
-                    return err(getErrorMessage(error)!);
+                    return err(getErrorMessage(error, true)!);
                   }
                 },
                 destructive: true,

@@ -1,11 +1,11 @@
-import { FC } from "react";
 import {
   Box,
-  BoxComponentProps,
-  PolymorphicComponentProps,
+  type BoxComponentProps,
+  type PolymorphicComponentProps,
 } from "@mantine/core";
+import type { FC } from "react";
 
-import { Variant } from "./types";
+import type { Variant } from "./types";
 
 export const Background: FC<
   Omit<PolymorphicComponentProps<"svg", BoxComponentProps>, "variant"> & {

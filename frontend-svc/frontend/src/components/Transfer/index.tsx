@@ -1,13 +1,13 @@
-import { FC, useCallback } from "react";
 import { use$, useObservable } from "@legendapp/state/react";
 import { ActionIcon, Combobox, Group, useCombobox } from "@mantine/core";
 import { IconChevronRight } from "@tabler/icons-react";
+import { type FC, useCallback } from "react";
 
 import { TransferSideContext } from "./context";
 import { RenderItems } from "./RenderItems";
 import classes from "./TransferList.module.scss";
 import { Search } from "./TransferSearch";
-import {
+import type {
   TransferSide,
   TransferSideState,
   TransferToBeTransferred,
@@ -151,7 +151,7 @@ function RenderList({
   );
 
   return (
-    (<TransferSideContext
+    <TransferSideContext
       value={{ state: state$, combobox, visibility: visibilityState$ }}
     >
       <div data-type={type} className={classes.listContainer}>
@@ -183,7 +183,7 @@ function RenderList({
           </div>
         </Combobox>
       </div>
-    </TransferSideContext>)
+    </TransferSideContext>
   );
 }
 

@@ -1,6 +1,6 @@
-import { createContext, FC, ReactNode, use } from "react";
 import { Center, Loader as L } from "@mantine/core";
-import { FetchStatus, UseQueryResult } from "@tanstack/react-query";
+import type { FetchStatus, UseQueryResult } from "@tanstack/react-query";
+import { createContext, type FC, type ReactNode, use } from "react";
 
 import { DisplayError } from "@/components/Error";
 
@@ -29,7 +29,7 @@ const DataContext = createContext<{ data: any; fetchStatus: FetchStatus }>(
   undefined!,
 );
 
-export const useLoaderData = <Data = any,>() => use(DataContext).data as Data;
+export const useLoaderData = <Data = any>() => use(DataContext).data as Data;
 
 export const DefaultLoaderFallback: FC = () => (
   <Center flex={1} p="xl">

@@ -1,12 +1,12 @@
-import { useMemo, useState, type FC, type ReactElement } from "react";
 import { LineChart } from "@mantine/charts";
 import { Paper, Stack, Tabs, Text } from "@mantine/core";
 import { useQueryClient } from "@tanstack/react-query";
 import { isAxiosError } from "axios";
 import { format } from "date-fns";
 import { path } from "rambda";
-import { NavigateFunction } from "react-router-dom";
-import { ResponsiveContainer, XAxisProps } from "recharts";
+import { type FC, type ReactElement, useMemo, useState } from "react";
+import type { NavigateFunction } from "react-router-dom";
+import { ResponsiveContainer, type XAxisProps } from "recharts";
 import type { Payload } from "recharts/types/component/DefaultTooltipContent";
 
 import type { Job, JobStats } from "@/hooks/jobs/schemas";
@@ -238,7 +238,11 @@ export const JobCharts: FC<{
                 }
                 toast.error({
                   id: loadingToast,
-                  message: `Could not open session details: ${getErrorMessage(e)}`,
+                  message: (
+                    <Text>
+                      Could not open session details: {getErrorMessage(e)}
+                    </Text>
+                  ),
                 });
                 log.error(e, "Could not open session details");
                 return;

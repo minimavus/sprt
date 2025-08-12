@@ -1,51 +1,51 @@
 import {
-  Fragment,
-  useMemo,
-  useState,
-  type ForwardedRef,
-  type ReactNode,
-} from "react";
-import {
   Box,
+  type ComboboxData,
   Divider,
   Group,
   LoadingOverlay,
   Pagination,
   Select,
   Table,
+  type TableProps,
   Text,
   useMantineTheme,
-  type ComboboxData,
-  type TableProps,
 } from "@mantine/core";
 import { useMergedRef } from "@mantine/hooks";
 import {
-  ExpandedState,
+  type ColumnDef,
+  type ColumnFilter,
+  type ColumnPinningState,
+  type ExpandedState,
   flexRender,
+  type GroupingState,
   getCoreRowModel,
   getExpandedRowModel,
   getFilteredRowModel,
   getGroupedRowModel,
   getPaginationRowModel,
   getSortedRowModel,
-  useReactTable,
-  type ColumnDef,
-  type ColumnFilter,
-  type ColumnPinningState,
-  type GroupingState,
   type OnChangeFn,
   type PaginationState,
   type Row,
   type RowSelectionState,
   type SortingState,
   type TableOptions,
+  useReactTable,
   type VisibilityState,
 } from "@tanstack/react-table";
 import cx from "classnames";
+import {
+  type ForwardedRef,
+  Fragment,
+  type ReactNode,
+  useMemo,
+  useState,
+} from "react";
 
 import { fixedForwardRef } from "@/utils/fixedForwardRef";
 
-import { ActionBar, ActionBarConfig } from "./ActionBar";
+import { ActionBar, type ActionBarConfig } from "./ActionBar";
 import styles from "./Table.module.scss";
 import { TableGroupButton } from "./TableGroupButton";
 import { TableRowExpanded } from "./TableRowExpanded";

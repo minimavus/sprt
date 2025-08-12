@@ -1,8 +1,7 @@
-import { useState, type FC } from "react";
 import {
   Button,
   Checkbox,
-  ComboboxData,
+  type ComboboxData,
   Divider,
   Group,
   NumberInput,
@@ -13,6 +12,7 @@ import {
   Textarea,
   TextInput,
 } from "@mantine/core";
+import { type FC, useState } from "react";
 import { Controller, FormProvider, useForm, useWatch } from "react-hook-form";
 
 import { ModalFooter } from "@/components/Modals/Parts/ModalFooter";
@@ -22,7 +22,7 @@ import type { ActionModalProps } from ".";
 import { mapSelectedToIDs } from "./mapSelectedToIDs";
 import { AcctSessionTime } from "./parts/AcctSessionTime";
 import { Server } from "./parts/Server";
-import {
+import type {
   ActionModal,
   ServerProps,
   SessionTimeVariant,

@@ -1,12 +1,12 @@
-import { FC } from "react";
 import { getThemeColor, useMantineTheme } from "@mantine/core";
 import {
   IconAlertOctagonFilled,
   IconAlertTriangleFilled,
   IconCircleCheckFilled,
   IconInfoSquareRoundedFilled,
-  IconProps,
+  type IconProps,
 } from "@tabler/icons-react";
+import type { FC } from "react";
 
 type Status = "positive" | "negative" | "warning" | "info";
 

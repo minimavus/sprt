@@ -1,4 +1,3 @@
-import { FC } from "react";
 import {
   IconAdjustmentsHorizontal,
   IconBook2,
@@ -7,6 +6,7 @@ import {
   IconServer2,
   IconSettingsBolt,
 } from "@tabler/icons-react";
+import type { FC } from "react";
 
 import { usePermission } from "@/hooks/useUser";
 
@@ -16,7 +16,7 @@ import {
   NavSubLink,
   NavSubSection,
 } from "./NavSubLink";
-import { SubMenuComponentProps } from "./types";
+import type { SubMenuComponentProps } from "./types";
 
 const GlobalSettings: FC<SubMenuComponentProps> = ({ asMenu }) => {
   const can = usePermission("settings.read.global");

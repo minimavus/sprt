@@ -1,5 +1,5 @@
-import { type FC, type PropsWithChildren, type ReactNode } from "react";
 import { Box, Flex, Paper, Stack, Title } from "@mantine/core";
+import type { FC, PropsWithChildren, ReactNode } from "react";
 import { useMatches } from "react-router-dom";
 
 import { isWithTitle } from "./isWithTitle";

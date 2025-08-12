@@ -1,7 +1,7 @@
-import { FC } from "react";
+import type { FC } from "react";
 
 import { NavSubLink } from "./NavSubLink";
-import { SubMenuComponentProps } from "./types";
+import type { SubMenuComponentProps } from "./types";
 
 export const Certificates: FC<SubMenuComponentProps> = ({ asMenu }) => {
   return (

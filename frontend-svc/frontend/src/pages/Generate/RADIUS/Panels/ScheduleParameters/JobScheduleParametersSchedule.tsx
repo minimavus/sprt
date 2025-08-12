@@ -20,7 +20,7 @@ export const JobScheduleParametersSchedule: FC = () => {
       legend="Schedule"
       leadingZero
       {...field}
-      error={getErrorMessage(error)}
+      error={getErrorMessage(error, true)}
       shortcuts={["@hourly", "@daily", "@weekly", "@monthly"]}
     />
   );

@@ -1,10 +1,10 @@
-import { FC, ReactNode, useCallback, useId } from "react";
 import {
   InputLabel,
   SegmentedControl,
-  SegmentedControlProps,
+  type SegmentedControlProps,
   Stack,
 } from "@mantine/core";
+import { type FC, type ReactNode, useCallback, useId } from "react";
 import { useFormContext } from "react-hook-form";
 
 interface LabeledSegmentedControlProps extends SegmentedControlProps {

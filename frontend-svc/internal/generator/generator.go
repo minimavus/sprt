@@ -237,7 +237,7 @@ func sanitizeName(name string) string {
 }
 
 func (g *generator) GetTLSCipherSuites(proto, tlsVersion string) ([]sdk.OptionsGroup[bool], error) {
-	plugin, ok := registry.Get(proto)
+	plugin, ok := registry.GetByProvides(proto)
 	if !ok {
 		return nil, fmt.Errorf("plugin %s not found", proto)
 	}

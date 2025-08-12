@@ -1,7 +1,7 @@
-import { Fragment, type FC, type PropsWithChildren } from "react";
 import { Overlay as O, Paper, Text } from "@mantine/core";
-import { AxiosError, isAxiosError } from "axios";
+import { type AxiosError, isAxiosError } from "axios";
 import { AnimatePresence, motion } from "framer-motion";
+import { type FC, Fragment, type PropsWithChildren } from "react";
 
 import { useUser } from "@/hooks/useUser";
 

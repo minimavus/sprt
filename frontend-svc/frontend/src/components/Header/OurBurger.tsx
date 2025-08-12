@@ -1,5 +1,5 @@
-import { FC } from "react";
-import { Burger, BurgerProps } from "@mantine/core";
+import { Burger, type BurgerProps } from "@mantine/core";
+import type { FC } from "react";
 
 import { useAllUserAttributes } from "@/hooks/useUser";
 

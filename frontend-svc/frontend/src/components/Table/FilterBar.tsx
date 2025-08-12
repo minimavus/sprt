@@ -1,6 +1,6 @@
-import { FC, PropsWithChildren } from "react";
 import { Group, TextInput } from "@mantine/core";
 import { IconSearch } from "@tabler/icons-react";
+import type { FC, PropsWithChildren } from "react";
 
 type FilterBarProps = PropsWithChildren<{
   globalFilter: string;

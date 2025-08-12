@@ -1,20 +1,20 @@
-import { FC } from "react";
 import {
   Button,
-  ComboboxData,
-  ComboboxItemGroup,
+  type ComboboxData,
+  type ComboboxItemGroup,
   getThemeColor,
   InputLabel,
   Menu,
-  MenuItemProps,
-  PolymorphicComponentProps,
-  SelectProps,
+  type MenuItemProps,
+  type PolymorphicComponentProps,
+  type SelectProps,
   Stack,
-  StackProps,
+  type StackProps,
   useMantineTheme,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconCheck, IconChevronDown } from "@tabler/icons-react";
+import type { FC } from "react";
 
 interface DropdownSelectProps
   extends Omit<SelectProps, "onChange" | "wrapperProps"> {

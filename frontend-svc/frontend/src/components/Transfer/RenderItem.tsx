@@ -1,9 +1,9 @@
-import { FC, use } from "react";
 import { use$ } from "@legendapp/state/react";
 import { Checkbox, Combobox } from "@mantine/core";
+import { type FC, use } from "react";
 
 import { TransferSideContext } from "./context";
-import { TransferTreeDatum } from "./types";
+import type { TransferTreeDatum } from "./types";
 
 export const RenderItem: FC<{ itemKey: string; datum: TransferTreeDatum }> = ({
   itemKey: key,

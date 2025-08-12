@@ -1,6 +1,6 @@
-import { FC } from "react";
-import { Alert, AlertProps } from "@mantine/core";
+import { Alert, type AlertProps } from "@mantine/core";
 import { IconAlertSquareRounded, IconInfoCircle } from "@tabler/icons-react";
+import type { FC } from "react";
 
 export const Warning: FC<AlertProps> = ({ children, ...props }) => {
   return (

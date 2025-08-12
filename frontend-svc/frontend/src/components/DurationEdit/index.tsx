@@ -1,7 +1,7 @@
-import { forwardRef, useState } from "react";
-import { TextInput, TextInputProps } from "@mantine/core";
-import { Duration, formatDuration } from "date-fns";
+import { TextInput, type TextInputProps } from "@mantine/core";
+import { type Duration, formatDuration } from "date-fns";
 import parseDuration from "parse-duration";
+import { forwardRef, useState } from "react";
 
 import { millisecondsToDuration } from "@/utils/zodDuration";
 

@@ -1,4 +1,3 @@
-import { FC, useMemo, useState } from "react";
 import {
   Box,
   Button,
@@ -16,15 +15,16 @@ import {
   IconUserOff,
   IconUsers,
 } from "@tabler/icons-react";
+import { type FC, useMemo, useState } from "react";
 
 import { DisplayError } from "@/components/Error";
 import { DefaultLoaderFallback } from "@/components/Loader";
 import { ModalFooter } from "@/components/Modals/Parts/ModalFooter";
 import { useLogOwners } from "@/hooks/logs";
-import { QueryUser, useQueryUser } from "@/hooks/useQueryUser";
+import { type QueryUser, useQueryUser } from "@/hooks/useQueryUser";
 
 import { NavbarLink } from "./NavbarLink";
-import { NavbarLinkProps } from "./types";
+import type { NavbarLinkProps } from "./types";
 
 type SwitchUserProps = Omit<NavbarLinkProps, "icon" | "label">;
 

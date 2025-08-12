@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   Box,
   Collapse,
@@ -9,9 +8,10 @@ import {
   UnstyledButton,
 } from "@mantine/core";
 import { IconChevronRight } from "@tabler/icons-react";
+import { useState } from "react";
 
 import classes from "./styles.module.scss";
-import { NavbarLinkProps } from "./types";
+import type { NavbarLinkProps } from "./types";
 
 export function NavbarLink({
   icon: Icon,

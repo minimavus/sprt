@@ -1,6 +1,6 @@
-import { CSSProperties } from "react";
-import { MantineTheme } from "@mantine/core";
-import { Column } from "@tanstack/react-table";
+import type { MantineTheme } from "@mantine/core";
+import type { Column } from "@tanstack/react-table";
+import type { CSSProperties } from "react";
 
 export const getCommonPinningStyles = <TData>(
   column: Column<TData>,

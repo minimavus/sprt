@@ -1,5 +1,5 @@
-import { useCallback, type MouseEvent as ReactMouseEvent } from "react";
-import { useHref, useLinkClickHandler, type To } from "react-router-dom";
+import { type MouseEvent as ReactMouseEvent, useCallback } from "react";
+import { type To, useHref, useLinkClickHandler } from "react-router-dom";
 
 import { useQueryUser } from "@/hooks/useQueryUser";
 

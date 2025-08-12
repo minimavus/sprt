@@ -145,7 +145,7 @@ export const InterimUpdatesScheduleParameters: FC = () => {
         legend="Schedule"
         leadingZero
         {...field}
-        error={getErrorMessage(error)}
+        error={getErrorMessage(error, true)}
         shortcuts={["@hourly", "@daily", "@weekly", "@monthly"]}
       />
       <Accordion defaultValue={null} radius="sm" variant="separated">

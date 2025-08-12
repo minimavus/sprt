@@ -41,6 +41,10 @@ func (*papPlugin) TACACS() any {
 	return nil
 }
 
+func (*papPlugin) Provides() []string {
+	return []string{"pap", "chap", "pap-chap"}
+}
+
 func init() {
 	registry.Register(&papPlugin{})
 }

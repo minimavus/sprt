@@ -1,11 +1,11 @@
 import {
   alpha,
   getThemeColor,
-  MantineColorScheme,
-  MantineTheme,
+  type MantineColorScheme,
+  type MantineTheme,
   rem,
 } from "@mantine/core";
-import { HexEditorTheme } from "react-hex-editor/themes";
+import type { HexEditorTheme } from "react-hex-editor/themes";
 
 export const getHexEditorTheme = (
   theme: MantineTheme,

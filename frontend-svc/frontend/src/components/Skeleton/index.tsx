@@ -1,5 +1,5 @@
-import { FC } from "react";
-import { Skeleton, SkeletonProps, useMantineTheme } from "@mantine/core";
+import { Skeleton, type SkeletonProps, useMantineTheme } from "@mantine/core";
+import type { FC } from "react";
 
 type SkeletonLinesProps = {
   x: number;

@@ -1,9 +1,8 @@
-import { FC, useState } from "react";
 import { CodeHighlight } from "@mantine/code-highlight";
 import {
   Button,
   Code,
-  ComboboxData,
+  type ComboboxData,
   Group,
   Select,
   Stack,
@@ -12,6 +11,7 @@ import {
   Text,
   TextInput,
 } from "@mantine/core";
+import { type FC, useState } from "react";
 import {
   Controller,
   FormProvider,
@@ -24,17 +24,17 @@ import { Warning } from "@/components/Alerts";
 import { CopyToClipboard } from "@/components/CopyToClipboard";
 import {
   isPxGridRestResponseDetails,
-  PxGridServiceNode,
   type PxGridRestParam,
   type PxGridRestResponse,
   type PxGridService,
+  type PxGridServiceNode,
 } from "@/hooks/pxgrid/schemas";
 import {
   usePxGridConnectionService,
   usePxGridConnectionServiceRest,
 } from "@/hooks/pxgrid/services";
 import { useQueryUser } from "@/hooks/useQueryUser";
-import { getErrorMessage } from "@/utils/errors";
+import { getErrorMessage, maybeError } from "@/utils/errors";
 
 type ActionsProps = {
   serviceName: string;
@@ -54,7 +54,7 @@ const ParamSelect: FC<{ param: PxGridRestParam; name: string }> = ({
     <Select
       data={selectOptionsFromEnum(param.schema!.enum!)}
       {...field}
-      error={fieldState.error ? getErrorMessage(fieldState.error) : undefined}
+      error={maybeError(fieldState.error)}
       clearable
       label={param.name}
     />
@@ -109,7 +109,7 @@ const RESTParamInput: FC<{ param: PxGridRestParam; name: string }> = ({
           placeholder={param.name}
           label={param.name}
           description={param.schema?.$comment}
-          error={getErrorMessage(error)}
+          error={maybeError(error)}
         />
       )}
     />

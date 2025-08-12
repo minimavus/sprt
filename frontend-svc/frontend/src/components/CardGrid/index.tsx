@@ -1,6 +1,6 @@
-import { FC, PropsWithChildren } from "react";
 import { Box } from "@mantine/core";
 import cx from "classnames";
+import type { FC, PropsWithChildren } from "react";
 
 import styles from "@/components/CardGrid/CardGrid.module.scss";
 

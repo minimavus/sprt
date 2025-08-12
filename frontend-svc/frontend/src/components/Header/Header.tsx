@@ -1,4 +1,3 @@
-import { FC, ReactNode } from "react";
 import {
   ActionIcon,
   Button,
@@ -20,6 +19,7 @@ import {
   IconSun,
   IconUser,
 } from "@tabler/icons-react";
+import type { FC, ReactNode } from "react";
 
 import { useAllUserAttributes, useIsDarkTheme, useUser } from "@/hooks/useUser";
 

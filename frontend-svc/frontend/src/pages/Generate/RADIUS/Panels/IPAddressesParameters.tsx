@@ -17,7 +17,7 @@ import { DictionarySelect } from "@/components/Inputs/DictionarySelect";
 import { DisableableNumberInput } from "@/components/Inputs/DisableableNumberInput";
 import { LabeledSegmentedControl } from "@/components/Inputs/LabeledSegmentedControl";
 import styles from "@/styles/TextInput.module.scss";
-import { getErrorMessage } from "@/utils/errors";
+import { getErrorMessage, maybeError } from "@/utils/errors";
 
 import { HowItWorks } from "../common/HowItWorks";
 import { ListControls } from "../common/ListControls";
@@ -63,7 +63,7 @@ const IPsVariantList: FC = () => {
         {...ipAddresses}
         label="List of IP addresses"
         description={`Count: ${linesCount}`}
-        error={ipAddressesError ? getErrorMessage(ipAddressesError) : undefined}
+        error={maybeError(ipAddressesError)}
         id="ip-addresses-list"
         rightSectionWidth="var(--mantine-spacing-sm)"
         rightSection={

@@ -1,6 +1,6 @@
-import { FC, useMemo } from "react";
 import { Group, Text } from "@mantine/core";
-import { WeekDaysProps } from "react-cron-headless";
+import { type FC, useMemo } from "react";
+import type { WeekDaysProps } from "react-cron-headless";
 
 import { UNIT_WEEK_DAYS } from "./constants";
 

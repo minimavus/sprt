@@ -1,8 +1,13 @@
-import { forwardRef, PropsWithChildren } from "react";
-import { Anchor, AnchorProps, Button, ButtonProps } from "@mantine/core";
-import { To } from "react-router-dom";
+import {
+  Anchor,
+  type AnchorProps,
+  Button,
+  type ButtonProps,
+} from "@mantine/core";
+import { forwardRef, type PropsWithChildren } from "react";
+import type { To } from "react-router-dom";
 
-import { FixedLinkProps, useFixedLink } from "./useFixedLink";
+import { type FixedLinkProps, useFixedLink } from "./useFixedLink";
 
 type Props = PropsWithChildren<
   Omit<AnchorProps, keyof FixedLinkProps> & FixedLinkProps & { to: To }

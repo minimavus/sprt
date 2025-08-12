@@ -1,4 +1,3 @@
-import type { FC, ReactNode } from "react";
 import { Tooltip } from "@mantine/core";
 import {
   differenceInSeconds,
@@ -6,6 +5,7 @@ import {
   formatDistanceToNow,
   parseISO,
 } from "date-fns";
+import type { FC, ReactNode } from "react";
 
 import { log } from "@/utils/log";
 

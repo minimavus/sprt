@@ -1,11 +1,3 @@
-import {
-  useEffect,
-  useImperativeHandle,
-  useRef,
-  useState,
-  type FC,
-  type Ref,
-} from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Button,
@@ -30,6 +22,14 @@ import {
   IconRestore,
 } from "@tabler/icons-react";
 import {
+  type FC,
+  type Ref,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from "react";
+import {
   Controller,
   FormProvider,
   useController,
@@ -43,7 +43,7 @@ import { LabeledSegmentedControl } from "@/components/Inputs/LabeledSegmentedCon
 import { PageLayout } from "@/components/Layout/PageLayout";
 import { useHostName } from "@/hooks/settings/global";
 import {
-  SMSGatewaySettingsResponseValue,
+  type SMSGatewaySettingsResponseValue,
   useSMSGatewayExamples,
   useSMSGatewaySettings,
   useSMSGatewaySettingsUpdate,
@@ -51,9 +51,8 @@ import {
 import { useQueryUser } from "@/hooks/useQueryUser";
 import { useUser } from "@/hooks/useUser";
 import { getErrorMessage } from "@/utils/errors";
-
-import { formSchema, methodOptions, SMSSettingsFormData } from "./schema";
 import { SMSGatewayResult } from "./SMSGatewayResult";
+import { formSchema, methodOptions, type SMSSettingsFormData } from "./schema";
 import type { SMSGatewayConfigRef, SMSSettingsTabs } from "./types";
 import {
   formValuesToServerData,

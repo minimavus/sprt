@@ -2,15 +2,24 @@ package middleware
 
 import (
 	"encoding/json"
+	"maps"
 	"net/http"
 
+	"github.com/kaptinlin/jsonschema"
 	"github.com/labstack/echo/v4"
 
 	"github.com/cisco-open/sprt/frontend-svc/internal/errors"
 	"github.com/cisco-open/sprt/frontend-svc/shared"
 )
 
-type ProblemJSON map[string]interface{}
+type (
+	ProblemJSON map[string]any
+
+	InvalidParam struct {
+		Name   string `json:"name"`
+		Reason string `json:"reason"`
+	}
+)
 
 func NewProblemJSON() ProblemJSON {
 	return ProblemJSON{}
@@ -36,14 +45,19 @@ func (p *ProblemJSON) SetInstance(i string) {
 	(*p)["instance"] = i
 }
 
+func (p *ProblemJSON) AddInvalidParam(param InvalidParam) {
+	if (*p)["invalid-params"] == nil {
+		(*p)["invalid-params"] = []InvalidParam{}
+	}
+	(*p)["invalid-params"] = append((*p)["invalid-params"].([]InvalidParam), param)
+}
+
 func (p *ProblemJSON) SetCustomMembers(m map[string]any) {
 	if m == nil {
 		return
 	}
 
-	for k, v := range m {
-		(*p)[k] = v
-	}
+	maps.Copy((*p), m)
 }
 
 func (p *ProblemJSON) AddField(key string, value any) {
@@ -100,7 +114,17 @@ func NewErrorHandler(app shared.Logger) echo.HTTPErrorHandler {
 		}
 
 		if he.Internal != nil {
-			message.AddField("reason", he.Internal.Error())
+			switch v := he.Internal.(type) {
+			case *jsonschema.EvaluationResult:
+				for f, e := range v.Errors {
+					message.AddInvalidParam(InvalidParam{
+						Name:   f,
+						Reason: e.Error(),
+					})
+				}
+			default:
+				message.AddField("reason", v.Error())
+			}
 		}
 
 		if c.Request().Method == http.MethodHead { // Issue #608

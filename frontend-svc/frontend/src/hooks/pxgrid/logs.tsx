@@ -1,20 +1,20 @@
 import {
-  keepPreviousData,
-  useMutation,
   type DefaultError,
+  keepPreviousData,
   type QueryKey,
+  useMutation,
 } from "@tanstack/react-query";
 import axios from "axios";
 
 import { queryClient } from "@/hooks/queryClient";
 import { useGetQuery } from "@/hooks/useGetQuery";
-import { QueryUser } from "@/hooks/useQueryUser";
+import type { QueryUser } from "@/hooks/useQueryUser";
 import { api } from "@/utils/apiCompose";
 import { getErrorMessage } from "@/utils/errors";
 import { log } from "@/utils/log";
 import { orMe } from "@/utils/orMe";
 import { toast } from "@/utils/toasts";
-import { PaginationRequest } from "@/utils/zodPagination";
+import type { PaginationRequest } from "@/utils/zodPagination";
 
 import { pxGridLogsSchema } from "./schemas";
 

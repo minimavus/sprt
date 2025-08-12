@@ -1,6 +1,6 @@
-import type { FC } from "react";
-import { Group, GroupProps, rem } from "@mantine/core";
+import { Group, type GroupProps, rem } from "@mantine/core";
 import cx from "classnames";
+import type { FC } from "react";
 
 interface ModalFooterProps extends GroupProps {
   stickyBottom?: boolean;

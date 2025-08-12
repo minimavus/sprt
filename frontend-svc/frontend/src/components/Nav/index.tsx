@@ -1,5 +1,4 @@
-import { FC } from "react";
-import { BurgerProps, Divider, Stack } from "@mantine/core";
+import { type BurgerProps, Divider, Stack } from "@mantine/core";
 import {
   IconAtom2,
   IconCertificate,
@@ -9,6 +8,7 @@ import {
   IconSettings,
   IconTools,
 } from "@tabler/icons-react";
+import type { FC } from "react";
 import { useLocation } from "react-router-dom";
 
 import { useFixedLink } from "@/components/Link/useFixedLink";
@@ -20,8 +20,8 @@ import { Generate } from "./Generate";
 import { NavbarLink } from "./NavbarLink";
 import { Sessions } from "./Sessions";
 import { Settings } from "./Settings";
-import classes from "./styles.module.scss";
 import { SwitchUser } from "./SwitchUser";
+import classes from "./styles.module.scss";
 import { Tools } from "./Tools";
 
 export { NavbarLink };

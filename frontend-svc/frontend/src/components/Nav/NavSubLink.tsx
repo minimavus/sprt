@@ -1,6 +1,6 @@
-import { FC, PropsWithChildren, ReactNode } from "react";
 import { Menu, Text } from "@mantine/core";
-import { IconProps } from "@tabler/icons-react";
+import type { IconProps } from "@tabler/icons-react";
+import type { FC, PropsWithChildren, ReactNode } from "react";
 import { useLocation } from "react-router-dom";
 
 import { useFixedLink } from "../Link/useFixedLink";

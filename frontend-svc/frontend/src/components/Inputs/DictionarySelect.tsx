@@ -1,11 +1,10 @@
-import { useEffect, useState, type FC, type ReactNode } from "react";
 import {
   Button,
   Checkbox,
   Collapse,
   Divider,
   Drawer,
-  DrawerProps,
+  type DrawerProps,
   Group,
   InputError,
   noop,
@@ -25,7 +24,8 @@ import {
   IconRecycle,
   IconRecycleOff,
 } from "@tabler/icons-react";
-import { FieldError } from "react-hook-form";
+import { type FC, type ReactNode, useEffect, useState } from "react";
+import type { FieldError } from "react-hook-form";
 
 import { EmptyState } from "@/components/EmptyState";
 import { DisplayError } from "@/components/Error";

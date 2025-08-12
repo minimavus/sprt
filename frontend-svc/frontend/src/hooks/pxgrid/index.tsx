@@ -1,6 +1,6 @@
 import {
-  DefaultError,
-  QueryKey,
+  type DefaultError,
+  type QueryKey,
   useMutation,
   useQuery,
 } from "@tanstack/react-query";
@@ -8,7 +8,7 @@ import axios from "axios";
 
 import { queryClient } from "@/hooks/queryClient";
 import { queryGetFn } from "@/hooks/useGetQuery";
-import { NewConnectionFields } from "@/pages/pxGrid/NewConnection/form";
+import type { NewConnectionFields } from "@/pages/pxGrid/NewConnection/form";
 import { api } from "@/utils/apiCompose";
 import { getErrorMessage } from "@/utils/errors";
 import failOrRetry from "@/utils/failOrRetry";
@@ -16,14 +16,14 @@ import { log } from "@/utils/log";
 import { orMe } from "@/utils/orMe";
 import { toast } from "@/utils/toasts";
 
-import { QueryUser } from "../useQueryUser";
+import type { QueryUser } from "../useQueryUser";
 import {
-  PxGridConnection,
+  type PxGridConnection,
+  type PxGridConnections,
+  type PxGridStatus,
   pxGridConnectionSchema,
   pxGridConnectionsSchema,
   pxGridStatusSchema,
-  type PxGridConnections,
-  type PxGridStatus,
 } from "./schemas";
 
 const getPxGridStatusKey = (): QueryKey => ["pxgrid", "status"];

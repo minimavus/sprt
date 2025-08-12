@@ -1,10 +1,12 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/go-viper/mapstructure/v2"
 	"github.com/google/uuid"
+	"github.com/kaptinlin/jsonschema"
 	"github.com/labstack/echo/v4"
 
 	"github.com/cisco-open/sprt/frontend-svc/internal/auth"
@@ -12,6 +14,7 @@ import (
 	"github.com/cisco-open/sprt/frontend-svc/internal/user"
 	"github.com/cisco-open/sprt/frontend-svc/internal/variables"
 	"github.com/cisco-open/sprt/go-generator/sdk/json"
+	"github.com/cisco-open/sprt/go-generator/sdk/registry"
 	"github.com/cisco-open/sprt/go-generator/sdk/schemas"
 )
 
@@ -162,13 +165,12 @@ func (m *controller) GetSupportedTLSCipherSuites(c echo.Context) error {
 }
 
 func (m *controller) Generate(c echo.Context) error {
-	u, ctx, err := auth.GetUserDataAndContext(c)
+	u, _, err := auth.GetUserDataAndContext(c)
 	if err != nil {
 		return err
 	}
 
-	m.App.Logger().Debug().Ctx(ctx).Str("uid", u.ForUser).
-		Msg("Generate request received")
+	m.App.Logger().Debug().Str("uid", u.ForUser).Msg("Generate request received")
 
 	rawBody := map[string]any{}
 	if err = json.NewDecoder(c.Request().Body).Decode(&rawBody); err != nil {
@@ -186,18 +188,77 @@ func (m *controller) Generate(c echo.Context) error {
 
 	reqID, err := uuid.NewV7()
 	if err != nil {
-		m.App.Logger().Error().Err(err).Str("uid", u.ForUser).
-			Msg("Failed to get new request UUID")
+		m.App.Logger().Error().Err(err).Str("uid", u.ForUser).Msg("Failed to get new request UUID")
 		return echo.ErrInternalServerError.WithInternal(err)
 	}
 
-	m.App.Logger().Debug().Ctx(ctx).
-		Str("uid", u.ForUser).
-		Str("proto", decodedBody.General.Job.Proto).
-		Str("uuid", reqID.String()).
+	proto := decodedBody.General.Job.Proto
+	m.App.Logger().Debug().Str("uid", u.ForUser).Str("proto", proto).Str("uuid", reqID.String()).
 		Msg("Starting new generate job")
 
-	// TODO: Implement putting to a queue
+	if err = m.validateProtoSchema(u, proto, decodedBody.Other); err != nil {
+		m.App.Logger().Error().Err(err).Str("uid", u.ForUser).Str("proto", proto).Msg("Validation failed for proto body")
+		return echo.ErrBadRequest.WithInternal(err)
+	}
 
 	return c.JSON(http.StatusOK, map[string]any{"id": reqID})
+}
+
+func (m *controller) validateProtoSchema(u *auth.ExtendedUserData, proto string, others map[string]any) error {
+	m.App.Logger().Debug().Str("uid", u.ForUser).Str("proto", proto).
+		Msg("Getting plugin schema for proto")
+
+	plugin, ok := registry.GetByProvides(proto)
+	if !ok {
+		return fmt.Errorf("plugin '%s' not found", proto)
+	}
+
+	schemas := plugin.JSONSchema()
+	if len(schemas) == 0 {
+		m.App.Logger().Debug().Str("uid", u.ForUser).Str("proto", proto).
+			Msg("Got zero schemas for proto, skip validation")
+		return nil
+	}
+
+	protoParams := plugin.Parameters()
+	compiler := jsonschema.NewCompiler()
+
+	if len(schemas) != len(protoParams) {
+		m.App.Logger().Error().Str("uid", u.ForUser).Str("proto", proto).
+			Int("schemas", len(schemas)).Int("params", len(protoParams)).
+			Msg("Proto provided incorrect amount of schemas to validate")
+		return fmt.Errorf("proto provided incorrect amount of schemas to validate")
+	}
+
+	m.App.Logger().Debug().Str("uid", u.ForUser).Str("proto", proto).Int("schemas", len(schemas)).
+		Msg("Validating proto schema")
+
+	for i, pp := range protoParams {
+		m.App.Logger().Debug().Str("uid", u.ForUser).Str("proto", proto).Str("property", pp.PropName).
+			Msg("Validating property")
+
+		rawParamData, ok := others[pp.PropName]
+		if !ok {
+			return fmt.Errorf("property '%s' not present on request", pp.PropName)
+		}
+
+		dataAsMap, ok := rawParamData.(map[string]any)
+		if !ok {
+			m.App.Logger().Error().Str("uid", u.ForUser).Str("proto", proto).Str("property", pp.PropName).
+				Msgf("Property isn't JSON object, got: %T", rawParamData)
+			return fmt.Errorf("property '%s' isn't JSON object", pp.PropName)
+		}
+
+		schema, err := compiler.Compile(schemas[i])
+		if err != nil {
+			return fmt.Errorf("failed to compile validation schema: %w", err)
+		}
+
+		result := schema.ValidateMap(dataAsMap)
+		if !result.IsValid() {
+			return result
+		}
+	}
+
+	return nil
 }

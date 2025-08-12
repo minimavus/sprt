@@ -1,12 +1,12 @@
-import { FC, useEffect } from "react";
 import {
   ActionIcon,
-  ActionIconProps,
-  FloatingPosition,
+  type ActionIconProps,
+  type FloatingPosition,
   rem,
   Tooltip,
 } from "@mantine/core";
 import { IconCheck, IconCopy } from "@tabler/icons-react";
+import { type FC, useEffect } from "react";
 
 import { useCopyToClipboard } from "@/hooks/useCopyToClipboard";
 import { getErrorMessage } from "@/utils/errors";

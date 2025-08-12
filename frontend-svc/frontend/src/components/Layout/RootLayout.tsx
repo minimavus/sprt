@@ -1,6 +1,6 @@
-import type { FC } from "react";
 import { AppShell } from "@mantine/core";
 import { useDocumentTitle } from "@mantine/hooks";
+import type { FC } from "react";
 import { Outlet, useMatches } from "react-router-dom";
 
 import Header from "@/components/Header/Header";

@@ -1,6 +1,6 @@
-import { ComponentPropsWithRef, forwardRef, ReactNode } from "react";
 import cx from "classnames";
 import { motion } from "framer-motion";
+import { type ComponentPropsWithRef, forwardRef, type ReactNode } from "react";
 
 import styles from "./Tabs.module.scss";
 

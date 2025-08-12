@@ -42,7 +42,7 @@ var (
 func GetProtoDefinition(proto string) (ProtoDefinition, error) {
 	switch proto {
 	case "pap", "chap", "pap-chap":
-		papPlugin, ok := registry.Get("pap")
+		papPlugin, ok := registry.GetByProvides("pap")
 		if !ok {
 			return ProtoDefinition{}, fmt.Errorf("PAP/CHAP plugin not found")
 		}
@@ -56,7 +56,7 @@ func GetProtoDefinition(proto string) (ProtoDefinition, error) {
 			Schema:     params.ToJSONSchema(),
 		}, nil
 	case "eap-tls", "eaptls":
-		eapTLSPlugin, ok := registry.Get("eap-tls")
+		eapTLSPlugin, ok := registry.GetByProvides("eap-tls")
 		if !ok {
 			return ProtoDefinition{}, fmt.Errorf("EAP-TLS plugin not found")
 		}
@@ -70,7 +70,7 @@ func GetProtoDefinition(proto string) (ProtoDefinition, error) {
 			Schema:     params.ToJSONSchema(),
 		}, nil
 	case "peap":
-		peapPlugin, ok := registry.Get("eap-tls")
+		peapPlugin, ok := registry.GetByProvides("peap")
 		if !ok {
 			return ProtoDefinition{}, fmt.Errorf("PEAP plugin not found")
 		}
@@ -84,7 +84,7 @@ func GetProtoDefinition(proto string) (ProtoDefinition, error) {
 			Schema:     params.ToJSONSchema(),
 		}, nil
 	case "mab":
-		mabPlugin, ok := registry.Get("mab")
+		mabPlugin, ok := registry.GetByProvides("mab")
 		if !ok {
 			return ProtoDefinition{}, fmt.Errorf("MAB plugin not found")
 		}

@@ -1,4 +1,4 @@
-import { ShortcutsValues, Unit } from "react-cron-headless";
+import type { ShortcutsValues, Unit } from "react-cron-headless";
 
 export const SUPPORTED_SHORTCUTS: ShortcutsValues[] = [
   {

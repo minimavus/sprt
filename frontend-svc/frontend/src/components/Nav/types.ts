@@ -1,9 +1,9 @@
-import { ComponentType, HTMLAttributeAnchorTarget, Ref } from "react";
 import type {
   PolymorphicComponentProps,
   UnstyledButtonProps,
 } from "@mantine/core";
-import { IconAtom2 } from "@tabler/icons-react";
+import type { IconAtom2 } from "@tabler/icons-react";
+import type { ComponentType, HTMLAttributeAnchorTarget, Ref } from "react";
 
 export interface SubMenuComponentProps {
   asMenu: boolean;

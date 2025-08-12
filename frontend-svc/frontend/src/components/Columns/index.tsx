@@ -1,15 +1,15 @@
-import { forwardRef, type FC, type ReactNode } from "react";
 import {
   Box,
-  BoxComponentProps,
+  type BoxComponentProps,
   Grid,
-  GridColProps,
-  GridProps,
-  PolymorphicComponentProps,
+  type GridColProps,
+  type GridProps,
+  type PolymorphicComponentProps,
   Title,
-  TitleProps,
+  type TitleProps,
 } from "@mantine/core";
 import cx from "classnames";
+import { type FC, forwardRef, type ReactNode } from "react";
 
 import styles from "./styles.module.scss";
 

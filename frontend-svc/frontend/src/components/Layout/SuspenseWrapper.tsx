@@ -1,5 +1,5 @@
-import { type FC, type PropsWithChildren } from "react";
 import { QueryErrorResetBoundary } from "@tanstack/react-query";
+import type { FC, PropsWithChildren } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 
 import { DisplayError } from "@/components/Error";
