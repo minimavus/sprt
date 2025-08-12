@@ -39,7 +39,7 @@ func (b *listParameter) SetAdvanced(advanced bool) Parameter {
 	return b
 }
 
-func (b *listParameter) WithAdditionalRules(rules ...rule) Parameter {
+func (b *listParameter) WithAdditionalRules(rules ...Rule) Parameter {
 	b.base.Rules = append(b.base.Rules, rules...)
 	return b
 }

@@ -17,7 +17,7 @@ var (
 
 	uaDictionary = variables.NewDictionaryParameter("userAgents", nil, []dictionaries.DictionaryType{dictionaries.UA, dictionaries.Unclassified}).
 			PreselectAllOfType(dictionaries.UA).
-			WithLabel("User Agents").WithAllowRepeats(true).WithRandomSelect().
+			WithLabel("User Agents").WithAllowRepeats(true).WithRandomSelect().WithAdditionalRules(variables.Rule("min=1")).
 			Watch(variables.NewWatch(".guestFlow.variant").
 				When(GuestFlowNone, variables.ActionHide(".userAgents")).
 				WhenNot(GuestFlowNone, variables.ActionShow(".userAgents")))
@@ -62,7 +62,7 @@ var (
 						variables.NewDictionaryParameter("credentialsDictionary", []string{},
 							[]dictionaries.DictionaryType{dictionaries.Credentials, dictionaries.Unclassified}).
 							WithRandomSelect().
-							WithAllowRepeats(true),
+							WithAllowRepeats(true).WithAdditionalRules(variables.Rule("min=1")),
 					),
 				),
 			variables.NewTextInputParameter("accessCode", "Access code", "").SetHint("Leave empty if not needed"),
@@ -317,7 +317,7 @@ func getGuestSelfRegRuleDictionary(value any) variables.Variant {
 		}
 	}
 
-	return variables.NewVariant("dictionary").WithShort("From dictionary").WithField(d)
+	return variables.NewVariant("dictionary").WithShort("From dictionary").WithField(d).WithAdditionalRules(variables.Rule("min=1"))
 }
 
 func getGuestSelfRegRuleEmpty() variables.Variant {

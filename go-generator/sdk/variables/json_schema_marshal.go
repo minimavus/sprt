@@ -4,9 +4,58 @@ import (
 	j "encoding/json"
 	"fmt"
 	"log"
+	"strconv"
+	"strings"
 
 	"github.com/cisco-open/sprt/go-generator/sdk/json"
 )
+
+func parseArrayRules(m map[string]any, rules []Rule) {
+	if len(rules) == 0 {
+		return
+	}
+
+	for _, r := range rules {
+		if min, ok := strings.CutPrefix(string(r), "min="); ok {
+			if i, err := strconv.Atoi(min); err == nil {
+				m["minItems"] = i
+			} else {
+				panic(err)
+			}
+		}
+		if max, ok := strings.CutPrefix(string(r), "max="); ok {
+			if i, err := strconv.Atoi(max); err == nil {
+				m["maxItems"] = i
+			} else {
+				panic(err)
+			}
+		}
+	}
+}
+
+func addProperties(m map[string]any, p []Parameter) {
+	for _, pr := range p {
+		switch pr.GetType() {
+		case paramColumns:
+			c := pr.(*columnsParameter)
+			for _, col := range c.Value {
+				addProperties(m, col)
+			}
+			continue
+		case paramFieldSet, paramCollapseSet:
+			fs := pr.(*fieldSet)
+			addProperties(m, fs.Fields)
+		case paramText, paramDivider:
+			continue
+		default:
+			b, err := pr.ToJSONSchema()
+			if err != nil {
+				log.Fatalf("Failed to convert parameters to json schema: %v", err)
+			}
+			m[pr.GetName()] = b
+		}
+	}
+}
 
 func (b *infoParameter) ToJSONSchema() (any, error) {
 	return nil, nil
@@ -52,8 +101,10 @@ func (b *selectParameter[T]) ToJSONSchema() (any, error) {
 		enum = append(enum, o.Value)
 	}
 
+	var m map[string]any
+
 	if b.Multi {
-		m := map[string]any{
+		m = map[string]any{
 			"type": "array",
 			"items": map[string]any{
 				"type": "string",
@@ -61,13 +112,15 @@ func (b *selectParameter[T]) ToJSONSchema() (any, error) {
 			},
 			"uniqueItems": true,
 		}
-		return m, nil
+	} else {
+		m = map[string]any{
+			"type": "string",
+			"enum": enum,
+		}
 	}
 
-	m := map[string]any{
-		"type": "string",
-		"enum": enum,
-	}
+	parseArrayRules(m, b.Rules)
+
 	return m, nil
 }
 
@@ -82,6 +135,9 @@ func (b *loadableSelectParameter) ToJSONSchema() (any, error) {
 	if !b.Multi {
 		m["maxItems"] = 1
 	}
+
+	parseArrayRules(m, b.Rules)
+
 	return m, nil
 }
 
@@ -133,13 +189,16 @@ func (b *dictionaryParameter) ToJSONSchema() (any, error) {
 	props["allowRepeats"] = map[string]any{
 		"type": "boolean",
 	}
-	props["dictionaries"] = map[string]any{
+	dictsSchema := map[string]any{
 		"type": "array",
 		"items": map[string]any{
 			"type": "string",
 		},
 		"uniqueItems": true,
 	}
+	parseArrayRules(dictsSchema, b.Rules)
+	props["dictionaries"] = dictsSchema
+
 	props["select"] = map[string]any{
 		"type": "string",
 		"enum": []string{"sequential", "random"},
@@ -162,37 +221,15 @@ func (b *checkboxesParameter[T]) ToJSONSchema() (any, error) {
 }
 
 func (b *listParameter) ToJSONSchema() (any, error) {
-	return map[string]any{
+	m := map[string]any{
 		"type": "string",
-	}, nil
+	}
+	parseArrayRules(m, b.Rules)
+	return m, nil
 }
 
 func (b *fieldSet) ToJSONSchema() (any, error) {
 	return nil, nil
-}
-
-func addProperties(m map[string]any, p []Parameter) {
-	for _, pr := range p {
-		switch pr.GetType() {
-		case paramColumns:
-			c := pr.(*columnsParameter)
-			for _, col := range c.Value {
-				addProperties(m, col)
-			}
-			continue
-		case paramFieldSet, paramCollapseSet:
-			fs := pr.(*fieldSet)
-			addProperties(m, fs.Fields)
-		case paramText, paramDivider:
-			continue
-		default:
-			b, err := pr.ToJSONSchema()
-			if err != nil {
-				log.Fatalf("Failed to convert parameters to json schema: %v", err)
-			}
-			m[pr.GetName()] = b
-		}
-	}
 }
 
 func (pb *ParametersBlock) ToJSONSchema() (j.RawMessage, error) {

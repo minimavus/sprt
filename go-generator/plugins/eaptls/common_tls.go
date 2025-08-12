@@ -42,7 +42,7 @@ var (
 				SetRequest(map[string]any{"version": "{{.tlsVersion}}", "proto": "{{/general.job.proto}}"}).
 				SetResultAttribute("ciphers").
 				SetResultFields("name", "id"),
-		).SetMulti(true).SetAdvanced(true),
+		).SetMulti(true).SetAdvanced(true).WithAdditionalRules(variables.Rule("min=1")),
 		variables.NewCheckboxParameter("validateServer", false, "Validate server"),
 		variables.NewLoadableSelectParameter("trustedCertificates", "Trusted CA/Root certificates",
 			variables.NewLoadParams("/certificates/trusted", http.MethodGet).
@@ -56,7 +56,7 @@ var (
 					{Title: "Subject", Field: "subject"},
 				}).
 				SetResultObjectPath(".certificates"),
-		).SetMulti(true).
+		).SetMulti(true).WithAdditionalRules(variables.Rule("min=1")).
 			Watch(variables.NewWatch(".validateServer").
 				When(false, variables.ActionHide(".trustedCertificates")).
 				When(true, variables.ActionShow(".trustedCertificates"))),

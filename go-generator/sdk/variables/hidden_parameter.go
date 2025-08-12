@@ -27,7 +27,7 @@ func (b *hiddenParameter) SetAdvanced(advanced bool) Parameter {
 	return b
 }
 
-func (b *hiddenParameter) WithAdditionalRules(rules ...rule) Parameter {
+func (b *hiddenParameter) WithAdditionalRules(rules ...Rule) Parameter {
 	b.base.Rules = append(b.base.Rules, rules...)
 	return b
 }

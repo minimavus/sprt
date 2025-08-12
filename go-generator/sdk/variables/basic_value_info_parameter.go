@@ -61,7 +61,7 @@ func (b *basicValueInputParameter[T]) SetAdvanced(advanced bool) Parameter {
 	return b
 }
 
-func (b *basicValueInputParameter[T]) WithAdditionalRules(rules ...rule) Parameter {
+func (b *basicValueInputParameter[T]) WithAdditionalRules(rules ...Rule) Parameter {
 	b.base.Rules = append(b.base.Rules, rules...)
 	return b
 }

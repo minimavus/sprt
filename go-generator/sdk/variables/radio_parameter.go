@@ -31,7 +31,7 @@ func (b *radioParameter) SetAdvanced(advanced bool) Parameter {
 	return b
 }
 
-func (b *radioParameter) WithAdditionalRules(rules ...rule) Parameter {
+func (b *radioParameter) WithAdditionalRules(rules ...Rule) Parameter {
 	b.base.Rules = append(b.base.Rules, rules...)
 	return b
 }

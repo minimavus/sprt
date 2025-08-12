@@ -43,7 +43,7 @@ func (b *fieldSet) SetAdvanced(advanced bool) Parameter {
 	return b
 }
 
-func (b *fieldSet) WithAdditionalRules(rules ...rule) Parameter {
+func (b *fieldSet) WithAdditionalRules(rules ...Rule) Parameter {
 	b.base.Rules = append(b.base.Rules, rules...)
 	return b
 }

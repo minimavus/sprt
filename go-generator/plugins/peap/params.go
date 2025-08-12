@@ -26,7 +26,8 @@ var (
 				WithShort("From dictionaries").
 				WithField(
 					variables.NewDictionaryParameter("dictionaries", []string{},
-						[]dictionaries.DictionaryType{dictionaries.Credentials, dictionaries.Unclassified}),
+						[]dictionaries.DictionaryType{dictionaries.Credentials, dictionaries.Unclassified}).
+						WithAllowRepeats(true).WithAdditionalRules(variables.Rule("min=1")),
 				),
 		),
 	}

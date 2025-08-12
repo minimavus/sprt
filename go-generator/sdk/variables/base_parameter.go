@@ -3,9 +3,9 @@ package variables
 type (
 	parameterType string
 
-	rule string
+	Rule string
 
-	rules []rule
+	rules []Rule
 
 	base struct {
 		Type           parameterType `json:"type"`

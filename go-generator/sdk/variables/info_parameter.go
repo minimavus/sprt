@@ -38,7 +38,7 @@ func (b *infoParameter) SetAdvanced(advanced bool) Parameter {
 	return b
 }
 
-func (b *infoParameter) WithAdditionalRules(rules ...rule) Parameter {
+func (b *infoParameter) WithAdditionalRules(rules ...Rule) Parameter {
 	b.base.Rules = append(b.base.Rules, rules...)
 	return b
 }

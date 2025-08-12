@@ -62,7 +62,7 @@ func (b *selectParameter[T]) SetAdvanced(advanced bool) Parameter {
 	return b
 }
 
-func (b *selectParameter[T]) WithAdditionalRules(rules ...rule) Parameter {
+func (b *selectParameter[T]) WithAdditionalRules(rules ...Rule) Parameter {
 	b.base.Rules = append(b.base.Rules, rules...)
 	return b
 }
@@ -93,7 +93,7 @@ func (b *loadableSelectParameter) SetAdvanced(advanced bool) Parameter {
 	return b
 }
 
-func (b *loadableSelectParameter) WithAdditionalRules(rules ...rule) Parameter {
+func (b *loadableSelectParameter) WithAdditionalRules(rules ...Rule) Parameter {
 	b.base.Rules = append(b.base.Rules, rules...)
 	return b
 }

@@ -89,7 +89,7 @@ func (b *dictionaryParameter) SetAdvanced(advanced bool) Parameter {
 	return b
 }
 
-func (b *dictionaryParameter) WithAdditionalRules(rules ...rule) Parameter {
+func (b *dictionaryParameter) WithAdditionalRules(rules ...Rule) Parameter {
 	b.base.Rules = append(b.base.Rules, rules...)
 	return b
 }

@@ -22,7 +22,8 @@ var (
 								WithShowIfChecked(true).
 								WithField(
 									variables.NewInfoParameter("how_works", "Selected certificates will be used for authentication"),
-									variables.NewLoadableSelectParameter("certificates", "Certificates", IdentityCertificatesLoad).SetMulti(true),
+									variables.NewLoadableSelectParameter("certificates", "Certificates", IdentityCertificatesLoad).
+										SetMulti(true).WithAdditionalRules(variables.Rule("min=1")),
 								),
 							variables.NewVariant("scep").
 								WithDescription("Request from SCEP server").
@@ -40,7 +41,8 @@ var (
 												{Title: "URL", Field: "url"},
 											}).
 											SetResultFields("name", "id").
-											SetResultObjectPath(".servers")),
+											SetResultObjectPath(".servers")).
+										WithAdditionalRules(variables.Rule("min=1")),
 									variables.NewLoadableSelectParameter("template", "CSR template",
 										variables.NewLoadParams("/certificates/templates", http.MethodGet).
 											WithAPIPrefix().
@@ -51,7 +53,8 @@ var (
 												{Title: "Subject", Field: "subject"},
 											}).
 											SetResultFields("friendly_name", "id").
-											SetResultObjectPath(".templates")),
+											SetResultObjectPath(".templates")).
+										WithAdditionalRules(variables.Rule("min=1")),
 									variables.NewCheckboxParameter("saveIdentityCertificates", false, "Save generated Identity Certificates"),
 								),
 						),
@@ -102,7 +105,8 @@ var (
 								WithShort("Dictionary").
 								WithField(
 									variables.NewDictionaryParameter("dictionaries", []string{},
-										[]dictionaries.DictionaryType{dictionaries.Credentials, dictionaries.MAC, dictionaries.Unclassified}),
+										[]dictionaries.DictionaryType{dictionaries.Credentials, dictionaries.MAC, dictionaries.Unclassified}).
+										WithAdditionalRules(variables.Rule("min=1")),
 								),
 							variables.NewVariant("random").
 								WithDescription("Random username").

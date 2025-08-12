@@ -37,7 +37,7 @@ func (b *columnsParameter) SetAdvanced(advanced bool) Parameter {
 	return b
 }
 
-func (b *columnsParameter) WithAdditionalRules(rules ...rule) Parameter {
+func (b *columnsParameter) WithAdditionalRules(rules ...Rule) Parameter {
 	b.base.Rules = append(b.base.Rules, rules...)
 	return b
 }

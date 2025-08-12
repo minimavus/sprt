@@ -23,7 +23,7 @@ type (
 		WithDescription(string) Variant
 		WithShort(string) Variant
 		WithShowIfChecked(bool) Variant
-		WithAdditionalRules(...rule) Variant
+		WithAdditionalRules(...Rule) Variant
 	}
 
 	VariantsParameter interface {
@@ -61,7 +61,7 @@ func (v *variant) WithShowIfChecked(showIfChecked bool) Variant {
 	return v
 }
 
-func (v *variant) WithAdditionalRules(rules ...rule) Variant {
+func (v *variant) WithAdditionalRules(rules ...Rule) Variant {
 	v.Rules = append(v.Rules, rules...)
 	return v
 }
@@ -103,7 +103,7 @@ func (b *variantsParameter) SetAdvanced(advanced bool) Parameter {
 	return b
 }
 
-func (b *variantsParameter) WithAdditionalRules(rules ...rule) Parameter {
+func (b *variantsParameter) WithAdditionalRules(rules ...Rule) Parameter {
 	b.base.Rules = append(b.base.Rules, rules...)
 	return b
 }

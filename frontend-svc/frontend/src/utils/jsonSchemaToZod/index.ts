@@ -201,8 +201,16 @@ function createArraySchema(jsonSchema: JsonSchema7ArrayType): z.ZodType {
 }
 
 function createSetSchema(jsonSchema: JsonSchema7SetType): z.ZodType {
-  return z
-    .array(jsonSchemaToZod(jsonSchema.items!))
+  let schema = z.array(jsonSchemaToZod(jsonSchema.items!));
+
+  if (jsonSchema.maxItems !== undefined) {
+    schema = schema.max(jsonSchema.maxItems, jsonSchema.errorMessage?.maxItems);
+  }
+  if (jsonSchema.minItems !== undefined) {
+    schema = schema.min(jsonSchema.minItems, jsonSchema.errorMessage?.minItems);
+  }
+
+  return schema
     .check((ctx) => {
       const s = new Set(ctx.value);
       if (s.size !== ctx.value.length) {

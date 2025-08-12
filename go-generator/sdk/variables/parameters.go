@@ -16,7 +16,7 @@ type (
 		GetName() string
 		SetUpdateOnChange(updateOnChange []string) Parameter
 		SetAdvanced(advanced bool) Parameter
-		WithAdditionalRules(rules ...rule) Parameter
+		WithAdditionalRules(rules ...Rule) Parameter
 		Watch(watch ...*Watch) Parameter
 		ToJSONSchema() (any, error)
 	}
