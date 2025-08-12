@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	j "encoding/json"
 	"fmt"
 	"net/http"
 
@@ -17,6 +18,8 @@ import (
 	"github.com/cisco-open/sprt/go-generator/sdk/registry"
 	"github.com/cisco-open/sprt/go-generator/sdk/schemas"
 )
+
+var defaultJSONSchemaCompiler = jsonschema.NewCompiler()
 
 func (m *controller) GetProtoSpecificParams(c echo.Context) error {
 	req := new(struct {
@@ -164,6 +167,7 @@ func (m *controller) GetSupportedTLSCipherSuites(c echo.Context) error {
 	return c.JSON(http.StatusOK, ciphers)
 }
 
+// Generate handles the generate request
 func (m *controller) Generate(c echo.Context) error {
 	u, _, err := auth.GetUserDataAndContext(c)
 	if err != nil {
@@ -197,13 +201,24 @@ func (m *controller) Generate(c echo.Context) error {
 		Msg("Starting new generate job")
 
 	if err = m.validateProtoSchema(u, proto, decodedBody.Other); err != nil {
-		m.App.Logger().Error().Err(err).Str("uid", u.ForUser).Str("proto", proto).Msg("Validation failed for proto body")
+		m.App.Logger().Error().Err(err).Str("uid", u.ForUser).Str("proto", proto).
+			Msg("Validation failed for proto body")
 		return echo.ErrBadRequest.WithInternal(err)
+	}
+
+	if decodedBody.General.Server.LoadedID != nil {
+		// validate guest and CoA parameters
+		if err = m.validateSchemaForLoadedServer(&decodedBody); err != nil {
+			m.App.Logger().Error().Err(err).Str("uid", u.ForUser).Str("proto", proto).
+				Msg("Validation failed for guest and CoA parameters")
+			return echo.ErrBadRequest.WithInternal(err)
+		}
 	}
 
 	return c.JSON(http.StatusOK, map[string]any{"id": reqID})
 }
 
+// validateProtoSchema validates the proto schema
 func (m *controller) validateProtoSchema(u *auth.ExtendedUserData, proto string, others map[string]any) error {
 	m.App.Logger().Debug().Str("uid", u.ForUser).Str("proto", proto).
 		Msg("Getting plugin schema for proto")
@@ -221,11 +236,10 @@ func (m *controller) validateProtoSchema(u *auth.ExtendedUserData, proto string,
 	}
 
 	protoParams := plugin.Parameters()
-	compiler := jsonschema.NewCompiler()
 
-	if len(schemas) != len(protoParams) {
+	if len(schemas) != protoParams.Len() {
 		m.App.Logger().Error().Str("uid", u.ForUser).Str("proto", proto).
-			Int("schemas", len(schemas)).Int("params", len(protoParams)).
+			Int("schemas", len(schemas)).Int("params", protoParams.Len()).
 			Msg("Proto provided incorrect amount of schemas to validate")
 		return fmt.Errorf("proto provided incorrect amount of schemas to validate")
 	}
@@ -233,7 +247,8 @@ func (m *controller) validateProtoSchema(u *auth.ExtendedUserData, proto string,
 	m.App.Logger().Debug().Str("uid", u.ForUser).Str("proto", proto).Int("schemas", len(schemas)).
 		Msg("Validating proto schema")
 
-	for i, pp := range protoParams {
+	for i := range protoParams.Len() {
+		pp := protoParams.At(i)
 		m.App.Logger().Debug().Str("uid", u.ForUser).Str("proto", proto).Str("property", pp.PropName).
 			Msg("Validating property")
 
@@ -249,7 +264,7 @@ func (m *controller) validateProtoSchema(u *auth.ExtendedUserData, proto string,
 			return fmt.Errorf("property '%s' isn't JSON object", pp.PropName)
 		}
 
-		schema, err := compiler.Compile(schemas[i])
+		schema, err := defaultJSONSchemaCompiler.Compile(schemas[i])
 		if err != nil {
 			return fmt.Errorf("failed to compile validation schema: %w", err)
 		}
@@ -258,6 +273,32 @@ func (m *controller) validateProtoSchema(u *auth.ExtendedUserData, proto string,
 		if !result.IsValid() {
 			return result
 		}
+	}
+
+	return nil
+}
+
+func (m *controller) validateSchemaForLoadedServer(d *schemas.GenerateJSON) error {
+	coaSchema := variables.COA.Schema.([]j.RawMessage)[0]
+	coaCompiled, err := defaultJSONSchemaCompiler.Compile(coaSchema)
+	if err != nil {
+		return fmt.Errorf("failed to compile validation schema: %w", err)
+	}
+
+	result := coaCompiled.ValidateStruct(&d.Coa)
+	if !result.IsValid() {
+		return result
+	}
+
+	guestSchema := variables.Guest.Schema.([]j.RawMessage)[0]
+	guestCompiled, err := defaultJSONSchemaCompiler.Compile(guestSchema)
+	if err != nil {
+		return fmt.Errorf("failed to compile validation schema: %w", err)
+	}
+
+	result = guestCompiled.ValidateStruct(&d.Guest)
+	if !result.IsValid() {
+		return result
 	}
 
 	return nil

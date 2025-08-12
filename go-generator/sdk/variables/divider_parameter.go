@@ -1,8 +1,14 @@
 package variables
 
-import "github.com/google/uuid"
+import (
+	"github.com/google/uuid"
+)
 
 type (
+	dividerParameter struct {
+		infoParameter
+	}
+
 	Divider interface {
 		Parameter
 		WithLabel(label string) Divider
@@ -15,16 +21,18 @@ func NewDivider() Divider {
 		panic(err)
 	}
 
-	return &infoParameter{
-		base: base{
-			Type: paramDivider,
-			Name: "divider-" + u.String(),
+	return &dividerParameter{
+		infoParameter: infoParameter{
+			base: base{
+				Type: paramDivider,
+				Name: "divider-" + u.String(),
+			},
+			SubType: "divider",
 		},
-		SubType: "divider",
 	}
 }
 
-func (b *infoParameter) WithLabel(label string) Divider {
+func (b *dividerParameter) WithLabel(label string) Divider {
 	b.Value = label
 	return b
 }

@@ -18,7 +18,7 @@ func GetVariableDefinition(variable string) (VariableDefinition, error) {
 	case "COA", "coa":
 		return COA, nil
 	case "Guest", "guest":
-		return Guest(), nil
+		return Guest, nil
 	default:
 		return VariableDefinition{}, fmt.Errorf("unknown variable '%s'", variable)
 	}

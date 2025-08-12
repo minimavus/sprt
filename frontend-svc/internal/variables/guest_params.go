@@ -5,6 +5,7 @@ import (
 
 	"github.com/iancoleman/strcase"
 	"github.com/icrowley/fake"
+	"github.com/kaptinlin/jsonschema"
 	"golang.org/x/text/cases"
 	"golang.org/x/text/language"
 
@@ -181,11 +182,11 @@ var (
 					"Check the details at [SMS Configuration page](/settings/sms-gateway)").WithSubType("warning"),
 		)
 
-	guestParams = variables.Params{
-		{
+	guestParams = variables.BuildParams(
+		variables.ParametersBlock{
 			Title:    "Guest Flow",
 			PropName: "guest",
-			Parameters: []variables.Parameter{
+			Parameters: variables.ParamsSlice{
 				variables.NewVariantsParameter("guestFlow", "Expected guest flow").
 					WithVariants(
 						variables.NewVariant(GuestFlowNone).WithShort("None"),
@@ -195,10 +196,13 @@ var (
 					),
 				uaDictionary,
 			},
+			IfThenElse: jsonschema.If(jsonschema.Object(
+				jsonschema.Prop("type", jsonschema.Const("premium")),
+			)),
 		},
-	}
+	)
 
-	guest = VariableDefinition{
+	Guest = VariableDefinition{
 		Parameters: guestParams,
 		Schema:     guestParams.ToJSONSchema(),
 	}
@@ -210,10 +214,6 @@ const (
 	GuestFlowWithCreds = "with-creds"
 	GuestFlowSelfReg   = "self-reg"
 )
-
-func Guest() VariableDefinition {
-	return guest
-}
 
 type guestFlowSuccessConditionOptions struct {
 	Title     string

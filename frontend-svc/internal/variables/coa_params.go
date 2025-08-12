@@ -29,11 +29,11 @@ const (
 )
 
 var (
-	coaParams = variables.Params{
-		{
+	coaParams = variables.BuildParams(
+		variables.ParametersBlock{
 			Title:    "CoA Parameters",
 			PropName: "coa",
-			Parameters: []variables.Parameter{
+			Parameters: variables.ParamsSlice{
 				variables.NewColumnsParameter("coaColumns").
 					WithColumn(variables.ParamsSlice{}.
 						With(variables.NewFieldSetParameter("onBounceHostPortFields", "If **bounce-host-port** received").
@@ -62,7 +62,7 @@ var (
 							})))...),
 			},
 		},
-	}
+	)
 
 	COA = VariableDefinition{
 		Parameters: coaParams,

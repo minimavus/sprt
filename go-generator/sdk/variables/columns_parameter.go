@@ -1,5 +1,7 @@
 package variables
 
+import "github.com/kaptinlin/jsonschema"
+
 type (
 	columnsParameter struct {
 		base
@@ -44,5 +46,10 @@ func (b *columnsParameter) WithAdditionalRules(rules ...Rule) Parameter {
 
 func (b *columnsParameter) Watch(watch ...*Watch) Parameter {
 	b.base.W = watch
+	return b
+}
+
+func (b *columnsParameter) IfThenElseSchema(condition jsonschema.ConditionalSchema) Parameter {
+	b.base.ifThenElse = condition
 	return b
 }

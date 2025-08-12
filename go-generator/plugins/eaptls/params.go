@@ -8,8 +8,8 @@ import (
 )
 
 var (
-	eapTLSParams = variables.Params{
-		{
+	eapTLSParams = variables.BuildParams(
+		variables.ParametersBlock{
 			Title:    "EAP-TLS Parameters",
 			PropName: "eapTls",
 			Parameters: variables.ParamsSlice{
@@ -133,5 +133,5 @@ var (
 					).WithColumn(CommonTLSParams...),
 			},
 		},
-	}
+	)
 )

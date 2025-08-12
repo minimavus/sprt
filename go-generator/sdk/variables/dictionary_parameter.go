@@ -1,6 +1,10 @@
 package variables
 
-import "github.com/cisco-open/sprt/go-generator/sdk/variables/dictionaries"
+import (
+	"github.com/kaptinlin/jsonschema"
+
+	"github.com/cisco-open/sprt/go-generator/sdk/variables/dictionaries"
+)
 
 type (
 	dictionaryParameter struct {
@@ -96,5 +100,10 @@ func (b *dictionaryParameter) WithAdditionalRules(rules ...Rule) Parameter {
 
 func (b *dictionaryParameter) Watch(watch ...*Watch) Parameter {
 	b.base.W = watch
+	return b
+}
+
+func (b *dictionaryParameter) IfThenElseSchema(condition jsonschema.ConditionalSchema) Parameter {
+	b.base.ifThenElse = condition
 	return b
 }

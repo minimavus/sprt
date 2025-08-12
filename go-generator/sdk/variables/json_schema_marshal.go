@@ -241,12 +241,32 @@ func (pb *ParametersBlock) ToJSONSchema() (j.RawMessage, error) {
 
 	addProperties(m["properties"].(map[string]any), pb.Parameters)
 
+	if pb.IfThenElse != nil {
+		b, err := json.Marshal(pb.IfThenElse.ToSchema())
+		if err != nil {
+			log.Fatalf("Failed to convert proto params to json schema: %v", err)
+		}
+		var un map[string]any
+		if err := json.Unmarshal(b, &un); err != nil {
+			log.Fatalf("Failed to convert proto params to json schema: %v", err)
+		}
+		if un["if"] != nil {
+			m["if"] = un["if"]
+		}
+		if un["then"] != nil {
+			m["then"] = un["then"]
+		}
+		if un["else"] != nil {
+			m["else"] = un["else"]
+		}
+	}
+
 	return json.Marshal(m)
 }
 
-func (p *Params) ToJSONSchema() []j.RawMessage {
-	schemas := make([]j.RawMessage, 0, len(*p))
-	for _, pb := range *p {
+func (p *params) ToJSONSchema() []j.RawMessage {
+	schemas := make([]j.RawMessage, 0, len(p.b))
+	for _, pb := range p.b {
 		b, err := pb.ToJSONSchema()
 		if err != nil {
 			log.Fatalf("Failed to convert proto params to json schema: %v", err)

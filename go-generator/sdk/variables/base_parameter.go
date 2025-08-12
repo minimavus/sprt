@@ -1,5 +1,7 @@
 package variables
 
+import "github.com/kaptinlin/jsonschema"
+
 type (
 	parameterType string
 
@@ -8,6 +10,8 @@ type (
 	rules []Rule
 
 	base struct {
+		ifThenElse jsonschema.ConditionalSchema
+
 		Type           parameterType `json:"type"`
 		Name           string        `json:"name"`
 		Advanced       bool          `json:"advanced"`

@@ -6,8 +6,8 @@ import (
 )
 
 var (
-	papParams = variables.Params{
-		{
+	papParams = variables.BuildParams(
+		variables.ParametersBlock{
 			Title:    "PAP/CHAP Parameters",
 			PropName: "papChap",
 			Parameters: []variables.Parameter{
@@ -36,5 +36,5 @@ var (
 				),
 			},
 		},
-	}
+	)
 )

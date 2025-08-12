@@ -1,13 +1,30 @@
 package variables
 
+import (
+	j "encoding/json"
+
+	"github.com/cisco-open/sprt/go-generator/sdk/json"
+	"github.com/kaptinlin/jsonschema"
+)
+
 type (
 	ParametersBlock struct {
+		IfThenElse *jsonschema.ConditionalSchema
+
 		Title      string      `json:"title"`
 		Parameters ParamsSlice `json:"parameters"`
 		PropName   string      `json:"prop_name"`
 	}
 
-	Params []ParametersBlock
+	params struct {
+		b []ParametersBlock
+	}
+
+	Params interface {
+		ToJSONSchema() []j.RawMessage
+		Len() int
+		At(i int) ParametersBlock
+	}
 
 	ParamsSlice []Parameter
 
@@ -19,6 +36,7 @@ type (
 		WithAdditionalRules(rules ...Rule) Parameter
 		Watch(watch ...*Watch) Parameter
 		ToJSONSchema() (any, error)
+		IfThenElseSchema(jsonschema.ConditionalSchema) Parameter
 	}
 )
 
@@ -43,4 +61,22 @@ const (
 
 func (p ParamsSlice) With(params ...Parameter) ParamsSlice {
 	return append(p, params...)
+}
+
+func BuildParams(blocks ...ParametersBlock) Params {
+	return &params{
+		b: blocks,
+	}
+}
+
+func (p *params) Len() int {
+	return len(p.b)
+}
+
+func (p *params) At(i int) ParametersBlock {
+	return p.b[i]
+}
+
+func (p *params) MarshalJSON() ([]byte, error) {
+	return json.Marshal(p.b)
 }

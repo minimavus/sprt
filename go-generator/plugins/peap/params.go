@@ -32,8 +32,8 @@ var (
 		),
 	}
 
-	peapParams = variables.Params{
-		{
+	peapParams = variables.BuildParams(
+		variables.ParametersBlock{
 			Title:    "PEAP Parameters",
 			PropName: "peap",
 			Parameters: variables.ParamsSlice{
@@ -80,5 +80,5 @@ var (
 					WithColumn(eaptls.CommonTLSParams...),
 			},
 		},
-	}
+	)
 )

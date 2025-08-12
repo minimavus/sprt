@@ -1,5 +1,7 @@
 package variables
 
+import "github.com/kaptinlin/jsonschema"
+
 type (
 	variant struct {
 		Description   string      `json:"desc"`
@@ -110,5 +112,10 @@ func (b *variantsParameter) WithAdditionalRules(rules ...Rule) Parameter {
 
 func (b *variantsParameter) Watch(watch ...*Watch) Parameter {
 	b.base.W = watch
+	return b
+}
+
+func (b *variantsParameter) IfThenElseSchema(condition jsonschema.ConditionalSchema) Parameter {
+	b.base.ifThenElse = condition
 	return b
 }

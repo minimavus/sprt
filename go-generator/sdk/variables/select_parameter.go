@@ -1,5 +1,7 @@
 package variables
 
+import "github.com/kaptinlin/jsonschema"
+
 type (
 	selectParameter[T string | []string] struct {
 		base
@@ -72,6 +74,11 @@ func (b *selectParameter[T]) Watch(watch ...*Watch) Parameter {
 	return b
 }
 
+func (b *selectParameter[T]) IfThenElseSchema(condition jsonschema.ConditionalSchema) Parameter {
+	b.base.ifThenElse = condition
+	return b
+}
+
 func NewLoadableSelectParameter(name, label string, load *LoadParams) LoadableSelectParameter {
 	return &loadableSelectParameter{
 		base: base{
@@ -105,5 +112,10 @@ func (b *loadableSelectParameter) SetMulti(multi bool) LoadableSelectParameter {
 
 func (b *loadableSelectParameter) Watch(watch ...*Watch) Parameter {
 	b.base.W = watch
+	return b
+}
+
+func (b *loadableSelectParameter) IfThenElseSchema(condition jsonschema.ConditionalSchema) Parameter {
+	b.base.ifThenElse = condition
 	return b
 }
