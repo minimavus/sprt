@@ -9,13 +9,13 @@ import (
 
 type GenerateJSON struct {
 	// Coa corresponds to the JSON schema field "coa".
-	Coa *GenerateJSONCoa `json:"coa,omitempty" yaml:"coa,omitempty" mapstructure:"coa,omitempty"`
+	// Coa *GenerateJSONCoa `json:"coa,omitempty" yaml:"coa,omitempty" mapstructure:"coa,omitempty"`
 
 	// General corresponds to the JSON schema field "general".
 	General GenerateJSONGeneral `json:"general" yaml:"general" mapstructure:"general"`
 
 	// Guest corresponds to the JSON schema field "guest".
-	Guest *GenerateJSONGuest `json:"guest,omitempty" yaml:"guest,omitempty" mapstructure:"guest,omitempty"`
+	// Guest *GenerateJSONGuest `json:"guest,omitempty" yaml:"guest,omitempty" mapstructure:"guest,omitempty"`
 
 	// IpAddresses corresponds to the JSON schema field "ipAddresses".
 	IPAddresses any `json:"ipAddresses" yaml:"ipAddresses" mapstructure:"ipAddresses"`

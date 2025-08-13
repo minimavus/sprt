@@ -1,7 +1,5 @@
 package variables
 
-import "github.com/kaptinlin/jsonschema"
-
 type (
 	variant struct {
 		Description   string      `json:"desc"`
@@ -12,12 +10,16 @@ type (
 		Rules         rules       `json:"rules,omitempty"`
 	}
 
+	variantJSONSchemaPredictor func(variant string) ([]Parameter, error)
+
 	variantsParameter struct {
 		base
 		Variants []Variant `json:"variants"`
 		Title    string    `json:"title"`
 		Inline   bool      `json:"inline,omitempty"`
 		Value    string    `json:"value,omitempty"`
+
+		conditionalJSONSchemaPredictor variantJSONSchemaPredictor
 	}
 
 	Variant interface {
@@ -33,6 +35,7 @@ type (
 		WithVariants(...Variant) VariantsParameter
 		WithInline(inline bool) VariantsParameter
 		WithValue(value string) VariantsParameter
+		WithConditionalJSONSchema(predictor variantJSONSchemaPredictor) VariantsParameter
 	}
 )
 
@@ -115,7 +118,7 @@ func (b *variantsParameter) Watch(watch ...*Watch) Parameter {
 	return b
 }
 
-func (b *variantsParameter) IfThenElseSchema(condition jsonschema.ConditionalSchema) Parameter {
-	b.base.ifThenElse = condition
+func (b *variantsParameter) WithConditionalJSONSchema(predictor variantJSONSchemaPredictor) VariantsParameter {
+	b.conditionalJSONSchemaPredictor = predictor
 	return b
 }

@@ -1,7 +1,5 @@
 package variables
 
-import "github.com/kaptinlin/jsonschema"
-
 type (
 	basicValueInputParameter[T string | int] struct {
 		base
@@ -70,11 +68,6 @@ func (b *basicValueInputParameter[T]) WithAdditionalRules(rules ...Rule) Paramet
 
 func (b *basicValueInputParameter[T]) Watch(watch ...*Watch) Parameter {
 	b.base.W = watch
-	return b
-}
-
-func (b *basicValueInputParameter[T]) IfThenElseSchema(condition jsonschema.ConditionalSchema) Parameter {
-	b.base.ifThenElse = condition
 	return b
 }
 

@@ -10,6 +10,12 @@ import (
 	"github.com/cisco-open/sprt/go-generator/sdk/json"
 )
 
+type (
+	JSONSchemaMarshaler interface {
+		ToJSONSchema() (any, error)
+	}
+)
+
 func parseArrayRules(m map[string]any, rules []Rule) {
 	if len(rules) == 0 {
 		return
@@ -41,18 +47,22 @@ func addProperties(m map[string]any, p []Parameter) {
 			for _, col := range c.Value {
 				addProperties(m, col)
 			}
-			continue
+
 		case paramFieldSet, paramCollapseSet:
 			fs := pr.(*fieldSet)
 			addProperties(m, fs.Fields)
+
 		case paramText, paramDivider:
 			continue
+
 		default:
 			b, err := pr.ToJSONSchema()
 			if err != nil {
 				log.Fatalf("Failed to convert parameters to json schema: %v", err)
 			}
-			m[pr.GetName()] = b
+			if b != nil {
+				m[pr.GetName()] = b
+			}
 		}
 	}
 }
@@ -164,15 +174,26 @@ func (b *variantsParameter) ToJSONSchema() (any, error) {
 		vv := v.(*variant)
 		option := make(map[string]any)
 		option["type"] = "object"
-		option["properties"] = make(map[string]any)
-		option["properties"].(map[string]any)["variant"] = map[string]any{
+		properties := make(map[string]any)
+		properties["variant"] = map[string]any{
 			"type":  "string",
 			"const": vv.Name,
 		}
 		option["additionalProperties"] = false
 		option["required"] = []string{"variant"}
 
-		addProperties(option["properties"].(map[string]any), vv.Fields)
+		addProperties(properties, vv.Fields)
+		if b.conditionalJSONSchemaPredictor != nil {
+			fields, err := b.conditionalJSONSchemaPredictor(vv.Name)
+			if err != nil {
+				return nil, err
+			}
+			if len(fields) > 0 {
+				addProperties(properties, fields)
+			}
+		}
+
+		option["properties"] = properties
 
 		options = append(options, option)
 	}
@@ -237,7 +258,7 @@ func (pb *ParametersBlock) ToJSONSchema() (j.RawMessage, error) {
 
 	m["type"] = "object"
 	m["additionalProperties"] = false
-	m["properties"] = make(map[string]any)
+	m["properties"] = make(map[string]any, len(pb.Parameters))
 
 	addProperties(m["properties"].(map[string]any), pb.Parameters)
 
@@ -259,6 +280,8 @@ func (pb *ParametersBlock) ToJSONSchema() (j.RawMessage, error) {
 		if un["else"] != nil {
 			m["else"] = un["else"]
 		}
+
+		m["additionalProperties"] = true
 	}
 
 	return json.Marshal(m)

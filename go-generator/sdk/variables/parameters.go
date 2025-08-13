@@ -9,7 +9,7 @@ import (
 
 type (
 	ParametersBlock struct {
-		IfThenElse *jsonschema.ConditionalSchema
+		IfThenElse *jsonschema.ConditionalSchema `json:"-"`
 
 		Title      string      `json:"title"`
 		Parameters ParamsSlice `json:"parameters"`
@@ -35,8 +35,8 @@ type (
 		SetAdvanced(advanced bool) Parameter
 		WithAdditionalRules(rules ...Rule) Parameter
 		Watch(watch ...*Watch) Parameter
-		ToJSONSchema() (any, error)
-		IfThenElseSchema(jsonschema.ConditionalSchema) Parameter
+
+		JSONSchemaMarshaler
 	}
 )
 

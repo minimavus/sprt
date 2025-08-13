@@ -3,6 +3,7 @@ import { batch } from "@legendapp/state";
 import { use$, useUnmount } from "@legendapp/state/react";
 import { Button, Group, Stack, Tabs } from "@mantine/core";
 import { IconSend } from "@tabler/icons-react";
+import { isAxiosError } from "axios";
 import { type FC, Suspense, useEffect, useMemo } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { Await, useAsyncValue, useLoaderData } from "react-router-dom";
@@ -12,7 +13,7 @@ import { DefaultLoaderFallback } from "@/components/Loader";
 import type { ProtoDefinition } from "@/hooks/generate/schemas";
 import { useStart } from "@/hooks/generate/useStart";
 import { useQueryUser } from "@/hooks/useQueryUser";
-import { log } from "@/utils/log";
+import { isJSONError } from "@/utils/errors";
 
 import type { LoaderData } from "../loader";
 import { cleanupRadiusAttributes, type RadiusForm } from "./form";
@@ -91,7 +92,17 @@ const RadiusGeneratePageLoaded: FC = () => {
       try {
         await mutateAsync(clean);
       } catch (err) {
-        log.warn(err, "Failed to start new generate job.");
+        if (isAxiosError(err) && isJSONError(err.response?.data)) {
+          const e = err.response.data;
+          if (e["invalid-params"]) {
+            for (const invalidParam of e["invalid-params"]) {
+              form.setError(invalidParam.name as any, {
+                type: "manual",
+                message: invalidParam.reason,
+              });
+            }
+          }
+        }
       }
     },
     (errors) => {

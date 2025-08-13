@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	"encoding/gob"
-	"fmt"
+	"net"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -30,7 +30,7 @@ func main() {
 		return c.JSON(http.StatusOK, map[string]string{"message": "Hello, from the golang World!"})
 	})
 
-	listen := fmt.Sprintf(":%s", app.Specs.Server.Port)
+	listen := net.JoinHostPort("", app.Specs.Server.Port)
 
 	var err error
 	if app.Specs.Server.TLS {

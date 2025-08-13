@@ -8,7 +8,7 @@ type InvalidParam = {
   reason: string;
 };
 
-type JSONError = {
+export type JSONError = {
   detail?: string;
   error?: string;
   instance?: string;
@@ -18,7 +18,7 @@ type JSONError = {
   "invalid-params"?: InvalidParam[];
 };
 
-function isJSONError(error: unknown): error is JSONError {
+export function isJSONError(error: unknown): error is JSONError {
   return (
     typeof error === "object" &&
     error !== null &&

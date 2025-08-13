@@ -271,6 +271,7 @@ func (m *controller) validateProtoSchema(u *auth.ExtendedUserData, proto string,
 
 		result := schema.ValidateMap(dataAsMap)
 		if !result.IsValid() {
+			result.InstanceLocation = pp.PropName
 			return result
 		}
 	}
@@ -285,9 +286,13 @@ func (m *controller) validateSchemaForLoadedServer(d *schemas.GenerateJSON) erro
 		return fmt.Errorf("failed to compile validation schema: %w", err)
 	}
 
-	result := coaCompiled.ValidateStruct(&d.Coa)
-	if !result.IsValid() {
-		return result
+	coa, ok := d.Other["coa"].(map[string]any)
+	if ok {
+		result := coaCompiled.ValidateMap(coa)
+		if !result.IsValid() {
+			result.InstanceLocation = "coa"
+			return result
+		}
 	}
 
 	guestSchema := variables.Guest.Schema.([]j.RawMessage)[0]
@@ -296,9 +301,13 @@ func (m *controller) validateSchemaForLoadedServer(d *schemas.GenerateJSON) erro
 		return fmt.Errorf("failed to compile validation schema: %w", err)
 	}
 
-	result = guestCompiled.ValidateStruct(&d.Guest)
-	if !result.IsValid() {
-		return result
+	guest, ok := d.Other["guest"].(map[string]any)
+	if ok {
+		result := guestCompiled.ValidateMap(guest)
+		if !result.IsValid() {
+			result.InstanceLocation = "guest"
+			return result
+		}
 	}
 
 	return nil

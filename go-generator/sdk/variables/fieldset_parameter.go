@@ -1,7 +1,5 @@
 package variables
 
-import "github.com/kaptinlin/jsonschema"
-
 type (
 	fieldSet struct {
 		base
@@ -57,10 +55,5 @@ func (b *fieldSet) WithFields(fields ...Parameter) FieldSetParameter {
 
 func (b *fieldSet) Watch(watch ...*Watch) Parameter {
 	b.base.W = watch
-	return b
-}
-
-func (b *fieldSet) IfThenElseSchema(condition jsonschema.ConditionalSchema) Parameter {
-	b.base.ifThenElse = condition
 	return b
 }

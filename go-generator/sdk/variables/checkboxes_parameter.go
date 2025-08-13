@@ -1,7 +1,5 @@
 package variables
 
-import "github.com/kaptinlin/jsonschema"
-
 type (
 	checkboxesParameter[T any] struct {
 		base
@@ -55,10 +53,5 @@ func (b *checkboxesParameter[T]) WithValues(values []T) CheckboxesParameter[T] {
 
 func (b *checkboxesParameter[T]) Watch(watch ...*Watch) Parameter {
 	b.base.W = watch
-	return b
-}
-
-func (b *checkboxesParameter[T]) IfThenElseSchema(condition jsonschema.ConditionalSchema) Parameter {
-	b.base.ifThenElse = condition
 	return b
 }

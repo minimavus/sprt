@@ -1,7 +1,5 @@
 package variables
 
-import "github.com/kaptinlin/jsonschema"
-
 type (
 	radioParameter struct {
 		base
@@ -44,10 +42,5 @@ func (b *radioParameter) WithAdditionalRules(rules ...Rule) Parameter {
 
 func (b *radioParameter) Watch(watch ...*Watch) Parameter {
 	b.base.W = watch
-	return b
-}
-
-func (b *radioParameter) IfThenElseSchema(condition jsonschema.ConditionalSchema) Parameter {
-	b.base.ifThenElse = condition
 	return b
 }

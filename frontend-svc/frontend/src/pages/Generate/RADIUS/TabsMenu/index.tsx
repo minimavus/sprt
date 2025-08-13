@@ -122,6 +122,7 @@ const CoAMenuItem: FC = () => {
 
 const GuestMenuItem: FC = () => {
   const server = useLoadedServer();
+  const state = useFormState<RadiusForm>();
 
   useEffect(() => {
     if (server?.coa) {
@@ -134,7 +135,16 @@ const GuestMenuItem: FC = () => {
   return (
     <AnimatePresence>
       {server?.coa ? (
-        <MotionedTab {...fadeInClampOut} value="guest">
+        <MotionedTab
+          {...fadeInClampOut}
+          value="guest"
+          key="guest"
+          rightSection={
+            (state.errors as any)?.guest ? (
+              <StatusIcon status="warning" size={14} />
+            ) : undefined
+          }
+        >
           Guest Flow
         </MotionedTab>
       ) : null}

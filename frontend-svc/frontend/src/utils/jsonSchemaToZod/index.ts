@@ -191,12 +191,12 @@ function createArraySchema(jsonSchema: JsonSchema7ArrayType): z.ZodType {
       jsonSchema.errorMessages?.maxItems,
     );
   }
-  if (jsonSchema.minItems !== undefined) {
-    schema = schema.min(
-      jsonSchema.minItems,
-      jsonSchema.errorMessages?.minItems,
-    );
-  }
+  // if (jsonSchema.minItems !== undefined) {
+  //   schema = schema.min(
+  //     jsonSchema.minItems,
+  //     jsonSchema.errorMessages?.minItems,
+  //   );
+  // }
   return schema;
 }
 
@@ -206,9 +206,9 @@ function createSetSchema(jsonSchema: JsonSchema7SetType): z.ZodType {
   if (jsonSchema.maxItems !== undefined) {
     schema = schema.max(jsonSchema.maxItems, jsonSchema.errorMessage?.maxItems);
   }
-  if (jsonSchema.minItems !== undefined) {
-    schema = schema.min(jsonSchema.minItems, jsonSchema.errorMessage?.minItems);
-  }
+  // if (jsonSchema.minItems !== undefined) {
+  //   schema = schema.min(jsonSchema.minItems, jsonSchema.errorMessage?.minItems);
+  // }
 
   return schema
     .check((ctx) => {

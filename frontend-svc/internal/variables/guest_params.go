@@ -1,6 +1,7 @@
 package variables
 
 import (
+	"log"
 	"strings"
 
 	"github.com/iancoleman/strcase"
@@ -9,6 +10,7 @@ import (
 	"golang.org/x/text/cases"
 	"golang.org/x/text/language"
 
+	"github.com/cisco-open/sprt/go-generator/sdk/json"
 	"github.com/cisco-open/sprt/go-generator/sdk/variables"
 	"github.com/cisco-open/sprt/go-generator/sdk/variables/dictionaries"
 )
@@ -23,7 +25,7 @@ var (
 				When(GuestFlowNone, variables.ActionHide(".userAgents")).
 				WhenNot(GuestFlowNone, variables.ActionShow(".userAgents")))
 
-	hotSpotParams = variables.NewVariant(GuestFlowHotspot).WithShort("Hotspot").
+	hotSpotParams = variables.NewVariant(GuestFlowHotSpot).WithShort("Hotspot").
 			WithField(
 			variables.NewInfoParameter("how_works", "Redirect to hotspot page for authentication is expected"),
 			variables.NewTextInputParameter("accessCode", "Access code", "").SetHint("Leave empty if not needed"),
@@ -31,7 +33,7 @@ var (
 				variables.NewColumnsParameter("fineTuneColumns").
 					WithColumn(variables.ParamsSlice{}.
 						With(variables.NewDivider().WithLabel("Conditions")).
-						With(getGuestFlowSuccessCondition(GuestFlowHotspot)).
+						With(getGuestFlowSuccessCondition(GuestFlowHotSpot)).
 						With(variables.NewDivider().WithLabel("Forms")).
 						With(variables.NewTextInputParameter("formName", "AUP form name", "aupForm"), guestTokenForm)...).
 					WithColumn(variables.ParamsSlice{}.
@@ -194,11 +196,9 @@ var (
 						withCredsParams,
 						selfRegParams,
 					),
-				uaDictionary,
+				variables.IgnoreJSONSchemaMarshal(uaDictionary),
 			},
-			IfThenElse: jsonschema.If(jsonschema.Object(
-				jsonschema.Prop("type", jsonschema.Const("premium")),
-			)),
+			IfThenElse: buildVariantsConditionalSchema(),
 		},
 	)
 
@@ -210,7 +210,7 @@ var (
 
 const (
 	GuestFlowNone      = "none"
-	GuestFlowHotspot   = "hotspot"
+	GuestFlowHotSpot   = "hotspot"
 	GuestFlowWithCreds = "with-creds"
 	GuestFlowSelfReg   = "self-reg"
 )
@@ -483,4 +483,30 @@ func guestSelfRegNames() []variables.Parameter {
 		res = append(res, variables.NewTextInputParameter("selfRegFields:"+fieldName, name+" field name", n))
 	}
 	return res
+}
+
+func buildVariantsConditionalSchema() *jsonschema.ConditionalSchema {
+	sc, err := uaDictionary.ToJSONSchema()
+	if err != nil {
+		log.Fatalf("Failed to convert uaDictionary to json schema: %v", err)
+	}
+	bytes, err := json.Marshal(sc)
+	if err != nil {
+		log.Fatalf("Failed to marshal uaDictionary to json schema: %v", err)
+	}
+	compiled, err := jsonschema.GetDefaultCompiler().Compile(bytes)
+	if err != nil {
+		log.Fatalf("Failed to compile uaDictionary to json schema: %v", err)
+	}
+
+	return jsonschema.If(
+		jsonschema.Object(
+			jsonschema.Prop("guestFlow", jsonschema.Object(
+				jsonschema.Prop("variant", jsonschema.Enum(GuestFlowSelfReg, GuestFlowWithCreds, GuestFlowHotSpot)),
+			)),
+		),
+	).Then(jsonschema.Object(
+		jsonschema.Prop("userAgents", compiled),
+		jsonschema.Required("userAgents"),
+	))
 }

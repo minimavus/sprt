@@ -1,0 +1,696 @@
+{
+  "details": [
+    {
+      "details": [
+        {
+          "details": [
+            {
+              "evaluationPath": "/properties/variant",
+              "instanceLocation": "/variant",
+              "schemaLocation": "#/properties/variant",
+              "valid": true
+            }
+          ],
+          "evaluationPath": "/properties/guestFlow",
+          "instanceLocation": "/guestFlow",
+          "schemaLocation": "#/properties/guestFlow",
+          "valid": true
+        }
+      ],
+      "evaluationPath": "/if",
+      "instanceLocation": "",
+      "schemaLocation": "#/if",
+      "valid": true
+    },
+    {
+      "details": [
+        {
+          "details": [
+            {
+              "evaluationPath": "/properties/allowRepeats",
+              "instanceLocation": "/allowRepeats",
+              "schemaLocation": "#/properties/allowRepeats",
+              "valid": true
+            },
+            {
+              "evaluationPath": "/properties/dictionaries",
+              "instanceLocation": "/dictionaries",
+              "schemaLocation": "#/properties/dictionaries",
+              "valid": true
+            },
+            {
+              "evaluationPath": "/properties/select",
+              "instanceLocation": "/select",
+              "schemaLocation": "#/properties/select",
+              "valid": true
+            }
+          ],
+          "evaluationPath": "/properties/userAgents",
+          "instanceLocation": "/userAgents",
+          "schemaLocation": "#/properties/userAgents",
+          "valid": true
+        }
+      ],
+      "evaluationPath": "/then",
+      "instanceLocation": "",
+      "schemaLocation": "#/then",
+      "valid": true
+    },
+    {
+      "details": [
+        {
+          "details": [
+            {
+              "errors": {
+                "const": {
+                  "code": "const_mismatch",
+                  "keyword": "const",
+                  "message": "Value does not match the constant value",
+                  "params": null
+                }
+              },
+              "evaluationPath": "/properties/variant",
+              "instanceLocation": "/variant",
+              "schemaLocation": "#/properties/variant",
+              "valid": false
+            },
+            {
+              "errors": {
+                "schema": {
+                  "code": "false_schema_mismatch",
+                  "keyword": "schema",
+                  "message": "No values are allowed because the schema is set to 'false'",
+                  "params": null
+                }
+              },
+              "evaluationPath": "/additionalProperties/loginFields:accessCode",
+              "instanceLocation": "/loginFields:accessCode",
+              "schemaLocation": "#/additionalProperties/loginFields:accessCode",
+              "valid": false
+            },
+            {
+              "errors": {
+                "schema": {
+                  "code": "false_schema_mismatch",
+                  "keyword": "schema",
+                  "message": "No values are allowed because the schema is set to 'false'",
+                  "params": null
+                }
+              },
+              "evaluationPath": "/additionalProperties/loginFields:password",
+              "instanceLocation": "/loginFields:password",
+              "schemaLocation": "#/additionalProperties/loginFields:password",
+              "valid": false
+            },
+            {
+              "errors": {
+                "schema": {
+                  "code": "false_schema_mismatch",
+                  "keyword": "schema",
+                  "message": "No values are allowed because the schema is set to 'false'",
+                  "params": null
+                }
+              },
+              "evaluationPath": "/additionalProperties/loginFormName",
+              "instanceLocation": "/loginFormName",
+              "schemaLocation": "#/additionalProperties/loginFormName",
+              "valid": false
+            },
+            {
+              "errors": {
+                "schema": {
+                  "code": "false_schema_mismatch",
+                  "keyword": "schema",
+                  "message": "No values are allowed because the schema is set to 'false'",
+                  "params": null
+                }
+              },
+              "evaluationPath": "/additionalProperties/successCondition",
+              "instanceLocation": "/successCondition",
+              "schemaLocation": "#/additionalProperties/successCondition",
+              "valid": false
+            },
+            {
+              "errors": {
+                "schema": {
+                  "code": "false_schema_mismatch",
+                  "keyword": "schema",
+                  "message": "No values are allowed because the schema is set to 'false'",
+                  "params": null
+                }
+              },
+              "evaluationPath": "/additionalProperties/aupFormName",
+              "instanceLocation": "/aupFormName",
+              "schemaLocation": "#/additionalProperties/aupFormName",
+              "valid": false
+            },
+            {
+              "errors": {
+                "schema": {
+                  "code": "false_schema_mismatch",
+                  "keyword": "schema",
+                  "message": "No values are allowed because the schema is set to 'false'",
+                  "params": null
+                }
+              },
+              "evaluationPath": "/additionalProperties/loginFields:username",
+              "instanceLocation": "/loginFields:username",
+              "schemaLocation": "#/additionalProperties/loginFields:username",
+              "valid": false
+            },
+            {
+              "errors": {
+                "schema": {
+                  "code": "false_schema_mismatch",
+                  "keyword": "schema",
+                  "message": "No values are allowed because the schema is set to 'false'",
+                  "params": null
+                }
+              },
+              "evaluationPath": "/additionalProperties/tokenFormName",
+              "instanceLocation": "/tokenFormName",
+              "schemaLocation": "#/additionalProperties/tokenFormName",
+              "valid": false
+            },
+            {
+              "errors": {
+                "schema": {
+                  "code": "false_schema_mismatch",
+                  "keyword": "schema",
+                  "message": "No values are allowed because the schema is set to 'false'",
+                  "params": null
+                }
+              },
+              "evaluationPath": "/additionalProperties/accessCode",
+              "instanceLocation": "/accessCode",
+              "schemaLocation": "#/additionalProperties/accessCode",
+              "valid": false
+            },
+            {
+              "errors": {
+                "schema": {
+                  "code": "false_schema_mismatch",
+                  "keyword": "schema",
+                  "message": "No values are allowed because the schema is set to 'false'",
+                  "params": null
+                }
+              },
+              "evaluationPath": "/additionalProperties/credentials",
+              "instanceLocation": "/credentials",
+              "schemaLocation": "#/additionalProperties/credentials",
+              "valid": false
+            }
+          ],
+          "errors": {
+            "additionalProperties": {
+              "code": "additional_properties_mismatch",
+              "keyword": "additionalProperties",
+              "message": "Additional properties {properties} do not match the schema",
+              "params": {
+                "properties": "'loginFields:accessCode', 'loginFields:password', 'loginFormName', 'successCondition', 'aupFormName', 'loginFields:username', 'tokenFormName', 'accessCode', 'credentials'"
+              }
+            },
+            "properties": {
+              "code": "property_mismatch",
+              "keyword": "properties",
+              "message": "Property {property} does not match the schema",
+              "params": { "property": "'variant'" }
+            }
+          },
+          "evaluationPath": "/anyOf/0",
+          "instanceLocation": "",
+          "schemaLocation": "#/anyOf/0",
+          "valid": false
+        },
+        {
+          "details": [
+            {
+              "evaluationPath": "/properties/successCondition",
+              "instanceLocation": "/successCondition",
+              "schemaLocation": "#/properties/successCondition",
+              "valid": true
+            },
+            {
+              "evaluationPath": "/properties/tokenFormName",
+              "instanceLocation": "/tokenFormName",
+              "schemaLocation": "#/properties/tokenFormName",
+              "valid": true
+            },
+            {
+              "errors": {
+                "const": {
+                  "code": "const_mismatch",
+                  "keyword": "const",
+                  "message": "Value does not match the constant value",
+                  "params": null
+                }
+              },
+              "evaluationPath": "/properties/variant",
+              "instanceLocation": "/variant",
+              "schemaLocation": "#/properties/variant",
+              "valid": false
+            },
+            {
+              "evaluationPath": "/properties/accessCode",
+              "instanceLocation": "/accessCode",
+              "schemaLocation": "#/properties/accessCode",
+              "valid": true
+            },
+            {
+              "errors": {
+                "schema": {
+                  "code": "false_schema_mismatch",
+                  "keyword": "schema",
+                  "message": "No values are allowed because the schema is set to 'false'",
+                  "params": null
+                }
+              },
+              "evaluationPath": "/additionalProperties/loginFormName",
+              "instanceLocation": "/loginFormName",
+              "schemaLocation": "#/additionalProperties/loginFormName",
+              "valid": false
+            },
+            {
+              "errors": {
+                "schema": {
+                  "code": "false_schema_mismatch",
+                  "keyword": "schema",
+                  "message": "No values are allowed because the schema is set to 'false'",
+                  "params": null
+                }
+              },
+              "evaluationPath": "/additionalProperties/aupFormName",
+              "instanceLocation": "/aupFormName",
+              "schemaLocation": "#/additionalProperties/aupFormName",
+              "valid": false
+            },
+            {
+              "errors": {
+                "schema": {
+                  "code": "false_schema_mismatch",
+                  "keyword": "schema",
+                  "message": "No values are allowed because the schema is set to 'false'",
+                  "params": null
+                }
+              },
+              "evaluationPath": "/additionalProperties/loginFields:username",
+              "instanceLocation": "/loginFields:username",
+              "schemaLocation": "#/additionalProperties/loginFields:username",
+              "valid": false
+            },
+            {
+              "errors": {
+                "schema": {
+                  "code": "false_schema_mismatch",
+                  "keyword": "schema",
+                  "message": "No values are allowed because the schema is set to 'false'",
+                  "params": null
+                }
+              },
+              "evaluationPath": "/additionalProperties/credentials",
+              "instanceLocation": "/credentials",
+              "schemaLocation": "#/additionalProperties/credentials",
+              "valid": false
+            },
+            {
+              "errors": {
+                "schema": {
+                  "code": "false_schema_mismatch",
+                  "keyword": "schema",
+                  "message": "No values are allowed because the schema is set to 'false'",
+                  "params": null
+                }
+              },
+              "evaluationPath": "/additionalProperties/loginFields:accessCode",
+              "instanceLocation": "/loginFields:accessCode",
+              "schemaLocation": "#/additionalProperties/loginFields:accessCode",
+              "valid": false
+            },
+            {
+              "errors": {
+                "schema": {
+                  "code": "false_schema_mismatch",
+                  "keyword": "schema",
+                  "message": "No values are allowed because the schema is set to 'false'",
+                  "params": null
+                }
+              },
+              "evaluationPath": "/additionalProperties/loginFields:password",
+              "instanceLocation": "/loginFields:password",
+              "schemaLocation": "#/additionalProperties/loginFields:password",
+              "valid": false
+            }
+          ],
+          "errors": {
+            "additionalProperties": {
+              "code": "additional_properties_mismatch",
+              "keyword": "additionalProperties",
+              "message": "Additional properties {properties} do not match the schema",
+              "params": {
+                "properties": "'loginFormName', 'aupFormName', 'loginFields:username', 'credentials', 'loginFields:accessCode', 'loginFields:password'"
+              }
+            },
+            "properties": {
+              "code": "property_mismatch",
+              "keyword": "properties",
+              "message": "Property {property} does not match the schema",
+              "params": { "property": "'variant'" }
+            }
+          },
+          "evaluationPath": "/anyOf/1",
+          "instanceLocation": "",
+          "schemaLocation": "#/anyOf/1",
+          "valid": false
+        },
+        {
+          "details": [
+            {
+              "details": [
+                {
+                  "details": [
+                    {
+                      "errors": {
+                        "const": {
+                          "code": "const_mismatch",
+                          "keyword": "const",
+                          "message": "Value does not match the constant value",
+                          "params": null
+                        }
+                      },
+                      "evaluationPath": "/properties/variant",
+                      "instanceLocation": "/variant",
+                      "schemaLocation": "#/properties/variant",
+                      "valid": false
+                    },
+                    {
+                      "errors": {
+                        "schema": {
+                          "code": "false_schema_mismatch",
+                          "keyword": "schema",
+                          "message": "No values are allowed because the schema is set to 'false'",
+                          "params": null
+                        }
+                      },
+                      "evaluationPath": "/additionalProperties/credentialsDictionary",
+                      "instanceLocation": "/credentialsDictionary",
+                      "schemaLocation": "#/additionalProperties/credentialsDictionary",
+                      "valid": false
+                    }
+                  ],
+                  "errors": {
+                    "additionalProperties": {
+                      "code": "additional_property_mismatch",
+                      "keyword": "additionalProperties",
+                      "message": "Additional property {property} does not match the schema",
+                      "params": { "property": "'credentialsDictionary'" }
+                    },
+                    "properties": {
+                      "code": "property_mismatch",
+                      "keyword": "properties",
+                      "message": "Property {property} does not match the schema",
+                      "params": { "property": "'variant'" }
+                    }
+                  },
+                  "evaluationPath": "/anyOf/0",
+                  "instanceLocation": "",
+                  "schemaLocation": "#/anyOf/0",
+                  "valid": false
+                },
+                {
+                  "details": [
+                    {
+                      "details": [
+                        {
+                          "evaluationPath": "/properties/allowRepeats",
+                          "instanceLocation": "/allowRepeats",
+                          "schemaLocation": "#/properties/allowRepeats",
+                          "valid": true
+                        },
+                        {
+                          "errors": {
+                            "minItems": {
+                              "code": "items_too_short",
+                              "keyword": "minItems",
+                              "message": "Value should have at least {min_items} items",
+                              "params": { "count": 0, "min_items": 1 }
+                            }
+                          },
+                          "evaluationPath": "/properties/dictionaries",
+                          "instanceLocation": "/dictionaries",
+                          "schemaLocation": "#/properties/dictionaries",
+                          "valid": false
+                        },
+                        {
+                          "evaluationPath": "/properties/select",
+                          "instanceLocation": "/select",
+                          "schemaLocation": "#/properties/select",
+                          "valid": true
+                        }
+                      ],
+                      "errors": {
+                        "properties": {
+                          "code": "property_mismatch",
+                          "keyword": "properties",
+                          "message": "Property {property} does not match the schema",
+                          "params": { "property": "'dictionaries'" }
+                        }
+                      },
+                      "evaluationPath": "/properties/credentialsDictionary",
+                      "instanceLocation": "/credentialsDictionary",
+                      "schemaLocation": "#/properties/credentialsDictionary",
+                      "valid": false
+                    },
+                    {
+                      "evaluationPath": "/properties/variant",
+                      "instanceLocation": "/variant",
+                      "schemaLocation": "#/properties/variant",
+                      "valid": true
+                    }
+                  ],
+                  "errors": {
+                    "properties": {
+                      "code": "property_mismatch",
+                      "keyword": "properties",
+                      "message": "Property {property} does not match the schema",
+                      "params": { "property": "'credentialsDictionary'" }
+                    }
+                  },
+                  "evaluationPath": "/anyOf/1",
+                  "instanceLocation": "",
+                  "schemaLocation": "#/anyOf/1",
+                  "valid": false
+                }
+              ],
+              "errors": {
+                "anyOf": {
+                  "code": "any_of_item_mismatch",
+                  "keyword": "anyOf",
+                  "message": "Value does not match anyOf schema",
+                  "params": null
+                }
+              },
+              "evaluationPath": "/properties/credentials",
+              "instanceLocation": "/credentials",
+              "schemaLocation": "#/properties/credentials",
+              "valid": false
+            },
+            {
+              "evaluationPath": "/properties/loginFields:password",
+              "instanceLocation": "/loginFields:password",
+              "schemaLocation": "#/properties/loginFields:password",
+              "valid": true
+            },
+            {
+              "evaluationPath": "/properties/loginFields:username",
+              "instanceLocation": "/loginFields:username",
+              "schemaLocation": "#/properties/loginFields:username",
+              "valid": true
+            },
+            {
+              "evaluationPath": "/properties/successCondition",
+              "instanceLocation": "/successCondition",
+              "schemaLocation": "#/properties/successCondition",
+              "valid": true
+            },
+            {
+              "evaluationPath": "/properties/tokenFormName",
+              "instanceLocation": "/tokenFormName",
+              "schemaLocation": "#/properties/tokenFormName",
+              "valid": true
+            },
+            {
+              "evaluationPath": "/properties/variant",
+              "instanceLocation": "/variant",
+              "schemaLocation": "#/properties/variant",
+              "valid": true
+            },
+            {
+              "evaluationPath": "/properties/accessCode",
+              "instanceLocation": "/accessCode",
+              "schemaLocation": "#/properties/accessCode",
+              "valid": true
+            },
+            {
+              "evaluationPath": "/properties/aupFormName",
+              "instanceLocation": "/aupFormName",
+              "schemaLocation": "#/properties/aupFormName",
+              "valid": true
+            },
+            {
+              "evaluationPath": "/properties/loginFields:accessCode",
+              "instanceLocation": "/loginFields:accessCode",
+              "schemaLocation": "#/properties/loginFields:accessCode",
+              "valid": true
+            },
+            {
+              "evaluationPath": "/properties/loginFormName",
+              "instanceLocation": "/loginFormName",
+              "schemaLocation": "#/properties/loginFormName",
+              "valid": true
+            }
+          ],
+          "errors": {
+            "properties": {
+              "code": "property_mismatch",
+              "keyword": "properties",
+              "message": "Property {property} does not match the schema",
+              "params": { "property": "'credentials'" }
+            }
+          },
+          "evaluationPath": "/anyOf/2",
+          "instanceLocation": "",
+          "schemaLocation": "#/anyOf/2",
+          "valid": false
+        },
+        {
+          "details": [
+            {
+              "evaluationPath": "/properties/tokenFormName",
+              "instanceLocation": "/tokenFormName",
+              "schemaLocation": "#/properties/tokenFormName",
+              "valid": true
+            },
+            {
+              "evaluationPath": "/properties/aupFormName",
+              "instanceLocation": "/aupFormName",
+              "schemaLocation": "#/properties/aupFormName",
+              "valid": true
+            },
+            {
+              "evaluationPath": "/properties/loginFields:accessCode",
+              "instanceLocation": "/loginFields:accessCode",
+              "schemaLocation": "#/properties/loginFields:accessCode",
+              "valid": true
+            },
+            {
+              "evaluationPath": "/properties/successCondition",
+              "instanceLocation": "/successCondition",
+              "schemaLocation": "#/properties/successCondition",
+              "valid": true
+            },
+            {
+              "errors": {
+                "const": {
+                  "code": "const_mismatch",
+                  "keyword": "const",
+                  "message": "Value does not match the constant value",
+                  "params": null
+                }
+              },
+              "evaluationPath": "/properties/variant",
+              "instanceLocation": "/variant",
+              "schemaLocation": "#/properties/variant",
+              "valid": false
+            },
+            {
+              "evaluationPath": "/properties/accessCode",
+              "instanceLocation": "/accessCode",
+              "schemaLocation": "#/properties/accessCode",
+              "valid": true
+            },
+            {
+              "evaluationPath": "/properties/loginFields:username",
+              "instanceLocation": "/loginFields:username",
+              "schemaLocation": "#/properties/loginFields:username",
+              "valid": true
+            },
+            {
+              "evaluationPath": "/properties/loginFormName",
+              "instanceLocation": "/loginFormName",
+              "schemaLocation": "#/properties/loginFormName",
+              "valid": true
+            },
+            {
+              "evaluationPath": "/properties/loginFields:password",
+              "instanceLocation": "/loginFields:password",
+              "schemaLocation": "#/properties/loginFields:password",
+              "valid": true
+            },
+            {
+              "errors": {
+                "schema": {
+                  "code": "false_schema_mismatch",
+                  "keyword": "schema",
+                  "message": "No values are allowed because the schema is set to 'false'",
+                  "params": null
+                }
+              },
+              "evaluationPath": "/additionalProperties/credentials",
+              "instanceLocation": "/credentials",
+              "schemaLocation": "#/additionalProperties/credentials",
+              "valid": false
+            }
+          ],
+          "errors": {
+            "additionalProperties": {
+              "code": "additional_property_mismatch",
+              "keyword": "additionalProperties",
+              "message": "Additional property {property} does not match the schema",
+              "params": { "property": "'credentials'" }
+            },
+            "properties": {
+              "code": "property_mismatch",
+              "keyword": "properties",
+              "message": "Property {property} does not match the schema",
+              "params": { "property": "'variant'" }
+            }
+          },
+          "evaluationPath": "/anyOf/3",
+          "instanceLocation": "",
+          "schemaLocation": "#/anyOf/3",
+          "valid": false
+        }
+      ],
+      "errors": {
+        "anyOf": {
+          "code": "any_of_item_mismatch",
+          "keyword": "anyOf",
+          "message": "Value does not match anyOf schema",
+          "params": null
+        }
+      },
+      "evaluationPath": "/properties/guestFlow",
+      "instanceLocation": "/guestFlow",
+      "schemaLocation": "#/properties/guestFlow",
+      "valid": false
+    },
+    {
+      "evaluationPath": "/additionalProperties/userAgents",
+      "instanceLocation": "/userAgents",
+      "schemaLocation": "#/additionalProperties/userAgents",
+      "valid": true
+    }
+  ],
+  "errors": {
+    "properties": {
+      "code": "property_mismatch",
+      "keyword": "properties",
+      "message": "Property {property} does not match the schema",
+      "params": { "property": "'guestFlow'" }
+    }
+  },
+  "evaluationPath": "",
+  "instanceLocation": "",
+  "schemaLocation": "",
+  "valid": false
+}

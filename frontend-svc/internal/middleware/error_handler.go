@@ -116,10 +116,11 @@ func NewErrorHandler(app shared.Logger) echo.HTTPErrorHandler {
 		if he.Internal != nil {
 			switch v := he.Internal.(type) {
 			case *jsonschema.EvaluationResult:
-				for f, e := range v.Errors {
+				failedPaths := errors.FindFailedPath(v)
+				for _, err := range failedPaths {
 					message.AddInvalidParam(InvalidParam{
-						Name:   f,
-						Reason: e.Error(),
+						Name:   err.Path,
+						Reason: err.Message,
 					})
 				}
 			default:
