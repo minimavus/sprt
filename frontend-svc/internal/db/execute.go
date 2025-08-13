@@ -6,6 +6,7 @@ import (
 	"github.com/volatiletech/sqlboiler/v4/queries/qm"
 
 	"github.com/cisco-open/sprt/frontend-svc/shared"
+	"github.com/cisco-open/sprt/go-generator/specs"
 )
 
 type (
@@ -81,7 +82,7 @@ func Exec(app shared.LogDB) Executor {
 	return &execute{
 		db:                    app.DB(),
 		l:                     app,
-		maxParamsPerStatement: app.(interface{ DBSpec() Specs }).DBSpec().MaxParamsPerStatement,
+		maxParamsPerStatement: app.(interface{ DBSpec() specs.DBSpecs }).DBSpec().MaxParamsPerStatement,
 	}
 }
 

@@ -60,3 +60,7 @@ generator:
   radius:
     max-retransmits: 5
     max-timeout: 60
+
+queue:
+  nats:
+    url: nats://<HOST>:<PORT>

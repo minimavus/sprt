@@ -8,6 +8,7 @@ import (
 
 	"github.com/cisco-open/sprt/frontend-svc/internal/db"
 	"github.com/cisco-open/sprt/frontend-svc/shared"
+	"github.com/cisco-open/sprt/go-generator/specs"
 )
 
 var _ shared.DBer = (*AppConfig)(nil)
@@ -32,7 +33,7 @@ func (app *AppConfig) DB() *sql.DB {
 	return app.db
 }
 
-func (app *AppConfig) DBSpec() db.Specs {
+func (app *AppConfig) DBSpec() specs.DBSpecs {
 	s := app.Specs.DB
 	return s
 }

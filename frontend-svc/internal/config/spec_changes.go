@@ -9,6 +9,7 @@ import (
 
 	"github.com/cisco-open/sprt/frontend-svc/internal/db"
 	"github.com/cisco-open/sprt/frontend-svc/shared"
+	"github.com/cisco-open/sprt/go-generator/specs"
 )
 
 var _ shared.SpecSetter = (*AppConfig)(nil)
@@ -92,12 +93,12 @@ func (app *AppConfig) SetSpec(ctx context.Context, key string, value any, opts .
 		if !shouldRevert {
 			return
 		}
-		err = app.Specs.setSpec(key, oldValue)
-	}(app.Specs.getSpec(key))
+		err = app.Specs.SetSpec(key, oldValue)
+	}(app.Specs.GetSpec(key))
 
-	err = app.Specs.setSpec(key, value)
+	err = app.Specs.SetSpec(key, value)
 	if err != nil {
-		if !o.AllowDbOnly || !errors.Is(err, ErrFieldNotFound) {
+		if !o.AllowDbOnly || !errors.Is(err, specs.ErrFieldNotFound) {
 			return
 		}
 	}
@@ -118,7 +119,7 @@ func (app *AppConfig) SetSpec(ctx context.Context, key string, value any, opts .
 }
 
 func (app *AppConfig) GetSpec(ctx context.Context, key string) (any, bool) {
-	v, ok := app.Specs.querySpec(key)
+	v, ok := app.Specs.QuerySpec(key)
 	if ok {
 		return v, true
 	}
@@ -144,7 +145,7 @@ func (app *AppConfig) GetSpecs(_ context.Context, keys ...string) (map[string]an
 	missingKeys := make([]string, 0)
 	configs := make(map[string]any, len(keys))
 	for _, k := range keys {
-		v, ok := app.Specs.querySpec(k)
+		v, ok := app.Specs.QuerySpec(k)
 		if ok {
 			configs[k] = v
 			continue

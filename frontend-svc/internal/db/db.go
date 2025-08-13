@@ -6,11 +6,13 @@ import (
 	"fmt"
 	"time"
 
-	_ "github.com/lib/pq"
+	_ "github.com/lib/pq" // load pq driver
 	"github.com/rs/zerolog/log"
+
+	"github.com/cisco-open/sprt/go-generator/specs"
 )
 
-func NewSQL(ctx context.Context, cfg Specs) (*sql.DB, error) {
+func NewSQL(ctx context.Context, cfg specs.DBSpecs) (*sql.DB, error) {
 	db, err := sql.Open("postgres", cfg.GetDSN())
 	if err != nil {
 		return nil, fmt.Errorf("create db conn: %w", err)
@@ -25,7 +27,7 @@ func NewSQL(ctx context.Context, cfg Specs) (*sql.DB, error) {
 	return db, nil
 }
 
-func PingConnection(ctx context.Context, cfg *Specs, pinger func(ctx context.Context) error) error {
+func PingConnection(ctx context.Context, cfg *specs.DBSpecs, pinger func(ctx context.Context) error) error {
 	ticker := time.NewTicker(cfg.ConnTimeout)
 	defer ticker.Stop()
 

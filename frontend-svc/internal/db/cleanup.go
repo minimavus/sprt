@@ -47,25 +47,25 @@ func (e *execute) GetOrphanFlowsByProto(ctx context.Context, proto models.Protos
 		idsFromFlows = append(idsFromFlows, int(f.SessionID))
 	}
 
-	type sessId struct {
-		Id int64 `boil:"id" json:"id" toml:"id" yaml:"id"`
+	type sessID struct {
+		ID int64 `boil:"id" json:"id" toml:"id" yaml:"id"`
 	}
 
-	distIdsStruct := []*sessId{}
+	distIDsStruct := []*sessID{}
 	err = models.NewQuery(
 		qm.Select(`DISTINCT "id"`),
 		qm.From(sessionsTable(proto)),
-	).Bind(ctx, e.db, &distIdsStruct)
+	).Bind(ctx, e.db, &distIDsStruct)
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
 		return nil, err
 	}
 
-	distIds := make([]int, 0, len(distIdsStruct))
-	for _, f := range distIdsStruct {
-		distIds = append(distIds, int(f.Id))
+	distIDs := make([]int, 0, len(distIDsStruct))
+	for _, f := range distIDsStruct {
+		distIDs = append(distIDs, int(f.ID))
 	}
 
-	orph, _ := lo.Difference(idsFromFlows, distIds)
+	orph, _ := lo.Difference(idsFromFlows, distIDs)
 
 	return orph, nil
 }
@@ -115,14 +115,14 @@ func (e *execute) DeleteFlows(ctx context.Context, ids ...int) (int64, error) {
 
 	step := e.getMaxParamsPerStatement()
 	for i < len(ids) {
-		var chunkIds []int
+		var chunkIDs []int
 		if i+step < len(ids) {
-			chunkIds = ids[i : i+step]
+			chunkIDs = ids[i : i+step]
 		} else {
-			chunkIds = ids[i:]
+			chunkIDs = ids[i:]
 		}
 
-		chunkDeleted, err := models.Flows(models.FlowWhere.SessionID.IN(chunkIds)).DeleteAll(ctx, e.db)
+		chunkDeleted, err := models.Flows(models.FlowWhere.SessionID.IN(chunkIDs)).DeleteAll(ctx, e.db)
 		if err != nil {
 			return total, err
 		}
@@ -172,17 +172,17 @@ func (e *execute) GetOldSessionIdsPerProto(ctx context.Context, proto models.Pro
 		q = append(q, qm.Limit(limit[0]))
 	}
 
-	type protoSessionId struct {
-		Id int `boil:"id" json:"id"`
+	type protoSessionID struct {
+		ID int `boil:"id" json:"id"`
 	}
-	result := []protoSessionId{}
+	result := []protoSessionID{}
 	err := models.NewQuery(q...).Bind(ctx, e.db, &result)
 
 	if err != nil {
 		return nil, noErrorIfNoRows(err)
 	}
 
-	return lo.Map(result, func(v protoSessionId, _ int) int { return v.Id }), nil
+	return lo.Map(result, func(v protoSessionID, _ int) int { return v.ID }), nil
 }
 
 func (e *execute) GetOldSessionsPerOwner(ctx context.Context, d time.Duration) (map[models.Protos][]ProtoSessionPerOwner, error) {
@@ -311,14 +311,14 @@ func (e *execute) DeleteCLIs(ctx context.Context, ids ...string) (int64, error) 
 
 	step := e.getMaxParamsPerStatement()
 	for i < len(ids) {
-		var chunkIds []string
+		var chunkIDs []string
 		if i+step < len(ids) {
-			chunkIds = ids[i : i+step]
+			chunkIDs = ids[i : i+step]
 		} else {
-			chunkIds = ids[i:]
+			chunkIDs = ids[i:]
 		}
 
-		chunkDeleted, err := models.Clis(models.CliWhere.ID.IN(chunkIds)).DeleteAll(ctx, e.db)
+		chunkDeleted, err := models.Clis(models.CliWhere.ID.IN(chunkIDs)).DeleteAll(ctx, e.db)
 		if err != nil {
 			return total, err
 		}

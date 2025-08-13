@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/cisco-open/sprt/go-generator/specs"
 	"github.com/rs/zerolog"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -20,7 +21,7 @@ import (
 type PXGridClient struct {
 	cl pxgrider_proto.PxgriderServiceClient
 
-	cfg   PXGriderSpecs
+	cfg   specs.PXGriderSpecs
 	l     *zerolog.Logger
 	conn  *grpc.ClientConn
 	hlCln healthgrpc.HealthClient
@@ -37,7 +38,7 @@ const (
 	}`
 )
 
-func NewPXGridClient(cfg PXGriderSpecs, logger *zerolog.Logger) *PXGridClient {
+func NewPXGridClient(cfg specs.PXGriderSpecs, logger *zerolog.Logger) *PXGridClient {
 	return &PXGridClient{
 		cfg: cfg,
 		l:   logger,

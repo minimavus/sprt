@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/cisco-open/sprt/frontend-svc/shared"
+	"github.com/cisco-open/sprt/go-generator/specs"
 	"github.com/go-co-op/gocron/v2"
 )
 
@@ -22,21 +23,21 @@ type (
 	}
 
 	CleanerStatus struct {
-		Config Specs       `json:"config"`
-		Runs   CleanerRuns `json:"runs"`
+		Config specs.CleanerSpecs `json:"config"`
+		Runs   CleanerRuns        `json:"runs"`
 	}
 
 	cleaner struct {
 		app shared.LogDB
 		s   gocron.Scheduler
 		j   gocron.Job
-		cfg Specs
+		cfg specs.CleanerSpecs
 	}
 )
 
 const sessionCleanupTag = "session-cleanup"
 
-func NewCleaner(app shared.LogDB, cfg Specs) (*cleaner, error) {
+func NewCleaner(app shared.LogDB, cfg specs.CleanerSpecs) (*cleaner, error) {
 	s, err := gocron.NewScheduler(
 		gocron.WithLogger(&cronLogger{app.Logger()}),
 	)

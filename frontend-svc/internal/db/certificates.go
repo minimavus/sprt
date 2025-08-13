@@ -235,11 +235,11 @@ func (e *execute) UpsertTemplate(ctx context.Context, template *models.Template)
 	}
 
 	if template.ID == "" {
-		newId, err := uuid.NewV7()
+		newID, err := uuid.NewV7()
 		if err != nil {
 			return fmt.Errorf("failed to generate new ID: %w", err)
 		}
-		template.ID = newId.String()
+		template.ID = newID.String()
 
 		return template.Insert(ctx, e.db, boil.Infer())
 	}

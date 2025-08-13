@@ -1,4 +1,4 @@
-package db
+package specs
 
 import (
 	"net"
@@ -8,7 +8,7 @@ import (
 )
 
 type (
-	Specs struct {
+	DBSpecs struct {
 		ConnRetry             int           `default:"1"`
 		ConnTimeout           time.Duration `default:"1m"`
 		SSLMode               string
@@ -22,7 +22,7 @@ type (
 	}
 )
 
-func (cfg Specs) GetDSN() string { // nolint:gocritic
+func (cfg DBSpecs) GetDSN() string {
 	query := make(url.Values)
 	if cfg.SSLMode != "" {
 		query.Set("sslmode", cfg.SSLMode)

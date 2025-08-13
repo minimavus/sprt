@@ -1,4 +1,4 @@
-package generator
+package specs
 
 type (
 	Matcher func(string) bool
@@ -27,7 +27,7 @@ type (
 		MaxTimeout     int `env:"RADIUS_MAX_TIMEOUT" default:"60"`
 	}
 
-	Specs struct {
+	GeneratorSpecs struct {
 		FreeRadiusDictionariesPath string `env:"FREE_RADIUS_DICTIONARIES_PATH"`
 		SourceIP                   SourceIP
 		MaxVarTries                int `env:"MAX_VAR_TRIES" default:"10000"`

@@ -6,17 +6,20 @@ import (
 	"flag"
 	"os"
 
-	"github.com/cisco-open/sprt/frontend-svc/internal/cleaner"
-	"github.com/cisco-open/sprt/frontend-svc/internal/generator"
-	"github.com/cisco-open/sprt/frontend-svc/internal/pxgrid"
 	"github.com/gorilla/sessions"
 	"github.com/joho/godotenv"
 	"github.com/rs/zerolog"
+
+	"github.com/cisco-open/sprt/frontend-svc/internal/cleaner"
+	"github.com/cisco-open/sprt/frontend-svc/internal/generator"
+	"github.com/cisco-open/sprt/frontend-svc/internal/pxgrid"
+	"github.com/cisco-open/sprt/frontend-svc/internal/queue"
+	"github.com/cisco-open/sprt/go-generator/specs"
 )
 
 type AppConfig struct {
 	SessionStore sessions.Store
-	Specs        Specs
+	Specs        specs.Specs
 
 	cleaner   cleaner.Cleaner
 	generator generator.Generator
@@ -24,6 +27,7 @@ type AppConfig struct {
 	db        *sql.DB
 	n         *notifier
 	px        *pxgrid.PXGridClient
+	queue     *queue.QueueClient
 }
 
 func LoadConfig(ctx context.Context) *AppConfig {
@@ -41,7 +45,8 @@ func LoadConfig(ctx context.Context) *AppConfig {
 		mustInitSessionStore().
 		mustInitCleaner().
 		initPxGridClient().
-		mustInitGenerator()
+		mustInitGenerator().
+		mustInitQueue()
 
 	if err := a.syncWithDb(ctx); err != nil {
 		panic(err)

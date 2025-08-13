@@ -1,3 +1,3 @@
 module github.com/cisco-open/sprt/go-generator/generator
 
-go 1.24
+go 1.25

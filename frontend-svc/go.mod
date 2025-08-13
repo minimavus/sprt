@@ -1,6 +1,6 @@
 module github.com/cisco-open/sprt/frontend-svc
 
-go 1.24.0
+go 1.25
 
 require (
 	github.com/aohorodnyk/mimeheader v0.0.6
@@ -45,7 +45,6 @@ require (
 	golang.org/x/text v0.28.0
 	google.golang.org/grpc v1.74.2
 	layeh.com/radius v0.0.0-20231213012653-1006025d24f8
-
 )
 
 require (
@@ -77,6 +76,7 @@ require (
 	github.com/jonboulle/clockwork v0.5.0 // indirect
 	github.com/kaptinlin/go-i18n v0.1.4 // indirect
 	github.com/kaptinlin/jsonschema v0.4.6 // indirect
+	github.com/klauspost/compress v1.18.0 // indirect
 	github.com/labstack/gommon v0.4.2 // indirect
 	github.com/leodido/go-urn v1.4.0 // indirect
 	github.com/mattn/go-colorable v0.1.14 // indirect
@@ -84,6 +84,9 @@ require (
 	github.com/mattn/go-pointer v0.0.1 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
+	github.com/nats-io/nats.go v1.44.0 // indirect
+	github.com/nats-io/nkeys v0.4.11 // indirect
+	github.com/nats-io/nuid v1.0.1 // indirect
 	github.com/pelletier/go-toml/v2 v2.2.4 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/rickb777/plural v1.4.2 // indirect

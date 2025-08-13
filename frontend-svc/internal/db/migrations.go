@@ -8,9 +8,10 @@ import (
 	migrate "github.com/rubenv/sql-migrate"
 
 	"github.com/cisco-open/sprt/frontend-svc/shared"
+	"github.com/cisco-open/sprt/go-generator/specs"
 )
 
-func Migrate(ctx context.Context, app shared.LogDB, cfg Specs) error {
+func Migrate(_ context.Context, app shared.LogDB, cfg specs.DBSpecs) error {
 	migrations := &migrate.FileMigrationSource{
 		Dir: cfg.MigrationsDirectory,
 	}

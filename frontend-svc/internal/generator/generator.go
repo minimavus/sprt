@@ -15,13 +15,13 @@ import (
 	"layeh.com/radius/dictionary"
 
 	"github.com/cisco-open/sprt/frontend-svc/internal/db"
-
 	"github.com/cisco-open/sprt/frontend-svc/shared"
 
 	"github.com/cisco-open/sprt/go-generator/sdk/iputils"
 	"github.com/cisco-open/sprt/go-generator/sdk/registry"
 	sdk "github.com/cisco-open/sprt/go-generator/sdk/variables"
 	"github.com/cisco-open/sprt/go-generator/sdk/variables/dictionaries/radius"
+	"github.com/cisco-open/sprt/go-generator/specs"
 )
 
 type (
@@ -38,13 +38,13 @@ type (
 
 	generator struct {
 		app    shared.LogDB
-		cfg    Specs
+		cfg    specs.GeneratorSpecs
 		parser *dictionary.Parser
 		cache  *cachedDictionaries
 	}
 )
 
-func New(app shared.LogDB, cfg Specs) (*generator, error) {
+func New(app shared.LogDB, cfg specs.GeneratorSpecs) (*generator, error) {
 	parser := dictionary.Parser{IgnoreIdenticalAttributes: true}
 	cache := cachedDictionaries{data: make(map[string]*dictionary.Dictionary)}
 
@@ -92,7 +92,7 @@ func (g *generator) buildExcludeMatchers(value any) {
 	}
 
 	g.cfg.SourceIP.Exclude = exclude
-	g.cfg.SourceIP.ExcludeMatchers = make([]Matcher, 0, len(exclude))
+	g.cfg.SourceIP.ExcludeMatchers = make([]specs.Matcher, 0, len(exclude))
 	g.app.Logger().Debug().Strs("exclude", exclude).Msg("source IP exclude list")
 	for _, ip := range exclude {
 		if iputils.IsIP(ip) {
@@ -111,7 +111,7 @@ func (g *generator) buildAllowedMatchers(value any) {
 	}
 
 	g.cfg.SourceIP.Allowed = allowed
-	g.cfg.SourceIP.AllowedMatchers = make([]Matcher, 0, len(allowed))
+	g.cfg.SourceIP.AllowedMatchers = make([]specs.Matcher, 0, len(allowed))
 	g.app.Logger().Debug().Strs("allowed", allowed).Msg("source IP allowed list")
 	for _, ip := range allowed {
 		if iputils.IsIP(ip) {
@@ -249,7 +249,7 @@ func (g *generator) GetTLSCipherSuites(proto, tlsVersion string) ([]sdk.OptionsG
 	return nil, fmt.Errorf("plugin %s does not support TLS cipher suites", proto)
 }
 
-func matchIP(ip string) Matcher {
+func matchIP(ip string) specs.Matcher {
 	parsed := net.ParseIP(ip)
 	return func(s string) bool {
 		ps := net.ParseIP(s)
@@ -257,7 +257,7 @@ func matchIP(ip string) Matcher {
 	}
 }
 
-func matchRegex(re string) Matcher {
+func matchRegex(re string) specs.Matcher {
 	compiled := regexp.MustCompile(re)
 	return func(s string) bool {
 		return compiled.MatchString(s)
