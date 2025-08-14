@@ -64,6 +64,12 @@ func (p ParamsSlice) With(params ...Parameter) ParamsSlice {
 }
 
 func BuildParams(blocks ...ParametersBlock) Params {
+	if blocks == nil {
+		return &params{
+			b: []ParametersBlock{},
+		}
+	}
+
 	return &params{
 		b: blocks,
 	}

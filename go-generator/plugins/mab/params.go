@@ -3,5 +3,5 @@ package mab
 import "github.com/cisco-open/sprt/go-generator/sdk/variables"
 
 var (
-	mabParams = variables.BuildParams(variables.ParametersBlock{})
+	mabParams = variables.BuildParams()
 )

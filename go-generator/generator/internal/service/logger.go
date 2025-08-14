@@ -1,4 +1,4 @@
-package config
+package service
 
 import (
 	"os"
@@ -10,16 +10,16 @@ import (
 	"github.com/cisco-open/sprt/frontend-svc/shared"
 )
 
-var _ (shared.Logger) = (*AppConfig)(nil)
+var _ (shared.Logger) = (*Service)(nil)
 
-func (app *AppConfig) buildLogger() *AppConfig {
+func (s *Service) buildLogger() *Service {
 	// preparing logger
 	zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
 	zerolog.ErrorStackMarshaler = pkgerrors.MarshalStack
 	zerolog.ErrorFieldName = "err"
 
 	var l zerolog.Logger
-	if app.InProduction() {
+	if s.InProduction() {
 		// pure JSON
 		l = zerolog.New(os.Stderr).
 			With().Timestamp().
@@ -38,12 +38,12 @@ func (app *AppConfig) buildLogger() *AppConfig {
 			Logger().Level(zerolog.DebugLevel)
 	}
 
-	l = l.With().Str("service", "frontend").Logger()
+	l = l.With().Str("service", "generator").Logger()
 
-	app.l = &l
-	return app
+	s.l = &l
+	return s
 }
 
-func (app *AppConfig) Logger() *zerolog.Logger {
-	return app.l
+func (s *Service) Logger() *zerolog.Logger {
+	return s.l
 }

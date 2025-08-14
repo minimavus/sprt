@@ -215,6 +215,19 @@ func (m *controller) Generate(c echo.Context) error {
 		}
 	}
 
+	rawBodyBytes, err := json.Marshal(rawBody)
+	if err != nil {
+		m.App.Logger().Error().Err(err).Str("uid", u.ForUser).Str("proto", proto).
+			Msg("Failed to marshal raw body")
+		return echo.ErrInternalServerError.WithInternal(err)
+	}
+
+	if err = m.App.Queue().PublishGenerateJob(rawBodyBytes); err != nil {
+		m.App.Logger().Error().Err(err).Str("uid", u.ForUser).Str("proto", proto).
+			Msg("Failed to publish generate job")
+		return echo.ErrInternalServerError.WithInternal(err)
+	}
+
 	return c.JSON(http.StatusOK, map[string]any{"id": reqID})
 }
 

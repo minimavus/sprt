@@ -1,4 +1,4 @@
-package config
+package service
 
 import (
 	"fmt"
@@ -13,7 +13,7 @@ var (
 	V          = "undefined"
 )
 
-func (a *AppConfig) mustLoadSpecs(cfgFile *string) *AppConfig {
+func (a *Service) mustLoadSpecs(cfgFile *string) *Service {
 	viper.SetConfigName("config")
 	viper.SetConfigType("yaml")
 	viper.SetEnvPrefix("sprt")

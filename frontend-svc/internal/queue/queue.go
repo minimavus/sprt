@@ -13,13 +13,15 @@ type QueueClient struct {
 	cfg specs.QueueSpecs
 }
 
+const (
+	queueClientName = "SPRT Frontend Service"
+)
+
 func NewQueueClient(app shared.LogDB, cfg specs.QueueSpecs) (*QueueClient, error) {
-	nc, err := nats.Connect(cfg.Nats.URL)
+	nc, err := nats.Connect(cfg.Nats.URL, setupOptions(app, cfg)...)
 	if err != nil {
 		return nil, err
 	}
-
-	app.Logger().Info().Str("url", cfg.Nats.URL).Msg("Connected to NATS")
 
 	return &QueueClient{app, nc, cfg}, nil
 }
@@ -37,6 +39,37 @@ func (q *QueueClient) Status() string {
 }
 
 func (q *QueueClient) PublishGenerateJob(j []byte) error {
-	q.app.Logger().Debug().Interface("job", j).Msg("Publishing generate job")
+	q.app.Logger().Debug().Str("job", string(j)).Msg("Publishing generate job")
 	return q.nc.Publish(q.cfg.GenerateQueue, j)
+}
+
+func setupOptions(l shared.Logger, cfg specs.QueueSpecs) []nats.Option {
+	totalWait := cfg.Nats.TotalWait
+	maxReconnects := int(totalWait / cfg.Nats.ReconnectWait)
+
+	opts := []nats.Option{
+		nats.Name(queueClientName),
+		nats.MaxReconnects(maxReconnects),
+		nats.ReconnectWait(cfg.Nats.ReconnectWait),
+		nats.Timeout(cfg.Nats.Timeout),
+		nats.ConnectHandler(func(nc *nats.Conn) {
+			l.Logger().Info().
+				Str("url", nc.ConnectedUrl()).
+				Str("server_name", nc.ConnectedServerName()).
+				Str("server_version", nc.ConnectedServerVersion()).
+				Bool("tls", nc.TLSRequired()).
+				Msg("Connected to NATS service")
+		}),
+		nats.DisconnectErrHandler(func(_ *nats.Conn, err error) {
+			l.Logger().Warn().Dur("total_wait", totalWait).Err(err).Msg("Disconnected from NATS service")
+		}),
+		nats.ReconnectHandler(func(nc *nats.Conn) {
+			l.Logger().Info().Str("url", nc.ConnectedUrl()).Msg("Reconnected to NATS service")
+		}),
+		nats.ClosedHandler(func(nc *nats.Conn) {
+			l.Logger().Info().Err(nc.LastError()).Msg("Closed connection to NATS service")
+		}),
+	}
+
+	return opts
 }

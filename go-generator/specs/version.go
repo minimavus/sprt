@@ -1,3 +1,3 @@
-package config
+package specs
 
 const Version = "2.0.0"

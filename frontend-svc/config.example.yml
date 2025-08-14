@@ -64,3 +64,6 @@ generator:
 queue:
   nats:
     url: nats://<HOST>:<PORT>
+    reconnect-wait: 2s
+    total-wait: 2m
+    timeout: 2s

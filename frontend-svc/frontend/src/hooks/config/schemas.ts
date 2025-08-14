@@ -48,6 +48,7 @@ export type GlobalConfig = z.infer<typeof globalConfigSchema>;
 export const pluginSchema = z.object({
   name: z.string(),
   schema: z.any(),
+  provides: z.array(z.string()).optional(),
 });
 
 export const pluginsSchema = z.object({

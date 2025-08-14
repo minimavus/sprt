@@ -22,8 +22,9 @@ func (m *controller) GetLoadedPlugins(c echo.Context) error {
 	var plugins []map[string]any
 	for _, p := range plugs {
 		plugins = append(plugins, map[string]any{
-			"name":   p.Name(),
-			"schema": p.JSONSchema(),
+			"name":     p.Name(),
+			"schema":   p.JSONSchema(),
+			"provides": p.Provides(),
 		})
 	}
 
