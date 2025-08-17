@@ -1,11 +1,8 @@
 package db
 
 import (
-	"context"
 	"database/sql"
 	"errors"
-
-	"github.com/sourcegraph/conc/pool"
 
 	"github.com/cisco-open/sprt/go-generator/sdk/db/models"
 )
@@ -35,15 +32,6 @@ func sessionsTable(pr models.Protos) string {
 		return models.TableNames.TacacsSessions
 	}
 	return models.TableNames.Sessions
-}
-
-func newResultPool[R any](ctx context.Context) *pool.ResultContextPool[R] {
-	return pool.NewWithResults[R]().
-		WithContext(ctx).
-		WithCollectErrored().
-		WithMaxGoroutines(2).
-		WithCancelOnError().
-		WithFirstError()
 }
 
 func (e *execute) getMaxParamsPerStatement() int {

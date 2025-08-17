@@ -27,6 +27,10 @@ type (
 	}
 )
 
+const (
+	IDLength = 16
+)
+
 func GetNewServiceID() string {
-	return gonanoid.MustID(32)
+	return gonanoid.MustID(IDLength)
 }

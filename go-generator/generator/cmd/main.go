@@ -28,7 +28,7 @@ func main() {
 		svc.Logger().Debug().Int("goroutines", runtime.NumGoroutine()).Msg("Close stats")
 	}()
 
-	if err := svc.ListenForGenerateJobs(); err != nil {
+	if err := svc.StartListeningOnQueues(); err != nil {
 		panic(err)
 	}
 
@@ -38,6 +38,9 @@ func main() {
 func waitFotInterruption(svc *service.Service) {
 	done := make(chan os.Signal, 1)
 	signal.Notify(done, syscall.SIGINT, syscall.SIGTERM)
-	svc.Logger().Info().Str("id", svc.ID()).Msg("Generator started")
+	svc.Logger().Info().Str("id", svc.ID()).
+		Str("build_stamp", svc.Specs.Version.BuildStamp).
+		Str("v", svc.Specs.Version.V).
+		Msg("Generator started")
 	<-done
 }

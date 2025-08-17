@@ -9,8 +9,20 @@ type (
 		Job  json.RawMessage `json:"job"`
 		User string          `json:"user"`
 	}
+
+	RPCJob struct {
+		ID       string  `json:"id"`
+		Status   string  `json:"status"`
+		Progress float64 `json:"progress"`
+		User     string  `json:"user"`
+	}
+
+	RPCGetRunningJobsResponseParams struct {
+		Jobs []RPCJob `json:"jobs"`
+	}
 )
 
 const (
-	RPCMethodGenerate RPCMethod = "generate"
+	RPCMethodGenerate       RPCMethod = "generate"
+	RPCMethodGetRunningJobs RPCMethod = "get_running_jobs"
 )

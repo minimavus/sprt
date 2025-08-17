@@ -12,6 +12,7 @@ import (
 	"github.com/volatiletech/sqlboiler/v4/boil"
 	"github.com/volatiletech/sqlboiler/v4/queries/qm"
 
+	"github.com/cisco-open/sprt/go-generator/sdk/conc"
 	"github.com/cisco-open/sprt/go-generator/sdk/db/models"
 )
 
@@ -77,7 +78,7 @@ func (e *execute) GetOrphanFlows(ctx context.Context) ([]int, error) {
 		sessions []int
 	}
 
-	p := newResultPool[result](ctx)
+	p := conc.NewResultPool[result](ctx)
 
 	p.Go(func(ctx context.Context) (result, error) {
 		sess, err := e.GetOrphanFlowsByProto(ctx, models.ProtosRadius)
@@ -192,7 +193,7 @@ func (e *execute) GetOldSessionsPerOwner(ctx context.Context, d time.Duration) (
 		sess  []ProtoSessionPerOwner
 	}
 
-	p := newResultPool[result](ctx)
+	p := conc.NewResultPool[result](ctx)
 
 	p.Go(func(ctx context.Context) (result, error) {
 		r, err := e.GetOldSessionsPerOwnerPerProto(ctx, models.ProtosRadius, d)
@@ -229,7 +230,7 @@ func (e *execute) GetOldSessionIds(ctx context.Context, d time.Duration, limit .
 		sess  []int
 	}
 
-	p := newResultPool[result](ctx)
+	p := conc.NewResultPool[result](ctx)
 
 	p.Go(func(ctx context.Context) (result, error) {
 		r, err := e.GetOldSessionIdsPerProto(ctx, models.ProtosRadius, d, limit...)

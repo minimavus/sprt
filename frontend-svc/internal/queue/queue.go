@@ -1,17 +1,14 @@
 package queue
 
 import (
-	j "encoding/json"
 	"fmt"
 	"sync/atomic"
 
 	"github.com/nats-io/nats.go"
 	"github.com/sourcegraph/jsonrpc2"
 
-	"github.com/cisco-open/sprt/frontend-svc/internal/auth"
 	"github.com/cisco-open/sprt/go-generator/sdk/app"
-	"github.com/cisco-open/sprt/go-generator/sdk/json"
-	"github.com/cisco-open/sprt/go-generator/sdk/rpc"
+	"github.com/cisco-open/sprt/go-generator/sdk/queue"
 	"github.com/cisco-open/sprt/go-generator/specs"
 )
 
@@ -22,10 +19,6 @@ type QueueClient struct {
 
 	msgCounter atomic.Uint64
 }
-
-const (
-	queueClientName = "SPRT Frontend Service"
-)
 
 func NewQueueClient(app app.App, cfg specs.QueueSpecs) (*QueueClient, error) {
 	nc, err := nats.Connect(cfg.Nats.URL, setupOptions(app, cfg)...)
@@ -48,40 +41,12 @@ func (q *QueueClient) Status() string {
 	return q.nc.Status().String()
 }
 
-func (q *QueueClient) PublishGenerateJob(job j.RawMessage, u *auth.ExtendedUserData) error {
-	q.app.Logger().Debug().Str("job", string(job)).Msg("Publishing generate job")
-
-	p := rpc.RPCGenerateParams{
-		Job:  job,
-		User: u.ForUser,
-	}
-
-	paramsBytes, err := json.Marshal(p)
-	if err != nil {
-		return err
-	}
-
-	rawParams := j.RawMessage(paramsBytes)
-
-	req := jsonrpc2.Request{
-		Method: string(rpc.RPCMethodGenerate),
-		Params: &rawParams,
-	}
-
-	reqBytes, err := json.Marshal(req)
-	if err != nil {
-		return err
-	}
-
-	return q.nc.Publish(q.cfg.GenerateQueue, reqBytes)
-}
-
 func setupOptions(l app.Logger, cfg specs.QueueSpecs) []nats.Option {
 	totalWait := cfg.Nats.TotalWait
 	maxReconnects := int(totalWait / cfg.Nats.ReconnectWait)
 
 	opts := []nats.Option{
-		nats.Name(queueClientName),
+		nats.Name(string(queue.QueueClientNameFrontend)),
 		nats.MaxReconnects(maxReconnects),
 		nats.ReconnectWait(cfg.Nats.ReconnectWait),
 		nats.Timeout(cfg.Nats.Timeout),
@@ -107,6 +72,8 @@ func setupOptions(l app.Logger, cfg specs.QueueSpecs) []nats.Option {
 	return opts
 }
 
-func (q *QueueClient) nextMsgID() string {
-	return fmt.Sprintf("%s-%d", q.app.ID(), q.msgCounter.Add(1))
+func (q *QueueClient) nextMsgID() jsonrpc2.ID {
+	return jsonrpc2.ID{
+		Str: fmt.Sprintf("%s-%d", q.app.ID(), q.msgCounter.Add(1)),
+	}
 }

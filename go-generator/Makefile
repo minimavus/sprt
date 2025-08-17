@@ -20,3 +20,7 @@ clean:
 .PHONY: run
 run: build
 	@$(WORKSPACE_ROOT)/bin/app --config $(CONFIG)
+
+.PHONY: dev
+dev: 
+	air

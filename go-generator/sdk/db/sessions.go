@@ -10,6 +10,7 @@ import (
 	"github.com/volatiletech/sqlboiler/v4/queries"
 	"github.com/volatiletech/sqlboiler/v4/queries/qm"
 
+	"github.com/cisco-open/sprt/go-generator/sdk/conc"
 	"github.com/cisco-open/sprt/go-generator/sdk/db/models"
 )
 
@@ -71,7 +72,7 @@ func (e *execute) GetSessionsPerServerBulked(ctx context.Context, owners []strin
 		servers []*ServerWithSessions
 	}
 
-	p := newResultPool[result](ctx)
+	p := conc.NewResultPool[result](ctx)
 
 	p.Go(func(ctx context.Context) (result, error) {
 		r, err := e.GetSessionsPerServerBulkedPerProto(ctx, owners, models.ProtosRadius)

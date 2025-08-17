@@ -7,6 +7,7 @@ import (
 	"github.com/nats-io/nats.go"
 
 	"github.com/cisco-open/sprt/go-generator/sdk/app"
+	"github.com/cisco-open/sprt/go-generator/sdk/queue"
 	"github.com/cisco-open/sprt/go-generator/specs"
 )
 
@@ -19,10 +20,6 @@ type QueueClient struct {
 
 	subs map[string]*nats.Subscription
 }
-
-const (
-	queueClientName = "SPRT Frontend Service"
-)
 
 func NewQueueClient(app app.App, cfg specs.QueueSpecs) (*QueueClient, error) {
 	nc, err := nats.Connect(cfg.Nats.URL, setupOptions(app, cfg)...)
@@ -38,12 +35,12 @@ func NewQueueClient(app app.App, cfg specs.QueueSpecs) (*QueueClient, error) {
 	}, nil
 }
 
-func setupOptions(l app.Logger, cfg specs.QueueSpecs) []nats.Option {
+func setupOptions(l app.App, cfg specs.QueueSpecs) []nats.Option {
 	totalWait := cfg.Nats.TotalWait
 	maxReconnects := int(totalWait / cfg.Nats.ReconnectWait)
 
 	opts := []nats.Option{
-		nats.Name(queueClientName),
+		nats.Name(string(queue.QueueClientNameGenerator) + "/" + l.ID()),
 		nats.MaxReconnects(maxReconnects),
 		nats.ReconnectWait(cfg.Nats.ReconnectWait),
 		nats.Timeout(cfg.Nats.Timeout),

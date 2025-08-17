@@ -67,3 +67,4 @@ queue:
     reconnect-wait: 2s
     total-wait: 2m
     timeout: 2s
+    management-url: http://<HOST>:<PORT>
