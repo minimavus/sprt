@@ -83,27 +83,14 @@ func (q *QueueClient) GetRunningJobsOfGenerator(ctx context.Context, generatorID
 
 	q.app.Logger().Debug().Str("generator", generatorID).Msg("Got running jobs of generator")
 
-	var jrpcResp jsonrpc2.Response
-	if err := json.Unmarshal(resp.Data, &jrpcResp); err != nil {
+	jrpcResp, err := rpc.DecodeJSONRPCResponse(resp.Data)
+	if err != nil {
 		return nil, err
 	}
 
-	if jrpcResp.Error != nil {
-		q.app.Logger().Error().
-			Str("error", jrpcResp.Error.Message).
-			Int64("code", jrpcResp.Error.Code).
-			Interface("data", jrpcResp.Error.Data).
-			Msg("Failed to get running jobs of generator")
-		return nil, fmt.Errorf("failed to get running jobs of generator: %s", jrpcResp.Error.Message)
-	}
-
-	if jrpcResp.Result == nil {
-		q.app.Logger().Error().Str("generator", generatorID).Msg("Got empty response from generator")
-		return nil, fmt.Errorf("got empty response from generator")
-	}
-
-	var jobsResponse rpc.RPCGetRunningJobsResponseParams
-	if err := json.Unmarshal(*jrpcResp.Result, &jobsResponse); err != nil {
+	jobsResponse, err := rpc.GetJSONRPCResult[rpc.RPCGetRunningJobsResponseParams](jrpcResp, q.app.Logger())
+	if err != nil {
+		q.app.Logger().Error().Err(err).Str("generator", generatorID).Msg("Failed to get running jobs of generator")
 		return nil, err
 	}
 

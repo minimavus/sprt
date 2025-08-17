@@ -19,8 +19,8 @@ import {
 } from "@/utils/zodDuration";
 import { zodTime } from "@/utils/zodTime";
 
-import { useGetQuery } from "./useGetQuery";
-import type { Protos } from "./zodProto";
+import { useGetQuery } from "../useGetQuery";
+import type { Protos } from "../zodProto";
 
 const getOrphanedFlowsKey = (full?: boolean): QueryKey =>
   full ? ["cleanup", "flows"] : ["cleanup", "flows", "stats"];

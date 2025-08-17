@@ -107,7 +107,7 @@ const Cleanup: FC = () => {
             rightSection={<SectionStatusIcon section="processes" />}
             {...tabDisplayProps}
           >
-            Running processes
+            Running jobs
           </Tabs.Tab>
           <Tabs.Tab
             value="scheduled"

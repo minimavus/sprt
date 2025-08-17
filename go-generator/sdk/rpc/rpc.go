@@ -11,10 +11,11 @@ type (
 	}
 
 	RPCJob struct {
-		ID       string  `json:"id"`
-		Status   string  `json:"status"`
-		Progress float64 `json:"progress"`
-		User     string  `json:"user"`
+		ID          string  `json:"id"`
+		GeneratorID string  `json:"generator_id"`
+		Status      string  `json:"status"`
+		Progress    float64 `json:"progress"`
+		User        string  `json:"user"`
 	}
 
 	RPCGetRunningJobsResponseParams struct {

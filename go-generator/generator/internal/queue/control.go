@@ -1,12 +1,10 @@
 package queue
 
 import (
-	j "encoding/json"
 	"fmt"
 
 	"github.com/cisco-open/sprt/go-generator/sdk/json"
 	"github.com/cisco-open/sprt/go-generator/sdk/rpc"
-	"github.com/cisco-open/sprt/go-generator/sdk/utils"
 	"github.com/nats-io/nats.go"
 	"github.com/sourcegraph/jsonrpc2"
 )
@@ -41,17 +39,11 @@ func (q *QueueClient) onControlMessage(msg *nats.Msg) {
 		err = fmt.Errorf("invalid method for control message: %s", req.Method)
 		q.app.Logger().Error().Str("method", req.Method).Msg("Invalid method for control message")
 
-		r := jsonrpc2.Response{
-			ID:     req.ID,
-			Error:  utils.PtrOf(jsonrpc2.Error{Code: jsonrpc2.CodeMethodNotFound, Message: err.Error()}),
-			Result: nil,
-		}
-
-		responseBytes, err = json.Marshal(r)
+		responseBytes, err = rpc.NewResponse(req.ID).Error(jsonrpc2.CodeMethodNotFound, err).Bytes()
 		if err != nil {
 			q.app.Logger().Error().Err(err).Msg("Failed to marshal response")
-			return
 		}
+		responseBytes = nil
 	}
 
 	q.Publish(msg.Reply, responseBytes)
@@ -63,26 +55,19 @@ func (q *QueueClient) GetRunningJobs(reqID jsonrpc2.ID) ([]byte, error) {
 	jobs := make([]rpc.RPCJob, 0)
 	// TODO: implement getting running jobs
 
+	jobs = append(jobs, rpc.RPCJob{
+		ID:          "job1",
+		Status:      "running",
+		GeneratorID: q.app.ID(),
+		Progress:    0.56,
+		User:        "user1",
+	})
+
 	resp := rpc.RPCGetRunningJobsResponseParams{
 		Jobs: jobs,
 	}
 
-	respBytes, err := json.Marshal(resp)
-	if err != nil {
-		return nil, err
-	}
-
-	response := jsonrpc2.Response{
-		ID:     reqID,
-		Result: utils.PtrOf(j.RawMessage(respBytes)),
-	}
-
-	responseBytes, err := json.Marshal(response)
-	if err != nil {
-		return nil, err
-	}
-
-	return responseBytes, nil
+	return rpc.NewResponse(reqID).Result(resp).Bytes()
 }
 
 func (q *QueueClient) myControlQueue() string {

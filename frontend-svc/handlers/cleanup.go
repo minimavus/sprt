@@ -312,20 +312,20 @@ func (m *controller) PutCleaner(c echo.Context) error {
 }
 
 func (m *controller) GetRunningProcesses(c echo.Context) error {
-	// _, ctx, err := auth.GetUserDataAndContext(c)
-	// if err != nil {
-	// 	return err
-	// }
+	_, ctx, err := auth.GetUserDataAndContext(c)
+	if err != nil {
+		return err
+	}
 
-	// generators, err := m.App.Queue().GetGenerators(ctx)
-	// if err != nil {
-	// 	m.App.Logger().Error().Err(err).Msg("Failed to get running generators")
-	// 	return echo.ErrInternalServerError.WithInternal(err)
-	// }
+	jobs, err := m.App.Queue().GetRunningJobs(ctx)
+	if err != nil {
+		m.App.Logger().Error().Err(err).Msg("Failed to get running jobs")
+		return echo.ErrInternalServerError.WithInternal(err)
+	}
 
-	// m.App.Logger().Info().Interface("generators", generators).Msg("Running generators")
+	m.App.Logger().Debug().Interface("jobs", jobs).Msg("Running jobs")
 
-	return echo.ErrNotImplemented
+	return c.JSON(http.StatusOK, map[string]any{"jobs": jobs})
 }
 
 func (m *controller) GetRunningProcessesStatus(c echo.Context) error {
@@ -343,10 +343,8 @@ func (m *controller) GetRunningProcessesStatus(c echo.Context) error {
 	m.App.Logger().Info().Interface("jobs", jobs).Msg("Running jobs")
 
 	res := StatusResponse{
-		Value: map[string]any{
-			"running": len(jobs),
-		},
-		Type: StatusValueTypeIcon,
+		Value: map[string]any{"running": len(jobs)},
+		Type:  StatusValueTypeIcon,
 	}
 	if len(jobs) > 0 {
 		res.Level = StatusLevelInfo
