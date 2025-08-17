@@ -14,9 +14,8 @@ import (
 	"github.com/spf13/cast"
 	"layeh.com/radius/dictionary"
 
-	"github.com/cisco-open/sprt/frontend-svc/internal/db"
-	"github.com/cisco-open/sprt/frontend-svc/shared"
-
+	"github.com/cisco-open/sprt/go-generator/sdk/app"
+	"github.com/cisco-open/sprt/go-generator/sdk/db"
 	"github.com/cisco-open/sprt/go-generator/sdk/iputils"
 	"github.com/cisco-open/sprt/go-generator/sdk/registry"
 	sdk "github.com/cisco-open/sprt/go-generator/sdk/variables"
@@ -37,14 +36,14 @@ type (
 	}
 
 	generator struct {
-		app    shared.LogDB
+		app    app.App
 		cfg    specs.GeneratorSpecs
 		parser *dictionary.Parser
 		cache  *cachedDictionaries
 	}
 )
 
-func New(app shared.LogDB, cfg specs.GeneratorSpecs) (*generator, error) {
+func New(app app.App, cfg specs.GeneratorSpecs) (*generator, error) {
 	parser := dictionary.Parser{IgnoreIdenticalAttributes: true}
 	cache := cachedDictionaries{data: make(map[string]*dictionary.Dictionary)}
 
@@ -53,10 +52,10 @@ func New(app shared.LogDB, cfg specs.GeneratorSpecs) (*generator, error) {
 	g.buildExcludeMatchers(cfg.SourceIP.Exclude)
 	g.buildAllowedMatchers(cfg.SourceIP.Allowed)
 
-	app.(shared.SpecNotifier).OnSpecChange("generator.source-ip.exclude", g.onSpecChange)
-	app.(shared.SpecNotifier).OnSpecChange("generator.source-ip.allowed", g.onSpecChange)
-	app.(shared.SpecNotifier).OnSpecChange("generator.source-ip.auto-detect", g.onSpecChange)
-	app.(shared.SpecNotifier).OnSpecChange("generator.source-ip.explicit-sources", g.onSpecChange)
+	app.(specs.SpecNotifier).OnSpecChange("generator.source-ip.exclude", g.onSpecChange)
+	app.(specs.SpecNotifier).OnSpecChange("generator.source-ip.allowed", g.onSpecChange)
+	app.(specs.SpecNotifier).OnSpecChange("generator.source-ip.auto-detect", g.onSpecChange)
+	app.(specs.SpecNotifier).OnSpecChange("generator.source-ip.explicit-sources", g.onSpecChange)
 
 	return g, nil
 }

@@ -5,7 +5,7 @@ import (
 	"github.com/volatiletech/sqlboiler/v4/boil"
 	"github.com/volatiletech/sqlboiler/v4/queries/qm"
 
-	"github.com/cisco-open/sprt/frontend-svc/shared"
+	"github.com/cisco-open/sprt/go-generator/sdk/app"
 	"github.com/cisco-open/sprt/go-generator/specs"
 )
 
@@ -28,7 +28,7 @@ type (
 
 	execute struct {
 		db boil.ContextExecutor
-		l  shared.Logger
+		l  app.Logger
 
 		offset                *int
 		limit                 *int
@@ -78,7 +78,7 @@ type (
 	}
 )
 
-func Exec(app shared.LogDB) Executor {
+func Exec(app app.App) Executor {
 	return &execute{
 		db:                    app.DB(),
 		l:                     app,

@@ -25,7 +25,7 @@ import (
 	"github.com/zmap/zcrypto/x509"
 
 	"github.com/cisco-open/sprt/frontend-svc/internal/utils"
-	"github.com/cisco-open/sprt/frontend-svc/models"
+	"github.com/cisco-open/sprt/go-generator/sdk/db/models"
 )
 
 var (

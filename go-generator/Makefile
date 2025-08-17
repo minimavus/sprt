@@ -1,5 +1,6 @@
 # Get workspace root directory (parent of go.work)
 WORKSPACE_ROOT := $(shell dirname $$(go env GOWORK))/go-generator
+CONFIG := $(WORKSPACE_ROOT)/../frontend-svc/config.local.yml
 
 # Default target
 .PHONY: build
@@ -18,4 +19,4 @@ clean:
 # Run the app
 .PHONY: run
 run: build
-	@$(WORKSPACE_ROOT)/bin/app
+	@$(WORKSPACE_ROOT)/bin/app --config $(CONFIG)

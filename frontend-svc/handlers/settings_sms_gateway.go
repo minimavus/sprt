@@ -6,7 +6,7 @@ import (
 	"github.com/labstack/echo/v4"
 
 	"github.com/cisco-open/sprt/frontend-svc/internal/auth"
-	"github.com/cisco-open/sprt/frontend-svc/internal/db"
+	"github.com/cisco-open/sprt/go-generator/sdk/db"
 )
 
 func populateEmptySettings(sts *db.SmsGatewaySettings) {

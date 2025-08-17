@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/cisco-open/sprt/frontend-svc/internal/auth"
-	"github.com/cisco-open/sprt/frontend-svc/shared"
+	"github.com/cisco-open/sprt/go-generator/specs"
 	"github.com/labstack/echo/v4"
 )
 
@@ -102,7 +102,7 @@ func (m *controller) UpdateGlobalConfig(c echo.Context) error {
 
 	for k, v := range req {
 		m.App.Logger().Debug().Str("user", u.ForUser).Str("key", k).Interface("value", v).Msg("UpdateGlobalConfig")
-		if err = m.App.SetSpec(ctx, k, v, shared.SetSpecOptions{AllowDbOnly: true}); err != nil {
+		if err = m.App.SetSpec(ctx, k, v, specs.SetSpecOptions{AllowDbOnly: true}); err != nil {
 			return echo.ErrInternalServerError.WithInternal(err)
 		}
 	}

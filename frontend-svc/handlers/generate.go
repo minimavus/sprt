@@ -222,7 +222,7 @@ func (m *controller) Generate(c echo.Context) error {
 		return echo.ErrInternalServerError.WithInternal(err)
 	}
 
-	if err = m.App.Queue().PublishGenerateJob(rawBodyBytes); err != nil {
+	if err = m.App.Queue().PublishGenerateJob(rawBodyBytes, u); err != nil {
 		m.App.Logger().Error().Err(err).Str("uid", u.ForUser).Str("proto", proto).
 			Msg("Failed to publish generate job")
 		return echo.ErrInternalServerError.WithInternal(err)

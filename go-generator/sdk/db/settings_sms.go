@@ -3,9 +3,10 @@ package db
 import (
 	"context"
 
-	"github.com/cisco-open/sprt/frontend-svc/models"
-	"github.com/cisco-open/sprt/go-generator/sdk/json"
 	"github.com/volatiletech/sqlboiler/v4/queries/qm"
+
+	"github.com/cisco-open/sprt/go-generator/sdk/db/models"
+	"github.com/cisco-open/sprt/go-generator/sdk/json"
 )
 
 type SmsGatewaySettingsManipulator interface {

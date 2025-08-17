@@ -7,10 +7,10 @@ import (
 	"github.com/rs/zerolog/log"
 	"github.com/rs/zerolog/pkgerrors"
 
-	"github.com/cisco-open/sprt/frontend-svc/shared"
+	"github.com/cisco-open/sprt/go-generator/sdk/app"
 )
 
-var _ (shared.Logger) = (*AppConfig)(nil)
+var _ app.Logger = (*AppConfig)(nil)
 
 func (app *AppConfig) buildLogger() *AppConfig {
 	// preparing logger

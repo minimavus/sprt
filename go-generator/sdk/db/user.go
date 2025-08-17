@@ -5,7 +5,7 @@ import (
 
 	"github.com/volatiletech/sqlboiler/v4/boil"
 
-	"github.com/cisco-open/sprt/frontend-svc/models"
+	"github.com/cisco-open/sprt/go-generator/sdk/db/models"
 )
 
 type UsersManipulator interface {

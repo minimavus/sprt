@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/cisco-open/sprt/frontend-svc/shared"
+	"github.com/cisco-open/sprt/go-generator/sdk/app"
 	"github.com/cisco-open/sprt/go-generator/specs"
 	"github.com/go-co-op/gocron/v2"
 )
@@ -28,7 +28,7 @@ type (
 	}
 
 	cleaner struct {
-		app shared.LogDB
+		app app.App
 		s   gocron.Scheduler
 		j   gocron.Job
 		cfg specs.CleanerSpecs
@@ -37,7 +37,7 @@ type (
 
 const sessionCleanupTag = "session-cleanup"
 
-func NewCleaner(app shared.LogDB, cfg specs.CleanerSpecs) (*cleaner, error) {
+func NewCleaner(app app.App, cfg specs.CleanerSpecs) (*cleaner, error) {
 	s, err := gocron.NewScheduler(
 		gocron.WithLogger(&cronLogger{app.Logger()}),
 	)
@@ -47,9 +47,9 @@ func NewCleaner(app shared.LogDB, cfg specs.CleanerSpecs) (*cleaner, error) {
 
 	c := cleaner{app, s, nil, cfg}
 
-	app.(shared.SpecNotifier).OnSpecChange("cleaner.enabled", c.onEnabledChange)
-	app.(shared.SpecNotifier).OnSpecChange("cleaner.cron", c.onCronChange)
-	app.(shared.SpecNotifier).OnSpecChange("cleaner.older_than", c.onOlderThanChange)
+	app.(specs.SpecNotifier).OnSpecChange("cleaner.enabled", c.onEnabledChange)
+	app.(specs.SpecNotifier).OnSpecChange("cleaner.cron", c.onCronChange)
+	app.(specs.SpecNotifier).OnSpecChange("cleaner.older_than", c.onOlderThanChange)
 
 	c.Toggle(c.cfg.Enabled)
 

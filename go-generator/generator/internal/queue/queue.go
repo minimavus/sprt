@@ -1,26 +1,23 @@
 package queue
 
 import (
-	j "encoding/json"
 	"fmt"
 	"sync/atomic"
 
 	"github.com/nats-io/nats.go"
-	"github.com/sourcegraph/jsonrpc2"
 
-	"github.com/cisco-open/sprt/frontend-svc/internal/auth"
 	"github.com/cisco-open/sprt/go-generator/sdk/app"
-	"github.com/cisco-open/sprt/go-generator/sdk/json"
-	"github.com/cisco-open/sprt/go-generator/sdk/rpc"
 	"github.com/cisco-open/sprt/go-generator/specs"
 )
 
 type QueueClient struct {
-	app app.App
-	nc  *nats.Conn
-	cfg specs.QueueSpecs
+	*nats.Conn
 
+	app        app.App
+	cfg        specs.QueueSpecs
 	msgCounter atomic.Uint64
+
+	subs map[string]*nats.Subscription
 }
 
 const (
@@ -33,47 +30,12 @@ func NewQueueClient(app app.App, cfg specs.QueueSpecs) (*QueueClient, error) {
 		return nil, err
 	}
 
-	return &QueueClient{app, nc, cfg, atomic.Uint64{}}, nil
-}
-
-func (q *QueueClient) Close() {
-	q.nc.Close()
-}
-
-func (q *QueueClient) Statistics() nats.Statistics {
-	return q.nc.Stats()
-}
-
-func (q *QueueClient) Status() string {
-	return q.nc.Status().String()
-}
-
-func (q *QueueClient) PublishGenerateJob(job j.RawMessage, u *auth.ExtendedUserData) error {
-	q.app.Logger().Debug().Str("job", string(job)).Msg("Publishing generate job")
-
-	p := rpc.RPCGenerateParams{
-		Job:  job,
-		User: u.ForUser,
-	}
-
-	paramsBytes, err := json.Marshal(p)
-	if err != nil {
-		return err
-	}
-
-	rawParams := j.RawMessage(paramsBytes)
-
-	req := jsonrpc2.Request{
-		Method: string(rpc.RPCMethodGenerate),
-		Params: &rawParams,
-	}
-
-	reqBytes, err := json.Marshal(req)
-	if err != nil {
-		return err
-	}
-
-	return q.nc.Publish(q.cfg.GenerateQueue, reqBytes)
+	return &QueueClient{
+		Conn: nc,
+		app:  app,
+		cfg:  cfg,
+		subs: make(map[string]*nats.Subscription),
+	}, nil
 }
 
 func setupOptions(l app.Logger, cfg specs.QueueSpecs) []nats.Option {
@@ -101,6 +63,9 @@ func setupOptions(l app.Logger, cfg specs.QueueSpecs) []nats.Option {
 		}),
 		nats.ClosedHandler(func(nc *nats.Conn) {
 			l.Logger().Info().Err(nc.LastError()).Msg("Closed connection to NATS service")
+		}),
+		nats.ConnectHandler(func(nc *nats.Conn) {
+			l.Logger().Debug().Str("url", nc.ConnectedUrl()).Msg("Connected to NATS service")
 		}),
 	}
 

@@ -3,5 +3,7 @@ PATH := $(PATH):$(GOPATH)/bin
 
 dev:
 	@echo "🔧 Starting development environment..."
-	@cd ./go-generator && make build
-	@cd ./frontend-svc && make dev
+	@trap 'trap - TERM; kill 0; wait' INT TERM
+	(cd ./go-generator && make run) & \
+	(cd ./frontend-svc && make dev) & \
+	wait

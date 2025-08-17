@@ -6,8 +6,9 @@ import (
 	"github.com/cisco-open/sprt/frontend-svc/internal/config"
 	m "github.com/cisco-open/sprt/frontend-svc/internal/middleware"
 	"github.com/cisco-open/sprt/frontend-svc/internal/policy"
-	"github.com/cisco-open/sprt/frontend-svc/models"
 	"github.com/cisco-open/sprt/frontend-svc/shared"
+
+	"github.com/cisco-open/sprt/go-generator/sdk/db/models"
 )
 
 type controller struct {

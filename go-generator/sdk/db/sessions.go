@@ -10,8 +10,7 @@ import (
 	"github.com/volatiletech/sqlboiler/v4/queries"
 	"github.com/volatiletech/sqlboiler/v4/queries/qm"
 
-	"github.com/cisco-open/sprt/frontend-svc/internal/utils"
-	"github.com/cisco-open/sprt/frontend-svc/models"
+	"github.com/cisco-open/sprt/go-generator/sdk/db/models"
 )
 
 type (
@@ -39,19 +38,19 @@ type (
 )
 
 type SessionsManipulator interface {
-	GetSessionsPerServerBulked(ctx context.Context, owner string) (ServersWithSessionsPerProto, error)
-	GetSessionsPerServerBulkedPerProto(ctx context.Context, owner string, proto models.Protos) ([]*ServerWithSessions, error)
-	GetServerBulks(ctx context.Context, server, owner string, proto models.Protos) ([]*SessionsInBulk, error)
+	GetSessionsPerServerBulked(ctx context.Context, owners []string) (ServersWithSessionsPerProto, error)
+	GetSessionsPerServerBulkedPerProto(ctx context.Context, owners []string, proto models.Protos) ([]*ServerWithSessions, error)
+	GetServerBulks(ctx context.Context, server string, owners []string, proto models.Protos) ([]*SessionsInBulk, error)
 
-	GetRadiusSessions(ctx context.Context, server, owner string, opts GetSessionsOptions) ([]*models.Session, error)
-	GetRadiusSessionDetails(ctx context.Context, server, owner string, id int64) (*SessionWithFlow, error)
-	GetTotalRadiusSessionsInBulk(ctx context.Context, server, owner, bulk string) (int64, error)
+	GetRadiusSessions(ctx context.Context, server string, owners []string, opts GetSessionsOptions) ([]*models.Session, error)
+	GetRadiusSessionDetails(ctx context.Context, server string, owners []string, id int64) (*SessionWithFlow, error)
+	GetTotalRadiusSessionsInBulk(ctx context.Context, server string, owners []string, bulk string) (int64, error)
 
-	GetTacacsSessions(ctx context.Context, server, owner string, opts GetSessionsOptions) ([]*models.TacacsSession, error)
-	GetTacacsSessionDetails(ctx context.Context, server, owner string, id int64) (*TacacsSessionWithFlow, error)
-	GetTotalTacacsSessionsInBulk(ctx context.Context, server, owner, bulk string) (int64, error)
+	GetTacacsSessions(ctx context.Context, server string, owners []string, opts GetSessionsOptions) ([]*models.TacacsSession, error)
+	GetTacacsSessionDetails(ctx context.Context, server string, owners []string, id int64) (*TacacsSessionWithFlow, error)
+	GetTotalTacacsSessionsInBulk(ctx context.Context, server string, owners []string, bulk string) (int64, error)
 
-	GetSessionSummary(ctx context.Context, id int64, owner string, proto models.Protos) (*SessionSummary, error)
+	GetSessionSummary(ctx context.Context, id int64, owners []string, proto models.Protos) (*SessionSummary, error)
 }
 
 var _ SessionsManipulator = (*execute)(nil)
@@ -66,7 +65,7 @@ type ServerWithSessions struct {
 type ServersWithSessionsPerProto map[models.Protos][]*ServerWithSessions
 
 // GetSessionsPerServerBulked returns sessions per server
-func (e *execute) GetSessionsPerServerBulked(ctx context.Context, owner string) (ServersWithSessionsPerProto, error) {
+func (e *execute) GetSessionsPerServerBulked(ctx context.Context, owners []string) (ServersWithSessionsPerProto, error) {
 	type result struct {
 		proto   models.Protos
 		servers []*ServerWithSessions
@@ -75,7 +74,7 @@ func (e *execute) GetSessionsPerServerBulked(ctx context.Context, owner string) 
 	p := newResultPool[result](ctx)
 
 	p.Go(func(ctx context.Context) (result, error) {
-		r, err := e.GetSessionsPerServerBulkedPerProto(ctx, owner, models.ProtosRadius)
+		r, err := e.GetSessionsPerServerBulkedPerProto(ctx, owners, models.ProtosRadius)
 		if err != nil {
 			return result{}, err
 		}
@@ -83,7 +82,7 @@ func (e *execute) GetSessionsPerServerBulked(ctx context.Context, owner string) 
 	})
 
 	p.Go(func(ctx context.Context) (result, error) {
-		r, err := e.GetSessionsPerServerBulkedPerProto(ctx, owner, models.ProtosTacacs)
+		r, err := e.GetSessionsPerServerBulkedPerProto(ctx, owners, models.ProtosTacacs)
 		if err != nil {
 			return result{}, err
 		}
@@ -103,9 +102,7 @@ func (e *execute) GetSessionsPerServerBulked(ctx context.Context, owner string) 
 	return d, nil
 }
 
-func (e *execute) GetSessionsPerServerBulkedPerProto(ctx context.Context, owner string, proto models.Protos) ([]*ServerWithSessions, error) {
-	ownerPack := utils.OwnerPack(owner)
-
+func (e *execute) GetSessionsPerServerBulkedPerProto(ctx context.Context, owners []string, proto models.Protos) ([]*ServerWithSessions, error) {
 	var (
 		result       []*ServerWithSessions
 		sessionTable string
@@ -125,14 +122,14 @@ func (e *execute) GetSessionsPerServerBulkedPerProto(ctx context.Context, owner 
 		GROUP BY rs."server", rs."owner"
 	) AS t 
 	LEFT JOIN `+pq.QuoteIdentifier(models.TableNames.Servers)+` m
-		ON "t"."server"::text = "m"."attributes"->>'resolved' AND "t"."owner" = "m"."owner"`, pq.Array(ownerPack),
+		ON "t"."server"::text = "m"."attributes"->>'resolved' AND "t"."owner" = "m"."owner"`, pq.Array(owners),
 	).Bind(ctx, e.db, &result)
 	if err != nil {
 		return nil, err
 	}
 
 	for _, r := range result {
-		bulks, err := e.GetServerBulks(ctx, r.Server, owner, proto)
+		bulks, err := e.GetServerBulks(ctx, r.Server, owners, proto)
 		if err != nil {
 			return nil, err
 		}
@@ -147,9 +144,7 @@ type SessionsInBulk struct {
 	Name     null.String `json:"name" boil:"name"`
 }
 
-func (e *execute) GetServerBulks(ctx context.Context, server, owner string, proto models.Protos) ([]*SessionsInBulk, error) {
-	ownerPack := utils.OwnerPack(owner)
-
+func (e *execute) GetServerBulks(ctx context.Context, server string, owners []string, proto models.Protos) ([]*SessionsInBulk, error) {
 	var (
 		result []*SessionsInBulk
 	)
@@ -162,13 +157,13 @@ func (e *execute) GetServerBulks(ctx context.Context, server, owner string, prot
 		q = append(q,
 			qm.From(models.TableNames.Sessions),
 			models.SessionWhere.Server.EQ(server),
-			models.SessionWhere.Owner.IN(ownerPack),
+			models.SessionWhere.Owner.IN(owners),
 		)
 	} else if proto == models.ProtosTacacs {
 		q = append(q,
 			qm.From(models.TableNames.TacacsSessions),
 			models.TacacsSessionWhere.Server.EQ(null.StringFrom(server)),
-			models.TacacsSessionWhere.Owner.IN(ownerPack),
+			models.TacacsSessionWhere.Owner.IN(owners),
 		)
 	}
 
@@ -182,12 +177,10 @@ func (e *execute) GetServerBulks(ctx context.Context, server, owner string, prot
 	return result, nil
 }
 
-func (e *execute) GetRadiusSessions(ctx context.Context, server, owner string, opts GetSessionsOptions) ([]*models.Session, error) {
-	ownerPack := utils.OwnerPack(owner)
-
+func (e *execute) GetRadiusSessions(ctx context.Context, server string, owners []string, opts GetSessionsOptions) ([]*models.Session, error) {
 	qm := mods{
 		models.SessionWhere.Server.EQ(server),
-		models.SessionWhere.Owner.IN(ownerPack),
+		models.SessionWhere.Owner.IN(owners),
 	}
 
 	if opts.Bulk != "" {
@@ -212,14 +205,12 @@ func (e *execute) GetRadiusSessions(ctx context.Context, server, owner string, o
 	return result, nil
 }
 
-func (e *execute) GetRadiusSessionDetails(ctx context.Context, server, owner string, id int64) (*SessionWithFlow, error) {
-	ownerPack := utils.OwnerPack(owner)
-
+func (e *execute) GetRadiusSessionDetails(ctx context.Context, server string, owners []string, id int64) (*SessionWithFlow, error) {
 	var swf SessionWithFlow
 
 	err := models.Sessions(
 		models.SessionWhere.ID.EQ(id),
-		models.SessionWhere.Owner.IN(ownerPack),
+		models.SessionWhere.Owner.IN(owners),
 		models.SessionWhere.Server.EQ(server),
 	).Bind(ctx, e.db, &swf)
 	if err != nil {
@@ -239,12 +230,10 @@ func (e *execute) GetRadiusSessionDetails(ctx context.Context, server, owner str
 	return &swf, nil
 }
 
-func (e *execute) GetTotalRadiusSessionsInBulk(ctx context.Context, server, owner, bulk string) (int64, error) {
-	ownerPack := utils.OwnerPack(owner)
-
+func (e *execute) GetTotalRadiusSessionsInBulk(ctx context.Context, server string, owners []string, bulk string) (int64, error) {
 	count, err := models.Sessions(
 		models.SessionWhere.Server.EQ(server),
-		models.SessionWhere.Owner.IN(ownerPack),
+		models.SessionWhere.Owner.IN(owners),
 		models.SessionWhere.Bulk.EQ(bulk),
 	).Count(ctx, e.db)
 	if err != nil {
@@ -254,12 +243,10 @@ func (e *execute) GetTotalRadiusSessionsInBulk(ctx context.Context, server, owne
 	return count, nil
 }
 
-func (e *execute) GetTacacsSessions(ctx context.Context, server, owner string, opts GetSessionsOptions) ([]*models.TacacsSession, error) {
-	ownerPack := utils.OwnerPack(owner)
-
+func (e *execute) GetTacacsSessions(ctx context.Context, server string, owners []string, opts GetSessionsOptions) ([]*models.TacacsSession, error) {
 	qm := mods{
 		models.TacacsSessionWhere.Server.EQ(null.StringFrom(server)),
-		models.TacacsSessionWhere.Owner.IN(ownerPack),
+		models.TacacsSessionWhere.Owner.IN(owners),
 	}
 	if opts.Bulk != "" {
 		qm = append(qm, models.TacacsSessionWhere.Bulk.EQ(null.StringFrom(opts.Bulk)))
@@ -282,12 +269,10 @@ func (e *execute) GetTacacsSessions(ctx context.Context, server, owner string, o
 	return result, nil
 }
 
-func (e *execute) GetTotalTacacsSessionsInBulk(ctx context.Context, server, owner, bulk string) (int64, error) {
-	ownerPack := utils.OwnerPack(owner)
-
+func (e *execute) GetTotalTacacsSessionsInBulk(ctx context.Context, server string, owners []string, bulk string) (int64, error) {
 	count, err := models.TacacsSessions(
 		models.TacacsSessionWhere.Server.EQ(null.StringFrom(server)),
-		models.TacacsSessionWhere.Owner.IN(ownerPack),
+		models.TacacsSessionWhere.Owner.IN(owners),
 		models.TacacsSessionWhere.Bulk.EQ(null.StringFrom(bulk)),
 	).Count(ctx, e.db)
 	if err != nil {
@@ -297,15 +282,13 @@ func (e *execute) GetTotalTacacsSessionsInBulk(ctx context.Context, server, owne
 	return count, nil
 }
 
-func (e *execute) GetSessionSummary(ctx context.Context, id int64, owner string, proto models.Protos) (*SessionSummary, error) {
-	ownerPack := utils.OwnerPack(owner)
-
+func (e *execute) GetSessionSummary(ctx context.Context, id int64, owners []string, proto models.Protos) (*SessionSummary, error) {
 	var summary SessionSummary
 
 	if proto == models.ProtosRadius {
 		err := models.Sessions(
 			models.SessionWhere.ID.EQ(id),
-			models.SessionWhere.Owner.IN(ownerPack),
+			models.SessionWhere.Owner.IN(owners),
 		).Bind(ctx, e.db, &summary)
 		if err != nil {
 			return nil, noErrorIfNoRows(err)
@@ -313,7 +296,7 @@ func (e *execute) GetSessionSummary(ctx context.Context, id int64, owner string,
 	} else if proto == models.ProtosTacacs {
 		err := models.TacacsSessions(
 			models.TacacsSessionWhere.ID.EQ(id),
-			models.TacacsSessionWhere.Owner.IN(ownerPack),
+			models.TacacsSessionWhere.Owner.IN(owners),
 		).Bind(ctx, e.db, &summary)
 		if err != nil {
 			return nil, noErrorIfNoRows(err)
@@ -323,14 +306,12 @@ func (e *execute) GetSessionSummary(ctx context.Context, id int64, owner string,
 	return &summary, nil
 }
 
-func (e *execute) GetTacacsSessionDetails(ctx context.Context, server, owner string, id int64) (*TacacsSessionWithFlow, error) {
-	ownerPack := utils.OwnerPack(owner)
-
+func (e *execute) GetTacacsSessionDetails(ctx context.Context, server string, owners []string, id int64) (*TacacsSessionWithFlow, error) {
 	var swf TacacsSessionWithFlow
 
 	err := models.TacacsSessions(
 		models.TacacsSessionWhere.ID.EQ(id),
-		models.TacacsSessionWhere.Owner.IN(ownerPack),
+		models.TacacsSessionWhere.Owner.IN(owners),
 		models.TacacsSessionWhere.Server.EQ(null.StringFrom(server)),
 	).Bind(ctx, e.db, &swf)
 	if err != nil {

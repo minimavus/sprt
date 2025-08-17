@@ -9,9 +9,9 @@ import (
 
 	"github.com/cisco-open/sprt/frontend-svc/internal/auth"
 	"github.com/cisco-open/sprt/frontend-svc/internal/certificates"
-	"github.com/cisco-open/sprt/frontend-svc/internal/db"
 	apierrors "github.com/cisco-open/sprt/frontend-svc/internal/errors"
-	"github.com/cisco-open/sprt/frontend-svc/models"
+	"github.com/cisco-open/sprt/go-generator/sdk/db"
+	"github.com/cisco-open/sprt/go-generator/sdk/db/models"
 )
 
 // @Summary Get certificates of a certain type

@@ -13,9 +13,9 @@ import (
 	"github.com/rs/zerolog/log"
 
 	"github.com/cisco-open/sprt/frontend-svc/internal/config"
-	"github.com/cisco-open/sprt/frontend-svc/internal/db"
 	"github.com/cisco-open/sprt/frontend-svc/internal/utils"
-	"github.com/cisco-open/sprt/frontend-svc/models"
+	"github.com/cisco-open/sprt/go-generator/sdk/db"
+	"github.com/cisco-open/sprt/go-generator/sdk/db/models"
 )
 
 type Importer []*models.Certificate

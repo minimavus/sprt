@@ -5,8 +5,9 @@ import (
 	"database/sql"
 	"errors"
 
-	"github.com/cisco-open/sprt/frontend-svc/models"
 	"github.com/sourcegraph/conc/pool"
+
+	"github.com/cisco-open/sprt/go-generator/sdk/db/models"
 )
 
 type OrderByDirection string

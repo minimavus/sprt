@@ -9,7 +9,7 @@ import (
 	"github.com/labstack/echo/v4"
 
 	"github.com/cisco-open/sprt/frontend-svc/internal/errors"
-	"github.com/cisco-open/sprt/frontend-svc/shared"
+	"github.com/cisco-open/sprt/go-generator/sdk/app"
 )
 
 type (
@@ -64,7 +64,7 @@ func (p *ProblemJSON) AddField(key string, value any) {
 	(*p)[key] = value
 }
 
-func NewErrorHandler(app shared.Logger) echo.HTTPErrorHandler {
+func NewErrorHandler(app app.Logger) echo.HTTPErrorHandler {
 	return func(err error, c echo.Context) {
 		if c.Response().Committed {
 			return

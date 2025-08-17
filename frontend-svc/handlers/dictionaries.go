@@ -11,10 +11,10 @@ import (
 	"github.com/volatiletech/sqlboiler/v4/boil"
 
 	"github.com/cisco-open/sprt/frontend-svc/internal/auth"
-	"github.com/cisco-open/sprt/frontend-svc/internal/db"
 	"github.com/cisco-open/sprt/frontend-svc/internal/policy"
-	"github.com/cisco-open/sprt/frontend-svc/models"
 
+	"github.com/cisco-open/sprt/go-generator/sdk/db"
+	"github.com/cisco-open/sprt/go-generator/sdk/db/models"
 	"github.com/cisco-open/sprt/go-generator/sdk/variables/dictionaries"
 )
 

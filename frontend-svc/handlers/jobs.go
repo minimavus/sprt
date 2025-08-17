@@ -7,9 +7,9 @@ import (
 	"github.com/labstack/echo/v4"
 
 	"github.com/cisco-open/sprt/frontend-svc/internal/auth"
-	"github.com/cisco-open/sprt/frontend-svc/internal/db"
 	"github.com/cisco-open/sprt/frontend-svc/internal/jobs"
 	"github.com/cisco-open/sprt/frontend-svc/internal/policy"
+	"github.com/cisco-open/sprt/go-generator/sdk/db"
 )
 
 func (m *controller) GetAllUsersWithJobs(c echo.Context) error {

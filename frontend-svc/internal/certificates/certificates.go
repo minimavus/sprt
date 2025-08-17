@@ -18,9 +18,9 @@ import (
 	"github.com/volatiletech/null/v8"
 	"github.com/zmap/zcrypto/x509"
 
-	"github.com/cisco-open/sprt/frontend-svc/internal/db"
-	"github.com/cisco-open/sprt/frontend-svc/models"
-	"github.com/cisco-open/sprt/frontend-svc/shared"
+	"github.com/cisco-open/sprt/go-generator/sdk/app"
+	"github.com/cisco-open/sprt/go-generator/sdk/db"
+	"github.com/cisco-open/sprt/go-generator/sdk/db/models"
 )
 
 var ErrNoKeys = errors.New("no keys")
@@ -195,7 +195,7 @@ func (c *Certificate) isExpired() bool {
 	return false
 }
 
-func (c *Certificate) LoadChain(ctx context.Context, app shared.LogDB) error {
+func (c *Certificate) LoadChain(ctx context.Context, app app.App) error {
 	if c.isSelfSigned() {
 		return nil
 	}

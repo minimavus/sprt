@@ -14,6 +14,7 @@ import (
 	"github.com/cisco-open/sprt/frontend-svc/internal/generator"
 	"github.com/cisco-open/sprt/frontend-svc/internal/pxgrid"
 	"github.com/cisco-open/sprt/frontend-svc/internal/queue"
+	"github.com/cisco-open/sprt/go-generator/sdk/app"
 	"github.com/cisco-open/sprt/go-generator/specs"
 )
 
@@ -25,9 +26,10 @@ type AppConfig struct {
 	generator generator.Generator
 	l         *zerolog.Logger
 	db        *sql.DB
-	n         *notifier
+	n         *specs.SpecNotify
 	px        *pxgrid.PXGridClient
 	queue     *queue.QueueClient
+	id        string
 }
 
 func LoadConfig(ctx context.Context) *AppConfig {
@@ -36,7 +38,7 @@ func LoadConfig(ctx context.Context) *AppConfig {
 	cfgFile := flag.String("config", "", "specifies config file to use")
 	flag.Parse()
 
-	a := &AppConfig{}
+	a := &AppConfig{id: app.GetNewServiceID()}
 
 	a.mustInitSpecNotifier().
 		mustLoadSpecs(cfgFile).
@@ -57,6 +59,10 @@ func LoadConfig(ctx context.Context) *AppConfig {
 
 func (app *AppConfig) InProduction() bool {
 	return app.Specs.Env == "production"
+}
+
+func (app *AppConfig) ID() string {
+	return app.id
 }
 
 // loadEnv loads .env files (if any)

@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/cisco-open/sprt/frontend-svc/internal/auth"
-	"github.com/cisco-open/sprt/frontend-svc/shared"
+	"github.com/cisco-open/sprt/go-generator/sdk/app"
 	"github.com/cisco-open/sprt/go-generator/sdk/json"
 )
 
@@ -117,7 +117,7 @@ type RadiusDefaults struct {
 	} `json:"scheduler"`
 }
 
-func GetUserProtoDefaults(_ context.Context, _ shared.LogDB, _ auth.ExtendedUserData, _ string) (any, error) {
+func GetUserProtoDefaults(_ context.Context, _ app.App, _ auth.ExtendedUserData, _ string) (any, error) {
 	// TODO: Implement this method
 	a := RadiusDefaults{}
 	err := json.Unmarshal([]byte(tempDefaults), &a)

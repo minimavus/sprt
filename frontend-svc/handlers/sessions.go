@@ -7,9 +7,11 @@ import (
 	"github.com/labstack/echo/v4"
 
 	"github.com/cisco-open/sprt/frontend-svc/internal/auth"
-	"github.com/cisco-open/sprt/frontend-svc/internal/db"
 	"github.com/cisco-open/sprt/frontend-svc/internal/sessions"
-	"github.com/cisco-open/sprt/frontend-svc/models"
+	"github.com/cisco-open/sprt/frontend-svc/internal/utils"
+
+	"github.com/cisco-open/sprt/go-generator/sdk/db"
+	"github.com/cisco-open/sprt/go-generator/sdk/db/models"
 	"github.com/cisco-open/sprt/go-generator/sdk/json"
 )
 
@@ -19,7 +21,7 @@ func (m *controller) GetSessionsPerServerBulked(c echo.Context) error {
 		return err
 	}
 
-	bulked, err := db.Exec(m.App).GetSessionsPerServerBulked(ctx, u.ForUser)
+	bulked, err := db.Exec(m.App).GetSessionsPerServerBulked(ctx, utils.OwnerPack(u.ForUser))
 	if err != nil {
 		return echo.ErrInternalServerError.WithInternal(err)
 	}
@@ -52,25 +54,25 @@ func (m *controller) GetSessionsPerBulk(proto models.Protos) func(c echo.Context
 		switch proto {
 		case models.ProtosRadius:
 			sessions, err := db.Exec(m.App).WithPagination(pagination.DBPagination()).WithSort(&sort).WithFilter(filter).
-				GetRadiusSessions(ctx, req.Server, u.ForUser, db.GetSessionsOptions{Bulk: req.Bulk})
+				GetRadiusSessions(ctx, req.Server, utils.OwnerPack(u.ForUser), db.GetSessionsOptions{Bulk: req.Bulk})
 			if err != nil {
 				return echo.ErrInternalServerError.WithInternal(err)
 			}
 
 			response["sessions"] = sessions
-			total, err = db.Exec(m.App).GetTotalRadiusSessionsInBulk(ctx, req.Server, u.ForUser, req.Bulk)
+			total, err = db.Exec(m.App).GetTotalRadiusSessionsInBulk(ctx, req.Server, utils.OwnerPack(u.ForUser), req.Bulk)
 			if err != nil {
 				return echo.ErrInternalServerError.WithInternal(err)
 			}
 		case models.ProtosTacacs:
 			sessions, err := db.Exec(m.App).WithPagination(pagination.DBPagination()).WithSort(&sort).WithFilter(filter).
-				GetTacacsSessions(ctx, req.Server, u.ForUser, db.GetSessionsOptions{Bulk: req.Bulk})
+				GetTacacsSessions(ctx, req.Server, utils.OwnerPack(u.ForUser), db.GetSessionsOptions{Bulk: req.Bulk})
 			if err != nil {
 				return echo.ErrInternalServerError.WithInternal(err)
 			}
 
 			response["sessions"] = sessions
-			total, err = db.Exec(m.App).GetTotalTacacsSessionsInBulk(ctx, req.Server, u.ForUser, req.Bulk)
+			total, err = db.Exec(m.App).GetTotalTacacsSessionsInBulk(ctx, req.Server, utils.OwnerPack(u.ForUser), req.Bulk)
 			if err != nil {
 				return echo.ErrInternalServerError.WithInternal(err)
 			}
@@ -99,7 +101,7 @@ func (m *controller) GetRadiusSessionDetails(c echo.Context) error {
 		return err
 	}
 
-	session, err := db.Exec(m.App).GetRadiusSessionDetails(ctx, req.Server, u.ForUser, req.SessionID)
+	session, err := db.Exec(m.App).GetRadiusSessionDetails(ctx, req.Server, utils.OwnerPack(u.ForUser), req.SessionID)
 	if err != nil {
 		return echo.ErrInternalServerError.WithInternal(err)
 	}
@@ -137,7 +139,7 @@ func (m *controller) GetRadiusSessionsGuestData(c echo.Context) error {
 		Str("sessions_specifier", req.SessionsSpecifier).Ints64("sessions", req.Sessions).
 		Interface("req", req).Msg("Getting radius sessions guest data")
 
-	sess, err := db.Exec(m.App).GetRadiusSessions(ctx, req.Server, u.ForUser, db.GetSessionsOptions{IDs: req.Sessions, Bulk: req.Bulk})
+	sess, err := db.Exec(m.App).GetRadiusSessions(ctx, req.Server, utils.OwnerPack(u.ForUser), db.GetSessionsOptions{IDs: req.Sessions, Bulk: req.Bulk})
 	if err != nil {
 		return echo.ErrInternalServerError.WithInternal(err)
 	}
@@ -210,7 +212,7 @@ func (m *controller) GetRadiusServersBulks(c echo.Context) error {
 		return err
 	}
 
-	servers, err := db.Exec(m.App).GetSessionsPerServerBulkedPerProto(ctx, u.ForUser, models.ProtosRadius)
+	servers, err := db.Exec(m.App).GetSessionsPerServerBulkedPerProto(ctx, utils.OwnerPack(u.ForUser), models.ProtosRadius)
 	if err != nil {
 		return echo.ErrInternalServerError.WithInternal(err)
 	}
@@ -232,7 +234,7 @@ func (m *controller) GetTacacsSessionDetails(c echo.Context) error {
 		return err
 	}
 
-	session, err := db.Exec(m.App).GetTacacsSessionDetails(ctx, req.Server, u.ForUser, req.SessionID)
+	session, err := db.Exec(m.App).GetTacacsSessionDetails(ctx, req.Server, utils.OwnerPack(u.ForUser), req.SessionID)
 	if err != nil {
 		return echo.ErrInternalServerError.WithInternal(err)
 	}
@@ -341,7 +343,7 @@ func (m *controller) GetSessionSummary(c echo.Context) error {
 	m.App.Logger().Debug().Int64("session_id", req.ID).Str("user", u.ForUser).Str("proto", req.Proto).
 		Msg("Getting session summary")
 
-	summary, err := db.Exec(m.App).GetSessionSummary(ctx, req.ID, u.ForUser, models.Protos(req.Proto))
+	summary, err := db.Exec(m.App).GetSessionSummary(ctx, req.ID, utils.OwnerPack(u.ForUser), models.Protos(req.Proto))
 	if err != nil {
 		return echo.ErrInternalServerError.WithInternal(err)
 	}

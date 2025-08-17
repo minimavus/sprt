@@ -1,39 +1,12 @@
 package shared
 
 import (
-	"context"
-	"database/sql"
 	"io/fs"
 
 	"github.com/labstack/echo/v4"
-	"github.com/rs/zerolog"
 )
 
 type (
-	Logger interface {
-		Logger() *zerolog.Logger
-	}
-
-	DBer interface {
-		DB() *sql.DB
-	}
-
-	LogDB interface {
-		Logger
-		DBer
-	}
-
-	SpecSetter interface {
-		SetSpec(ctx context.Context, key string, value any, opts ...SetSpecOptions) error
-	}
-
-	SpecChangeCallback func(key string, value any)
-
-	SpecNotifier interface {
-		OnSpecChange(key string, cb SpecChangeCallback)
-		OffSpecChange(key string, cb SpecChangeCallback)
-	}
-
 	EchoRouter interface {
 		Add(method string, path string, handler echo.HandlerFunc, middleware ...echo.MiddlewareFunc) *echo.Route
 		Any(path string, handler echo.HandlerFunc, middleware ...echo.MiddlewareFunc) []*echo.Route

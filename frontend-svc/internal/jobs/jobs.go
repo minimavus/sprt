@@ -10,8 +10,8 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/cisco-open/sprt/frontend-svc/internal/db"
-	"github.com/cisco-open/sprt/frontend-svc/shared"
+	"github.com/cisco-open/sprt/go-generator/sdk/app"
+	"github.com/cisco-open/sprt/go-generator/sdk/db"
 	"github.com/cisco-open/sprt/go-generator/sdk/json"
 )
 
@@ -34,7 +34,7 @@ func FindRunning(jobs []*db.JobWithCLI) []string {
 	return result
 }
 
-func GetJobStats(app shared.LogDB, ctx context.Context, job, user string) (any, error) {
+func GetJobStats(app app.App, ctx context.Context, job, user string) (any, error) {
 	// FIXME: get it from file, not API
 
 	api := `/jobs/id/` + job + `/charts/`
@@ -72,7 +72,7 @@ func GetJobStats(app shared.LogDB, ctx context.Context, job, user string) (any, 
 	return stats, nil
 }
 
-func DeleteJob(app shared.LogDB, ctx context.Context, job, user string, noRollbackOnFileErr bool) error {
+func DeleteJob(app app.App, ctx context.Context, job, user string, noRollbackOnFileErr bool) error {
 	tx, err := app.DB().BeginTx(ctx, &sql.TxOptions{})
 	if err != nil {
 		return err
@@ -109,7 +109,7 @@ func DeleteJob(app shared.LogDB, ctx context.Context, job, user string, noRollba
 	return tx.Commit()
 }
 
-func RepeatJob(app shared.LogDB, ctx context.Context, job, user string) error {
+func RepeatJob(app app.App, ctx context.Context, job, user string) error {
 	j, err := db.Exec(app).GetJobByID(ctx, job, user)
 	if err != nil {
 		return err

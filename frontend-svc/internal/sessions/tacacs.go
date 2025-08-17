@@ -1,7 +1,7 @@
 package sessions
 
 import (
-	"github.com/cisco-open/sprt/frontend-svc/internal/db"
+	"github.com/cisco-open/sprt/go-generator/sdk/db"
 )
 
 type TacacsFlowType string

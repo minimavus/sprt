@@ -12,7 +12,7 @@ build:
   " -buildvcs=false -o ./bin/sprt-ui ./cmd/web/*.go
 
 dev:
-	cd frontend && pnpm run dev & air && fg
+	cd frontend && pnpm run dev & air
 
 local-prod:
 	ENV=production ./bin/sprt-ui --config config.local.yml

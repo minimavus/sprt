@@ -7,11 +7,12 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/cisco-open/sprt/frontend-svc/models"
 	"github.com/samber/lo"
 	"github.com/volatiletech/null/v8"
 	"github.com/volatiletech/sqlboiler/v4/boil"
 	"github.com/volatiletech/sqlboiler/v4/queries/qm"
+
+	"github.com/cisco-open/sprt/go-generator/sdk/db/models"
 )
 
 type Cleanuper interface {

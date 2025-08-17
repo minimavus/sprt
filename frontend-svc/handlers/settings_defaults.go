@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/cisco-open/sprt/frontend-svc/internal/auth"
-	"github.com/cisco-open/sprt/frontend-svc/internal/db"
+	"github.com/cisco-open/sprt/go-generator/sdk/db"
 	"github.com/labstack/echo/v4"
 )
 

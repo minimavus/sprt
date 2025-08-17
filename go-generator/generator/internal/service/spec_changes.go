@@ -1,4 +1,4 @@
-package config
+package service
 
 import (
 	"context"
@@ -8,10 +8,10 @@ import (
 	"github.com/cisco-open/sprt/go-generator/specs"
 )
 
-var _ specs.SpecSetter = (*AppConfig)(nil)
-var _ specs.SpecNotifier = (*AppConfig)(nil)
+var _ specs.SpecSetter = (*Service)(nil)
+var _ specs.SpecNotifier = (*Service)(nil)
 
-func (app *AppConfig) mustInitSpecNotifier() *AppConfig {
+func (app *Service) mustInitSpecNotifier() *Service {
 	app.n = specs.NewSpecNotifier()
 	return app
 }
@@ -23,7 +23,7 @@ func getSetSpecOptions(opts ...specs.SetSpecOptions) specs.SetSpecOptions {
 	return opts[0]
 }
 
-func (app *AppConfig) SetSpec(ctx context.Context, key string, value any, opts ...specs.SetSpecOptions) (err error) {
+func (app *Service) SetSpec(ctx context.Context, key string, value any, opts ...specs.SetSpecOptions) (err error) {
 	o := getSetSpecOptions(opts...)
 
 	shouldRevert := true
@@ -56,7 +56,7 @@ func (app *AppConfig) SetSpec(ctx context.Context, key string, value any, opts .
 	return nil
 }
 
-func (app *AppConfig) GetSpec(ctx context.Context, key string) (any, bool) {
+func (app *Service) GetSpec(ctx context.Context, key string) (any, bool) {
 	v, ok := app.Specs.QuerySpec(key)
 	if ok {
 		return v, true
@@ -75,7 +75,7 @@ func (app *AppConfig) GetSpec(ctx context.Context, key string) (any, bool) {
 	return v, ok
 }
 
-func (app *AppConfig) GetSpecs(_ context.Context, keys ...string) (map[string]any, bool) {
+func (app *Service) GetSpecs(_ context.Context, keys ...string) (map[string]any, bool) {
 	if len(keys) == 0 {
 		return nil, false
 	}
@@ -108,10 +108,10 @@ func (app *AppConfig) GetSpecs(_ context.Context, keys ...string) (map[string]an
 	return configs, true
 }
 
-func (app *AppConfig) OnSpecChange(key string, cb specs.SpecChangeCallback) {
+func (app *Service) OnSpecChange(key string, cb specs.SpecChangeCallback) {
 	app.n.On(key, cb)
 }
 
-func (app *AppConfig) OffSpecChange(key string, cb specs.SpecChangeCallback) {
+func (app *Service) OffSpecChange(key string, cb specs.SpecChangeCallback) {
 	app.n.Off(key, cb)
 }
