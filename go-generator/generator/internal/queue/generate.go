@@ -1,0 +1,60 @@
+package queue
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/cisco-open/sprt/go-generator/sdk/rpc"
+	"github.com/cisco-open/sprt/go-generator/sdk/utils"
+	"github.com/google/uuid"
+	"github.com/nats-io/nats.go"
+	"github.com/sourcegraph/jsonrpc2"
+)
+
+func (q *QueueClient) ListenForGenerateJobs() error {
+	sub, err := q.Subscribe(q.cfg.GenerateQueue, q.onGenerateJob)
+	if err != nil {
+		return err
+	}
+
+	q.subs[q.cfg.GenerateQueue] = sub
+
+	q.m.On(q.cfg.GenerateQueue, rpc.RPCMethodGenerate, q.GenerateJob, &rpc.RPCGenerateParams{})
+
+	return nil
+}
+
+func (q *QueueClient) onGenerateJob(msg *nats.Msg) {
+	q.app.Logger().Debug().Str("subject", msg.Subject).Msg("Received generate job")
+
+	resp, err := q.m.Handle(q.app.Ctx(), q.cfg.GenerateQueue, msg.Data)
+	if err := q.handleAndPublish(msg, resp, err); err != nil {
+		q.app.Logger().Error().Err(err).Msg("Failed to handle and publish generate job response")
+	}
+}
+
+func (q *QueueClient) GenerateJob(_ context.Context, req *jsonrpc2.Request, data any) (*jsonrpc2.Response, error) {
+	params, ok := data.(*rpc.RPCGenerateParams)
+	if !ok {
+		return nil, fmt.Errorf("expected *rpc.RPCGenerateParams, got %T", data)
+	}
+
+	q.app.Logger().Debug().Str("user", params.User).Msg("Processing generate job")
+
+	if req.Notif {
+		q.app.Logger().Debug().Str("user", params.User).Msg("Generate job request is notification")
+		return nil, nil
+	}
+
+	jobID, err := uuid.NewV7()
+	if err != nil {
+		return nil, err
+	}
+
+	response := rpc.RPCGenerateResponseParams{
+		JobID:       jobID.String(),
+		GeneratorID: q.app.ID(),
+	}
+
+	return utils.PtrOf(rpc.Response(req.ID).Result(response).Build()), nil
+}

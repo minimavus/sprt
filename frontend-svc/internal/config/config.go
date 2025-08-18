@@ -65,6 +65,10 @@ func (app *AppConfig) ID() string {
 	return app.id
 }
 
+func (app *AppConfig) Ctx() context.Context {
+	return context.Background()
+}
+
 // loadEnv loads .env files (if any)
 func loadEnv() {
 	env := os.Getenv("ENV")

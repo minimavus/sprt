@@ -1,10 +1,11 @@
 package queue
 
 import (
+	"context"
 	"fmt"
 
-	"github.com/cisco-open/sprt/go-generator/sdk/json"
 	"github.com/cisco-open/sprt/go-generator/sdk/rpc"
+	"github.com/cisco-open/sprt/go-generator/sdk/utils"
 	"github.com/nats-io/nats.go"
 	"github.com/sourcegraph/jsonrpc2"
 )
@@ -17,39 +18,22 @@ func (q *QueueClient) SubscribeForControlMessages() error {
 
 	q.subs[q.myControlQueue()] = sub
 
+	q.m.On(q.myControlQueue(), rpc.RPCMethodGetRunningJobs, q.GetRunningJobs, nil)
+	q.m.On(q.myControlQueue(), rpc.RPCMethodStopJob, q.StopJob, &rpc.RPCStopJobParams{})
+
 	return nil
 }
 
 func (q *QueueClient) onControlMessage(msg *nats.Msg) {
 	q.app.Logger().Debug().Str("subject", msg.Subject).Msg("Received control message")
 
-	var req jsonrpc2.Request
-	if err := json.Unmarshal(msg.Data, &req); err != nil {
-		q.app.Logger().Error().Err(err).Msg("Failed to unmarshal control message")
-		return
+	resp, err := q.m.Handle(q.app.Ctx(), q.myControlQueue(), msg.Data)
+	if err := q.handleAndPublish(msg, resp, err); err != nil {
+		q.app.Logger().Error().Err(err).Msg("Failed to handle and publish control message")
 	}
-
-	var responseBytes []byte
-	var err error
-
-	switch req.Method {
-	case string(rpc.RPCMethodGetRunningJobs):
-		responseBytes, err = q.GetRunningJobs(req.ID)
-	default:
-		err = fmt.Errorf("invalid method for control message: %s", req.Method)
-		q.app.Logger().Error().Str("method", req.Method).Msg("Invalid method for control message")
-
-		responseBytes, err = rpc.NewResponse(req.ID).Error(jsonrpc2.CodeMethodNotFound, err).Bytes()
-		if err != nil {
-			q.app.Logger().Error().Err(err).Msg("Failed to marshal response")
-		}
-		responseBytes = nil
-	}
-
-	q.Publish(msg.Reply, responseBytes)
 }
 
-func (q *QueueClient) GetRunningJobs(reqID jsonrpc2.ID) ([]byte, error) {
+func (q *QueueClient) GetRunningJobs(_ context.Context, req *jsonrpc2.Request, _ any) (*jsonrpc2.Response, error) {
 	q.app.Logger().Debug().Msg("Getting running jobs")
 
 	jobs := make([]rpc.RPCJob, 0)
@@ -67,7 +51,22 @@ func (q *QueueClient) GetRunningJobs(reqID jsonrpc2.ID) ([]byte, error) {
 		Jobs: jobs,
 	}
 
-	return rpc.NewResponse(reqID).Result(resp).Bytes()
+	return utils.PtrOf(rpc.Response(req.ID).Result(resp).Build()), nil
+}
+
+func (q *QueueClient) StopJob(_ context.Context, req *jsonrpc2.Request, data any) (*jsonrpc2.Response, error) {
+	params, ok := data.(*rpc.RPCStopJobParams)
+	if !ok {
+		return nil, fmt.Errorf("expected *rpc.RPCStopJobParams, got %T", data)
+	}
+
+	q.app.Logger().Debug().Str("job_id", params.JobID).Str("user", params.User).Msg("TODO: Stopping job")
+
+	resp := rpc.RPCStopJobResponseParams{
+		Success: true,
+	}
+
+	return utils.PtrOf(rpc.Response(req.ID).Result(resp).Build()), nil
 }
 
 func (q *QueueClient) myControlQueue() string {

@@ -8,6 +8,7 @@ import (
 
 	"github.com/cisco-open/sprt/go-generator/sdk/app"
 	"github.com/cisco-open/sprt/go-generator/sdk/queue"
+	"github.com/cisco-open/sprt/go-generator/sdk/rpc"
 	"github.com/cisco-open/sprt/go-generator/specs"
 )
 
@@ -19,6 +20,8 @@ type QueueClient struct {
 	msgCounter atomic.Uint64
 
 	subs map[string]*nats.Subscription
+
+	m *rpc.RPCMethodsMap
 }
 
 func NewQueueClient(app app.App, cfg specs.QueueSpecs) (*QueueClient, error) {
@@ -32,6 +35,7 @@ func NewQueueClient(app app.App, cfg specs.QueueSpecs) (*QueueClient, error) {
 		app:  app,
 		cfg:  cfg,
 		subs: make(map[string]*nats.Subscription),
+		m:    rpc.MethodsMap(app.Logger()),
 	}, nil
 }
 
@@ -55,9 +59,6 @@ func setupOptions(l app.App, cfg specs.QueueSpecs) []nats.Option {
 		nats.DisconnectErrHandler(func(_ *nats.Conn, err error) {
 			l.Logger().Warn().Dur("total_wait", totalWait).Err(err).Msg("Disconnected from NATS service")
 		}),
-		nats.ReconnectHandler(func(nc *nats.Conn) {
-			l.Logger().Info().Str("url", nc.ConnectedUrl()).Msg("Reconnected to NATS service")
-		}),
 		nats.ClosedHandler(func(nc *nats.Conn) {
 			l.Logger().Info().Err(nc.LastError()).Msg("Closed connection to NATS service")
 		}),
@@ -67,6 +68,20 @@ func setupOptions(l app.App, cfg specs.QueueSpecs) []nats.Option {
 	}
 
 	return opts
+}
+
+func (q *QueueClient) SetupReconnectHandler() {
+	q.SetReconnectHandler(func(nc *nats.Conn) {
+		q.app.Logger().Info().Str("url", nc.ConnectedUrl()).Msg("Reconnected to NATS service")
+
+		if err := q.SubscribeForControlMessages(); err != nil {
+			q.app.Logger().Error().Err(err).Msg("Failed to subscribe for control messages after reconnect")
+		}
+
+		if err := q.ListenForGenerateJobs(); err != nil {
+			q.app.Logger().Error().Err(err).Msg("Failed to start listening for generate jobs after reconnect")
+		}
+	})
 }
 
 func (q *QueueClient) nextMsgID() string {

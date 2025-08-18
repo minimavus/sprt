@@ -1,16 +1,14 @@
 package queue
 
 import (
+	"context"
 	j "encoding/json"
 
 	"github.com/cisco-open/sprt/frontend-svc/internal/auth"
-	"github.com/cisco-open/sprt/go-generator/sdk/json"
 	"github.com/cisco-open/sprt/go-generator/sdk/rpc"
-	"github.com/cisco-open/sprt/go-generator/sdk/utils"
-	"github.com/sourcegraph/jsonrpc2"
 )
 
-func (q *QueueClient) PublishGenerateJob(job j.RawMessage, u *auth.ExtendedUserData) error {
+func (q *QueueClient) PublishGenerateJob(ctx context.Context, job j.RawMessage, u *auth.ExtendedUserData) (string, error) {
 	q.app.Logger().Debug().Str("job", string(job)).Msg("Publishing generate job")
 
 	p := rpc.RPCGenerateParams{
@@ -18,20 +16,26 @@ func (q *QueueClient) PublishGenerateJob(job j.RawMessage, u *auth.ExtendedUserD
 		User: u.ForUser,
 	}
 
-	paramsBytes, err := json.Marshal(p)
+	reqBytes, err := rpc.Request(rpc.RPCMethodGenerate).ID(q.nextMsgID()).Params(p).Bytes()
 	if err != nil {
-		return err
+		return "", err
 	}
 
-	req := jsonrpc2.Request{
-		Method: string(rpc.RPCMethodGenerate),
-		Params: utils.PtrOf(j.RawMessage(paramsBytes)),
-	}
-
-	reqBytes, err := json.Marshal(req)
+	resp, err := q.nc.RequestWithContext(ctx, q.cfg.GenerateQueue, reqBytes)
 	if err != nil {
-		return err
+		return "", err
 	}
 
-	return q.nc.Publish(q.cfg.GenerateQueue, reqBytes)
+	jrpcResp, err := rpc.DecodeJSONRPCResponse(resp.Data)
+	if err != nil {
+		return "", err
+	}
+
+	jobResponse, err := rpc.GetJSONRPCResult[rpc.RPCGenerateResponseParams](jrpcResp, q.app.Logger())
+	if err != nil {
+		q.app.Logger().Error().Err(err).Str("generator", jobResponse.GeneratorID).Msg("Failed to publish generate job")
+		return "", err
+	}
+
+	return jobResponse.JobID, nil
 }

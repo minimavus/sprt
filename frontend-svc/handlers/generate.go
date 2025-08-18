@@ -6,7 +6,6 @@ import (
 	"net/http"
 
 	"github.com/go-viper/mapstructure/v2"
-	"github.com/google/uuid"
 	"github.com/kaptinlin/jsonschema"
 	"github.com/labstack/echo/v4"
 
@@ -169,7 +168,7 @@ func (m *controller) GetSupportedTLSCipherSuites(c echo.Context) error {
 
 // Generate handles the generate request
 func (m *controller) Generate(c echo.Context) error {
-	u, _, err := auth.GetUserDataAndContext(c)
+	u, ctx, err := auth.GetUserDataAndContext(c)
 	if err != nil {
 		return err
 	}
@@ -190,14 +189,8 @@ func (m *controller) Generate(c echo.Context) error {
 		return echo.ErrBadRequest.WithInternal(err)
 	}
 
-	reqID, err := uuid.NewV7()
-	if err != nil {
-		m.App.Logger().Error().Err(err).Str("uid", u.ForUser).Msg("Failed to get new request UUID")
-		return echo.ErrInternalServerError.WithInternal(err)
-	}
-
 	proto := decodedBody.General.Job.Proto
-	m.App.Logger().Debug().Str("uid", u.ForUser).Str("proto", proto).Str("uuid", reqID.String()).
+	m.App.Logger().Debug().Str("uid", u.ForUser).Str("proto", proto).
 		Msg("Starting new generate job")
 
 	if err = m.validateProtoSchema(u, proto, decodedBody.Other); err != nil {
@@ -222,13 +215,14 @@ func (m *controller) Generate(c echo.Context) error {
 		return echo.ErrInternalServerError.WithInternal(err)
 	}
 
-	if err = m.App.Queue().PublishGenerateJob(rawBodyBytes, u); err != nil {
+	jobID, err := m.App.Queue().PublishGenerateJob(ctx, rawBodyBytes, u)
+	if err != nil {
 		m.App.Logger().Error().Err(err).Str("uid", u.ForUser).Str("proto", proto).
 			Msg("Failed to publish generate job")
 		return echo.ErrInternalServerError.WithInternal(err)
 	}
 
-	return c.JSON(http.StatusOK, map[string]any{"id": reqID})
+	return c.JSON(http.StatusOK, map[string]any{"id": jobID})
 }
 
 // validateProtoSchema validates the proto schema

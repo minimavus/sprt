@@ -12,7 +12,6 @@ import (
 	"github.com/cisco-open/sprt/go-generator/sdk/json"
 	"github.com/cisco-open/sprt/go-generator/sdk/queue"
 	"github.com/cisco-open/sprt/go-generator/sdk/rpc"
-	"github.com/sourcegraph/jsonrpc2"
 )
 
 type connection struct {
@@ -66,12 +65,7 @@ func (q *QueueClient) GetGenerators(ctx context.Context) ([]string, error) {
 func (q *QueueClient) GetRunningJobsOfGenerator(ctx context.Context, generatorID string) ([]rpc.RPCJob, error) {
 	q.app.Logger().Debug().Str("generator", generatorID).Msg("Getting running jobs of generator")
 
-	req := jsonrpc2.Request{
-		Method: string(rpc.RPCMethodGetRunningJobs),
-		ID:     q.nextMsgID(),
-	}
-
-	reqBytes, err := json.Marshal(req)
+	reqBytes, err := rpc.Request(rpc.RPCMethodGetRunningJobs).ID(q.nextMsgID()).Bytes()
 	if err != nil {
 		return nil, err
 	}
@@ -95,6 +89,40 @@ func (q *QueueClient) GetRunningJobsOfGenerator(ctx context.Context, generatorID
 	}
 
 	return jobsResponse.Jobs, nil
+}
+
+func (q *QueueClient) StopJob(ctx context.Context, generatorID, jobID, user string) (bool, error) {
+	q.app.Logger().Debug().Str("generator", generatorID).Str("job", jobID).Str("user", user).Msg("Stopping job")
+
+	params := rpc.RPCStopJobParams{
+		JobID: jobID,
+		User:  user,
+	}
+
+	reqBytes, err := rpc.Request(rpc.RPCMethodStopJob).ID(q.nextMsgID()).Params(params).Bytes()
+	if err != nil {
+		return false, err
+	}
+
+	resp, err := q.nc.RequestWithContext(ctx, q.getGeneratorQueue(generatorID), reqBytes)
+	if err != nil {
+		return false, err
+	}
+
+	q.app.Logger().Debug().Str("generator", generatorID).Str("job", jobID).Str("user", user).Msg("Stopped job")
+
+	jrpcResp, err := rpc.DecodeJSONRPCResponse(resp.Data)
+	if err != nil {
+		return false, err
+	}
+
+	jobResponse, err := rpc.GetJSONRPCResult[rpc.RPCStopJobResponseParams](jrpcResp, q.app.Logger())
+	if err != nil {
+		q.app.Logger().Error().Err(err).Str("generator", generatorID).Str("job", jobID).Str("user", user).Msg("Failed to stop job")
+		return false, err
+	}
+
+	return jobResponse.Success, nil
 }
 
 func (q *QueueClient) GetRunningJobs(ctx context.Context) ([]rpc.RPCJob, error) {

@@ -56,6 +56,10 @@ func (s *Service) ID() string {
 	return s.id
 }
 
+func (s *Service) Ctx() context.Context {
+	return s.mainCtx
+}
+
 func (s *Service) Close() {
 	timeoutCtx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()

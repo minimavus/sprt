@@ -27,5 +27,11 @@ func (s *Service) StartListeningOnQueues() error {
 	}
 
 	s.Logger().Debug().Msg("Listening for control messages")
-	return s.q.SubscribeForControlMessages()
+	if err := s.q.SubscribeForControlMessages(); err != nil {
+		return err
+	}
+
+	s.q.SetupReconnectHandler()
+
+	return nil
 }

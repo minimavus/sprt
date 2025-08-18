@@ -356,7 +356,33 @@ func (m *controller) GetRunningProcessesStatus(c echo.Context) error {
 }
 
 func (m *controller) StopRunningProcess(c echo.Context) error {
-	return echo.ErrNotImplemented
+	u, ctx, err := auth.GetUserDataAndContext(c)
+	if err != nil {
+		return err
+	}
+
+	req := new(struct {
+		GeneratorID string `query:"generator_id" validate:"required"`
+		JobID       string `query:"job_id" validate:"required"`
+		User        string `query:"user" validate:"required"`
+	})
+	if err = m.bindAndValidate(c, req); err != nil {
+		return err
+	}
+
+	m.App.Logger().Debug().
+		Str("generator_id", req.GeneratorID).
+		Str("job_id", req.JobID).
+		Str("user", req.User).
+		Str("requestor", u.ForUser).
+		Msg("Stopping job of a user")
+	stopped, err := m.App.Queue().StopJob(ctx, req.GeneratorID, req.JobID, req.User)
+	if err != nil {
+		m.App.Logger().Error().Err(err).Msg("Failed to stop job")
+		return echo.ErrInternalServerError.WithInternal(err)
+	}
+
+	return c.JSON(http.StatusOK, map[string]any{"stopped": stopped})
 }
 
 func (m *controller) GetScheduledJobs(c echo.Context) error {

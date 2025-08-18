@@ -45,7 +45,7 @@ type ResponseBuilder struct {
 	r jsonrpc2.Response
 }
 
-func NewResponse(id jsonrpc2.ID) *ResponseBuilder {
+func Response(id jsonrpc2.ID) *ResponseBuilder {
 	return &ResponseBuilder{
 		r: jsonrpc2.Response{
 			ID: id,
@@ -53,7 +53,7 @@ func NewResponse(id jsonrpc2.ID) *ResponseBuilder {
 	}
 }
 
-func NewResponseWithStringID(id string) *ResponseBuilder {
+func ResponseWithStringID(id string) *ResponseBuilder {
 	return &ResponseBuilder{
 		r: jsonrpc2.Response{
 			ID: jsonrpc2.ID{Str: id},
@@ -61,10 +61,24 @@ func NewResponseWithStringID(id string) *ResponseBuilder {
 	}
 }
 
-func NewResponseWithNumID(id int64) *ResponseBuilder {
+func ResponseWithNumID(id int64) *ResponseBuilder {
 	return &ResponseBuilder{
 		r: jsonrpc2.Response{
 			ID: jsonrpc2.ID{Num: uint64(id)},
+		},
+	}
+}
+
+func BuildFromResponse(resp *jsonrpc2.Response) *ResponseBuilder {
+	return &ResponseBuilder{
+		r: *resp,
+	}
+}
+
+func BuildResponseFromError(err *jsonrpc2.Error) *ResponseBuilder {
+	return &ResponseBuilder{
+		r: jsonrpc2.Response{
+			Error: err,
 		},
 	}
 }
@@ -107,6 +121,73 @@ func (b *ResponseBuilder) Bytes() ([]byte, error) {
 	data, err := json.Marshal(b.Build())
 	if err != nil {
 		return nil, fmt.Errorf("failed to marshal response: %w", err)
+	}
+	return data, nil
+}
+
+type RequestBuilder struct {
+	r        jsonrpc2.Request
+	buildErr error
+}
+
+func Request(method RPCMethod) *RequestBuilder {
+	return &RequestBuilder{
+		r: jsonrpc2.Request{
+			Method: string(method),
+		},
+	}
+}
+
+func BuildFromRequest(req *jsonrpc2.Request) *RequestBuilder {
+	return &RequestBuilder{
+		r: *req,
+	}
+}
+
+func (b *RequestBuilder) ID(id jsonrpc2.ID) *RequestBuilder {
+	b.r.ID = id
+	return b
+}
+
+func (b *RequestBuilder) IDStr(id string) *RequestBuilder {
+	b.r.ID = jsonrpc2.ID{Str: id}
+	return b
+}
+
+func (b *RequestBuilder) IDNum(id int64) *RequestBuilder {
+	b.r.ID = jsonrpc2.ID{Num: uint64(id)}
+	return b
+}
+
+func (b *RequestBuilder) Params(params any) *RequestBuilder {
+	switch v := params.(type) {
+	case j.RawMessage:
+		b.r.Params = utils.PtrOf(v)
+	case *j.RawMessage:
+		b.r.Params = v
+	default:
+		bt, err := json.Marshal(params)
+		if err != nil {
+			b.buildErr = fmt.Errorf("failed to marshal params: %w", err)
+			return b
+		}
+		b.r.Params = utils.PtrOf(j.RawMessage(bt))
+	}
+	return b
+}
+
+func (b *RequestBuilder) Build() (jsonrpc2.Request, error) {
+	return b.r, b.buildErr
+}
+
+func (b *RequestBuilder) Bytes() ([]byte, error) {
+	built, err := b.Build()
+	if err != nil {
+		return nil, err
+	}
+	data, err := json.Marshal(built)
+	if err != nil {
+		return nil, fmt.Errorf("failed to marshal request: %w", err)
 	}
 	return data, nil
 }

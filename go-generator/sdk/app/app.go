@@ -1,6 +1,7 @@
 package app
 
 import (
+	"context"
 	"database/sql"
 
 	gonanoid "github.com/matoous/go-nanoid"
@@ -24,6 +25,7 @@ type (
 		Logger
 		DBer
 		IDer
+		Ctx() context.Context
 	}
 )
 
