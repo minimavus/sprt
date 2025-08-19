@@ -97,7 +97,7 @@ type (
 func traverseStruct(prefix string, rt reflect.Type, rv reflect.Value) {
 	for i := range rt.NumField() {
 		rf := rt.Field(i)
-		ymlName := prefixed(prefix, strcase.ToKebab(rf.Name))
+		ymlName := prefixed(prefix, getFieldName(rf))
 		if rf.Type.Kind() == reflect.Struct {
 			traverseStruct(ymlName, rf.Type, rv.FieldByName(rf.Name))
 			continue
@@ -125,6 +125,15 @@ func prefixed(prefix, name string) string {
 	}
 
 	return prefix + "." + name
+}
+
+func getFieldName(rf reflect.StructField) string {
+	name := rf.Name
+	if tag := rf.Tag.Get("yaml"); tag != "" {
+		name = tag
+	}
+
+	return strcase.ToKebab(name)
 }
 
 func (s *Specs) PrepareViper() {

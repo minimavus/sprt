@@ -1,6 +1,10 @@
 package rpc
 
-import "encoding/json"
+import (
+	"encoding/json"
+
+	"github.com/cisco-open/sprt/go-generator/sdk/iputils"
+)
 
 type (
 	RPCMethod string
@@ -35,6 +39,10 @@ type (
 	RPCStopJobResponseParams struct {
 		Success bool `json:"success"`
 	}
+
+	RPCGetIPSourcesResponseParams struct {
+		Sources []iputils.Source `json:"sources"`
+	}
 )
 
 const (
@@ -42,4 +50,6 @@ const (
 
 	RPCMethodGetRunningJobs RPCMethod = "get_running_jobs"
 	RPCMethodStopJob        RPCMethod = "stop_job"
+
+	RPCMethodGetIPSources RPCMethod = "get_ip_sources"
 )

@@ -2,6 +2,7 @@ package service
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/cisco-open/sprt/go-generator/specs"
 	"github.com/spf13/viper"
@@ -17,6 +18,7 @@ func (a *Service) mustLoadSpecs(cfgFile *string) *Service {
 	viper.SetConfigName("config")
 	viper.SetConfigType("yaml")
 	viper.SetEnvPrefix("sprt")
+	viper.SetEnvKeyReplacer(strings.NewReplacer("sprt", "sprt_generator"))
 
 	if cfgFile != nil && *cfgFile != "" {
 		viper.SetConfigFile(*cfgFile)

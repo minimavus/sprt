@@ -8,10 +8,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/cisco-open/sprt/go-generator/sdk/conc"
 	"github.com/cisco-open/sprt/go-generator/sdk/json"
 	"github.com/cisco-open/sprt/go-generator/sdk/queue"
-	"github.com/cisco-open/sprt/go-generator/sdk/rpc"
 )
 
 type connection struct {
@@ -60,101 +58,6 @@ func (q *QueueClient) GetGenerators(ctx context.Context) ([]string, error) {
 	}
 
 	return generators, nil
-}
-
-func (q *QueueClient) GetRunningJobsOfGenerator(ctx context.Context, generatorID string) ([]rpc.RPCJob, error) {
-	q.app.Logger().Debug().Str("generator", generatorID).Msg("Getting running jobs of generator")
-
-	reqBytes, err := rpc.Request(rpc.RPCMethodGetRunningJobs).ID(q.nextMsgID()).Bytes()
-	if err != nil {
-		return nil, err
-	}
-
-	resp, err := q.nc.RequestWithContext(ctx, q.getGeneratorQueue(generatorID), reqBytes)
-	if err != nil {
-		return nil, err
-	}
-
-	q.app.Logger().Debug().Str("generator", generatorID).Msg("Got running jobs of generator")
-
-	jrpcResp, err := rpc.DecodeJSONRPCResponse(resp.Data)
-	if err != nil {
-		return nil, err
-	}
-
-	jobsResponse, err := rpc.GetJSONRPCResult[rpc.RPCGetRunningJobsResponseParams](jrpcResp, q.app.Logger())
-	if err != nil {
-		q.app.Logger().Error().Err(err).Str("generator", generatorID).Msg("Failed to get running jobs of generator")
-		return nil, err
-	}
-
-	return jobsResponse.Jobs, nil
-}
-
-func (q *QueueClient) StopJob(ctx context.Context, generatorID, jobID, user string) (bool, error) {
-	q.app.Logger().Debug().Str("generator", generatorID).Str("job", jobID).Str("user", user).Msg("Stopping job")
-
-	params := rpc.RPCStopJobParams{
-		JobID: jobID,
-		User:  user,
-	}
-
-	reqBytes, err := rpc.Request(rpc.RPCMethodStopJob).ID(q.nextMsgID()).Params(params).Bytes()
-	if err != nil {
-		return false, err
-	}
-
-	resp, err := q.nc.RequestWithContext(ctx, q.getGeneratorQueue(generatorID), reqBytes)
-	if err != nil {
-		return false, err
-	}
-
-	q.app.Logger().Debug().Str("generator", generatorID).Str("job", jobID).Str("user", user).Msg("Stopped job")
-
-	jrpcResp, err := rpc.DecodeJSONRPCResponse(resp.Data)
-	if err != nil {
-		return false, err
-	}
-
-	jobResponse, err := rpc.GetJSONRPCResult[rpc.RPCStopJobResponseParams](jrpcResp, q.app.Logger())
-	if err != nil {
-		q.app.Logger().Error().Err(err).Str("generator", generatorID).Str("job", jobID).Str("user", user).Msg("Failed to stop job")
-		return false, err
-	}
-
-	return jobResponse.Success, nil
-}
-
-func (q *QueueClient) GetRunningJobs(ctx context.Context) ([]rpc.RPCJob, error) {
-	generators, err := q.GetGenerators(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	q.app.Logger().Debug().Strs("generators", generators).Msg("Found generators")
-
-	pool := conc.NewResultPoolWithMaxGoroutines[[]rpc.RPCJob](ctx, len(generators))
-
-	for _, generatorID := range generators {
-		pool.Go(func(ctx context.Context) ([]rpc.RPCJob, error) {
-			return q.GetRunningJobsOfGenerator(ctx, generatorID)
-		})
-	}
-
-	t, err := pool.Wait()
-	if err != nil {
-		return nil, err
-	}
-
-	var jobs []rpc.RPCJob
-	for _, v := range t {
-		if v == nil {
-			continue
-		}
-		jobs = append(jobs, v...)
-	}
-
-	return jobs, nil
 }
 
 func (q *QueueClient) getMngURL(path string) (string, error) {

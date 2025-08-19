@@ -1,19 +1,22 @@
 package generator
 
 import (
+	"context"
 	"fmt"
 	"net"
 
+	"github.com/cisco-open/sprt/frontend-svc/internal/queue"
 	"github.com/cisco-open/sprt/go-generator/sdk/iputils"
 )
 
-func (g *generator) GetAvailableIPSources(includeAll bool) ([]iputils.Source, error) {
+func (g *generator) GetAvailableIPSources(ctx context.Context, q *queue.QueueClient, includeAll bool) ([]iputils.Source, error) {
 	if !g.cfg.SourceIP.AutoDetect {
 		g.app.Logger().Debug().Msg("IP source auto-detection is disabled")
 		return g.getExplicitSources()
 	}
 
-	srcs, err := iputils.GetAvailableIPSources(g.app.Logger())
+	// srcs, err := iputils.GetAvailableIPSources(g.app.Logger())
+	srcs, err := q.GetIPSources(ctx)
 	if err != nil {
 		return nil, err
 	}

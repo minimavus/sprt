@@ -13,7 +13,8 @@ import (
 )
 
 func main() {
-	svc := service.Build(context.Background())
+	ctx, cancel := context.WithCancel(context.Background())
+	svc := service.Build(ctx)
 
 	var plugins []string
 	for _, p := range registry.Registered() {
@@ -24,6 +25,7 @@ func main() {
 	defer func() {
 		svc.Logger().Debug().Msg("Closing queue")
 		svc.Close()
+		cancel()
 
 		svc.Logger().Debug().Int("goroutines", runtime.NumGoroutine()).Msg("Close stats")
 	}()

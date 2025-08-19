@@ -60,7 +60,7 @@ func (m *controller) GetAvailableIPSources(c echo.Context) error {
 		return err
 	}
 
-	u, _, err := auth.GetUserDataAndContext(c)
+	u, ctx, err := auth.GetUserDataAndContext(c)
 	if err != nil {
 		return err
 	}
@@ -68,7 +68,7 @@ func (m *controller) GetAvailableIPSources(c echo.Context) error {
 		return echo.ErrForbidden
 	}
 
-	sources, err := m.App.Generator().GetAvailableIPSources(req.IncludeAll)
+	sources, err := m.App.Generator().GetAvailableIPSources(ctx, m.App.Queue(), req.IncludeAll)
 	if err != nil {
 		return echo.ErrInternalServerError.WithInternal(err)
 	}
