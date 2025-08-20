@@ -5,15 +5,17 @@ import (
 	j "encoding/json"
 
 	"github.com/cisco-open/sprt/frontend-svc/internal/auth"
+	"github.com/cisco-open/sprt/go-generator/sdk/iputils"
 	"github.com/cisco-open/sprt/go-generator/sdk/rpc"
 )
 
-func (q *QueueClient) PublishGenerateJob(ctx context.Context, job j.RawMessage, u *auth.ExtendedUserData) (string, error) {
+func (q *QueueClient) PublishGenerateJob(ctx context.Context, job j.RawMessage, u *auth.ExtendedUserData, source iputils.Source) (string, error) {
 	q.app.Logger().Debug().Str("job", string(job)).Msg("Publishing generate job")
 
 	p := rpc.RPCGenerateParams{
-		Job:  job,
-		User: u.ForUser,
+		Job:    job,
+		User:   u.ForUser,
+		Source: source,
 	}
 
 	reqBytes, err := rpc.Request(rpc.RPCMethodGenerate).ID(q.nextMsgID()).Params(p).Bytes()

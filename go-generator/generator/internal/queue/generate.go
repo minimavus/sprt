@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/cisco-open/sprt/go-generator/sdk/iputils"
 	"github.com/cisco-open/sprt/go-generator/sdk/rpc"
 	"github.com/cisco-open/sprt/go-generator/sdk/utils"
 	"github.com/google/uuid"
@@ -39,16 +40,28 @@ func (q *QueueClient) GenerateJob(_ context.Context, req *jsonrpc2.Request, data
 		return nil, fmt.Errorf("expected *rpc.RPCGenerateParams, got %T", data)
 	}
 
-	q.app.Logger().Debug().Str("user", params.User).Msg("Processing generate job")
+	q.app.Logger().Debug().Str("user", params.User).Interface("source", params.Source).Msg("Processing generate job request")
+
+	isMyIP, err := q.isMyIP(params.Source)
+	if err != nil {
+		q.app.Logger().Error().Err(err).Msg("Failed to check if IP is mine")
+		return nil, err
+	}
+
+	if !isMyIP {
+		q.app.Logger().Debug().Str("user", params.User).Msg("Generate job request is not for me")
+		return nil, nil
+	}
+
+	q.app.Logger().Debug().Interface("source", params.Source).Str("user", params.User).Msg("Generate job request is for me")
+	jobID, err := uuid.NewV7()
+	if err != nil {
+		return nil, err
+	}
 
 	if req.Notif {
 		q.app.Logger().Debug().Str("user", params.User).Msg("Generate job request is notification")
 		return nil, nil
-	}
-
-	jobID, err := uuid.NewV7()
-	if err != nil {
-		return nil, err
 	}
 
 	response := rpc.RPCGenerateResponseParams{
@@ -57,4 +70,21 @@ func (q *QueueClient) GenerateJob(_ context.Context, req *jsonrpc2.Request, data
 	}
 
 	return utils.PtrOf(rpc.Response(req.ID).Result(response).Build()), nil
+}
+
+func (q *QueueClient) isMyIP(provided iputils.Source) (bool, error) {
+	sources, err := iputils.GetAvailableIPSources(q.app.Logger())
+	if err != nil {
+		return false, err
+	}
+
+	for _, source := range sources {
+		if provided.Address == source.Address {
+			if provided.Interface == "" || provided.Interface == source.Interface {
+				return true, nil
+			}
+		}
+	}
+
+	return false, nil
 }

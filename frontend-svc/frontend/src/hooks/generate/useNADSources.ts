@@ -73,7 +73,9 @@ export function useNADSourcesCombined(user: QueryUser) {
         const familyName = FamilyName[source.family] ?? source.family;
         const group = acc.find((g) => g.group === familyName);
         const compiled = {
-          value: source.address,
+          value: source.interface
+            ? `[${source.interface}]:[${source.address}]`
+            : `${source.address}`,
           label: source.interface
             ? `${source.address} (${source.interface})`
             : source.address,

@@ -31,6 +31,11 @@ func (s *Service) StartListeningOnQueues() error {
 		return err
 	}
 
+	s.Logger().Debug().Msg("Publishing new generator notification")
+	if err := s.q.PublishNewGeneratorNotification(s.ID()); err != nil {
+		return err
+	}
+
 	s.q.SetupReconnectHandler()
 
 	return nil

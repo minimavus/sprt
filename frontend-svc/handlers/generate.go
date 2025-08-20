@@ -13,6 +13,7 @@ import (
 	"github.com/cisco-open/sprt/frontend-svc/internal/policy"
 	"github.com/cisco-open/sprt/frontend-svc/internal/user"
 	"github.com/cisco-open/sprt/frontend-svc/internal/variables"
+	"github.com/cisco-open/sprt/go-generator/sdk/iputils"
 	"github.com/cisco-open/sprt/go-generator/sdk/json"
 	"github.com/cisco-open/sprt/go-generator/sdk/registry"
 	"github.com/cisco-open/sprt/go-generator/sdk/schemas"
@@ -215,7 +216,15 @@ func (m *controller) Generate(c echo.Context) error {
 		return echo.ErrInternalServerError.WithInternal(err)
 	}
 
-	jobID, err := m.App.Queue().PublishGenerateJob(ctx, rawBodyBytes, u)
+	interfaceName, ip := iputils.SplitAddress(decodedBody.General.Nas.NasIP)
+	m.App.Logger().Debug().Str("interface", interfaceName).Str("ip", ip).
+		Msg("Splitting NAS IP")
+	source := iputils.Source{
+		Address:   ip,
+		Interface: interfaceName,
+	}
+
+	jobID, err := m.App.Queue().PublishGenerateJob(ctx, rawBodyBytes, u, source)
 	if err != nil {
 		m.App.Logger().Error().Err(err).Str("uid", u.ForUser).Str("proto", proto).
 			Msg("Failed to publish generate job")

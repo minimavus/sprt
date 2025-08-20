@@ -19,3 +19,14 @@ func (app *AppConfig) mustInitQueue() *AppConfig {
 func (app *AppConfig) Queue() *queue.QueueClient {
 	return app.queue
 }
+
+func (app *AppConfig) StartListeningOnQueues() error {
+	app.Logger().Debug().Msg("Listening for generate jobs")
+	if err := app.queue.SubscribeForNewGeneratorNotification(); err != nil {
+		return err
+	}
+
+	app.queue.SetupReconnectHandler()
+
+	return nil
+}

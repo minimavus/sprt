@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/gob"
 	"net"
-	"net/http"
 
 	"github.com/labstack/echo/v4"
 
@@ -22,15 +21,11 @@ import (
 func main() {
 	e, app := prepareApp()
 
-	// Setup the API Group
-	api := e.Group("/api")
-
-	// Basic APi endpoint
-	api.GET("/message", func(c echo.Context) error {
-		return c.JSON(http.StatusOK, map[string]string{"message": "Hello, from the golang World!"})
-	})
-
 	listen := net.JoinHostPort("", app.Specs.Server.Port)
+
+	if err := app.StartListeningOnQueues(); err != nil {
+		panic(err)
+	}
 
 	var err error
 	if app.Specs.Server.TLS {

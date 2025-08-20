@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/cisco-open/sprt/go-generator/sdk/iputils"
+	"github.com/cisco-open/sprt/go-generator/sdk/queue"
 	"github.com/cisco-open/sprt/go-generator/sdk/rpc"
 	"github.com/cisco-open/sprt/go-generator/sdk/utils"
 	"github.com/nats-io/nats.go"
@@ -86,6 +87,23 @@ func (q *QueueClient) GetIPSources(_ context.Context, req *jsonrpc2.Request, _ a
 	return utils.PtrOf(rpc.Response(req.ID).Result(resp).Build()), nil
 }
 
+func (q *QueueClient) PublishNewGeneratorNotification(generatorID string) error {
+	p := rpc.RPCNewGeneratorNotificationParams{
+		GeneratorID: generatorID,
+	}
+
+	reqBytes, err := rpc.Request(rpc.RPCMethodNewGeneratorNotification).Params(p).Bytes()
+	if err != nil {
+		return err
+	}
+
+	return q.Publish(q.notificationControlQueue(), reqBytes)
+}
+
 func (q *QueueClient) myControlQueue() string {
 	return q.cfg.ControlQueue + "." + q.app.ID()
+}
+
+func (q *QueueClient) notificationControlQueue() string {
+	return queue.NotificationSubQueue(q.cfg.ControlQueue)
 }

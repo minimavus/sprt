@@ -10,8 +10,9 @@ type (
 	RPCMethod string
 
 	RPCGenerateParams struct {
-		Job  json.RawMessage `json:"job"`
-		User string          `json:"user"`
+		Job    json.RawMessage `json:"job"`
+		User   string          `json:"user"`
+		Source iputils.Source  `json:"source"`
 	}
 
 	RPCGenerateResponseParams struct {
@@ -43,6 +44,10 @@ type (
 	RPCGetIPSourcesResponseParams struct {
 		Sources []iputils.Source `json:"sources"`
 	}
+
+	RPCNewGeneratorNotificationParams struct {
+		GeneratorID string `json:"generator_id"`
+	}
 )
 
 const (
@@ -52,4 +57,6 @@ const (
 	RPCMethodStopJob        RPCMethod = "stop_job"
 
 	RPCMethodGetIPSources RPCMethod = "get_ip_sources"
+
+	RPCMethodNewGeneratorNotification RPCMethod = "new_generator_notification"
 )

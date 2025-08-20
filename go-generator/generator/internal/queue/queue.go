@@ -81,6 +81,10 @@ func (q *QueueClient) SetupReconnectHandler() {
 		if err := q.ListenForGenerateJobs(); err != nil {
 			q.app.Logger().Error().Err(err).Msg("Failed to start listening for generate jobs after reconnect")
 		}
+
+		if err := q.PublishNewGeneratorNotification(q.app.ID()); err != nil {
+			q.app.Logger().Error().Err(err).Msg("Failed to publish new generator notification after reconnect")
+		}
 	})
 }
 

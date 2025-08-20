@@ -9,6 +9,7 @@ import (
 
 	"github.com/cisco-open/sprt/go-generator/sdk/app"
 	"github.com/cisco-open/sprt/go-generator/sdk/queue"
+	"github.com/cisco-open/sprt/go-generator/sdk/rpc"
 	"github.com/cisco-open/sprt/go-generator/specs"
 )
 
@@ -18,6 +19,8 @@ type QueueClient struct {
 	cfg specs.QueueSpecs
 
 	msgCounter atomic.Uint64
+
+	m *rpc.RPCMethodsMap
 }
 
 func NewQueueClient(app app.App, cfg specs.QueueSpecs) (*QueueClient, error) {
@@ -26,7 +29,12 @@ func NewQueueClient(app app.App, cfg specs.QueueSpecs) (*QueueClient, error) {
 		return nil, err
 	}
 
-	return &QueueClient{app, nc, cfg, atomic.Uint64{}}, nil
+	return &QueueClient{
+		app: app,
+		nc:  nc,
+		cfg: cfg,
+		m:   rpc.MethodsMap(app.Logger()),
+	}, nil
 }
 
 func (q *QueueClient) Close() {
@@ -61,9 +69,6 @@ func setupOptions(l app.Logger, cfg specs.QueueSpecs) []nats.Option {
 		nats.DisconnectErrHandler(func(_ *nats.Conn, err error) {
 			l.Logger().Warn().Dur("total_wait", totalWait).Err(err).Msg("Disconnected from NATS service")
 		}),
-		nats.ReconnectHandler(func(nc *nats.Conn) {
-			l.Logger().Info().Str("url", nc.ConnectedUrl()).Msg("Reconnected to NATS service")
-		}),
 		nats.ClosedHandler(func(nc *nats.Conn) {
 			l.Logger().Info().Err(nc.LastError()).Msg("Closed connection to NATS service")
 		}),
@@ -72,8 +77,21 @@ func setupOptions(l app.Logger, cfg specs.QueueSpecs) []nats.Option {
 	return opts
 }
 
+func (q *QueueClient) SetupReconnectHandler() {
+	q.nc.SetReconnectHandler(func(nc *nats.Conn) {
+		q.app.Logger().Info().Str("url", nc.ConnectedUrl()).Msg("Reconnected to NATS service")
+
+		if err := q.SubscribeForNewGeneratorNotification(); err != nil {
+			q.app.Logger().Error().Err(err).Msg("Failed to subscribe for new generator notification after reconnect")
+		}
+	})
+}
+
 func (q *QueueClient) nextMsgID() jsonrpc2.ID {
 	return jsonrpc2.ID{
 		Str: fmt.Sprintf("%s-%d", q.app.ID(), q.msgCounter.Add(1)),
 	}
+}
+func (q *QueueClient) notificationControlQueue() string {
+	return queue.NotificationSubQueue(q.cfg.ControlQueue)
 }

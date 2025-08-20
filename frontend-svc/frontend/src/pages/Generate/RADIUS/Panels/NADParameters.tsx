@@ -38,6 +38,7 @@ const NADSourceAddress: FC = () => {
             error={getErrorMessage(error)}
             multiple={false}
             className={styles.compact}
+            allowDeselect={false}
           />
         ) : (
           <></>

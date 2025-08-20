@@ -222,6 +222,7 @@ export const radiusForm = z.object({
   general: z.object({
     nas: z.object({
       nasIp: z.string().nonempty(),
+      nasInterface: z.string().trim().optional(),
       connectionType: z.string().nonempty(),
       mtu: z.coerce.number().min(1),
       sessionIdTemplate: z.string().nonempty(),
