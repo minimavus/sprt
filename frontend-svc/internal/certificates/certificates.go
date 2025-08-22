@@ -15,7 +15,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/volatiletech/null/v8"
+	"github.com/aarondl/null/v8"
 	"github.com/zmap/zcrypto/x509"
 
 	"github.com/cisco-open/sprt/go-generator/sdk/app"

@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/aarondl/null/v8"
 	"github.com/labstack/echo/v4"
-	"github.com/volatiletech/null/v8"
 
 	"github.com/cisco-open/sprt/frontend-svc/internal/auth"
 	"github.com/cisco-open/sprt/frontend-svc/internal/certificates"

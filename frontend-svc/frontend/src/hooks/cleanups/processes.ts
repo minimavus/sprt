@@ -1,7 +1,8 @@
 import type { QueryKey } from "@tanstack/react-query";
 import z from "zod";
+
+import { useGetQuery } from "@/hooks/useGetQuery";
 import { api } from "@/utils/apiCompose";
-import { useGetQuery } from "../useGetQuery";
 
 export const JobSchema = z.object({
   id: z.string(),
@@ -11,7 +12,12 @@ export const JobSchema = z.object({
   user: z.string(),
 });
 
+export const ScheduledJobSchema = JobSchema.extend({
+  schedule: z.string(),
+});
+
 export type Job = z.infer<typeof JobSchema>;
+export type ScheduledJob = z.infer<typeof ScheduledJobSchema>;
 
 const RunningJobsResponseSchema = z.object({
   jobs: z.array(JobSchema).nullable(),
@@ -19,13 +25,30 @@ const RunningJobsResponseSchema = z.object({
 
 export type RunningJobsResponse = z.infer<typeof RunningJobsResponseSchema>;
 
-const getCleanupJobsKey = (): QueryKey => ["cleanup", "processes"];
+const ScheduledJobsResponseSchema = z.object({
+  jobs: z.array(ScheduledJobSchema).nullable(),
+});
+
+export type ScheduledJobsResponse = z.infer<typeof ScheduledJobsResponseSchema>;
+
+const getCleanupJobsKey = (): QueryKey => ["cleanup", "processes", "running"];
 
 export function useCleanupJobs() {
   return useGetQuery({
     url: api.v2`cleanup/processes`,
     queryKey: getCleanupJobsKey(),
     schema: RunningJobsResponseSchema,
+    mapper: (data) => data?.jobs || [],
+  });
+}
+
+const getCleanupScheduledJobsKey = (): QueryKey => ["cleanup", "processes", "scheduled"];
+
+export function useCleanupScheduledJobs() {
+  return useGetQuery({
+    url: api.v2`cleanup/scheduled`,
+    queryKey: getCleanupScheduledJobsKey(),
+    schema: ScheduledJobsResponseSchema,
     mapper: (data) => data?.jobs || [],
   });
 }

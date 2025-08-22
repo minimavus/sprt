@@ -21,7 +21,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/volatiletech/null/v8"
+	"github.com/aarondl/null/v8"
 	"github.com/zmap/zcrypto/x509"
 
 	"github.com/cisco-open/sprt/frontend-svc/internal/utils"

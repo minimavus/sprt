@@ -3,10 +3,10 @@ package db
 import (
 	"context"
 
+	"github.com/aarondl/null/v8"
+	"github.com/aarondl/sqlboiler/v4/queries/qm"
 	"github.com/cisco-open/sprt/go-generator/sdk/db/models"
 	"github.com/samber/lo"
-	"github.com/volatiletech/null/v8"
-	"github.com/volatiletech/sqlboiler/v4/queries/qm"
 )
 
 type LogsManipulator interface {

@@ -1,9 +1,9 @@
 package db
 
 import (
+	"github.com/aarondl/sqlboiler/v4/boil"
+	"github.com/aarondl/sqlboiler/v4/queries/qm"
 	"github.com/lib/pq"
-	"github.com/volatiletech/sqlboiler/v4/boil"
-	"github.com/volatiletech/sqlboiler/v4/queries/qm"
 
 	"github.com/cisco-open/sprt/go-generator/sdk/app"
 	"github.com/cisco-open/sprt/go-generator/specs"

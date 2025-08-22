@@ -7,8 +7,8 @@ import (
 	"fmt"
 	"slices"
 
+	"github.com/aarondl/sqlboiler/v4/boil"
 	"github.com/mitchellh/mapstructure"
-	"github.com/volatiletech/sqlboiler/v4/boil"
 
 	"github.com/cisco-open/sprt/go-generator/sdk/db/models"
 	"github.com/cisco-open/sprt/go-generator/sdk/json"

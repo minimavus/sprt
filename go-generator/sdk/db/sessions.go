@@ -5,10 +5,10 @@ import (
 	"database/sql"
 	"errors"
 
+	"github.com/aarondl/null/v8"
+	"github.com/aarondl/sqlboiler/v4/queries"
+	"github.com/aarondl/sqlboiler/v4/queries/qm"
 	"github.com/lib/pq"
-	"github.com/volatiletech/null/v8"
-	"github.com/volatiletech/sqlboiler/v4/queries"
-	"github.com/volatiletech/sqlboiler/v4/queries/qm"
 
 	"github.com/cisco-open/sprt/go-generator/sdk/conc"
 	"github.com/cisco-open/sprt/go-generator/sdk/db/models"

@@ -3,8 +3,8 @@ package db
 import (
 	"context"
 
+	"github.com/aarondl/sqlboiler/v4/queries/qm"
 	"github.com/cisco-open/sprt/go-generator/sdk/db/models"
-	"github.com/volatiletech/sqlboiler/v4/queries/qm"
 )
 
 const GlobalDictionariesOwner = "__GLOBAL__"

@@ -22,11 +22,11 @@ wipe-models:
 
 prepare:
 	@go get -u github.com/tiendc/sqlboiler-extensions@$(BOIL_EXT_VER)
-	@go install github.com/volatiletech/sqlboiler/v4@$(BOIL_VER)
-	@go install github.com/volatiletech/sqlboiler/v4/drivers/sqlboiler-psql@$(BOIL_VER)
+	@go install github.com/aarondl/sqlboiler/v4@$(BOIL_VER)
+	@go install github.com/aarondl/sqlboiler/v4/drivers/sqlboiler-psql@$(BOIL_VER)
 	@go install github.com/glerchundi/sqlboiler-crdb/v4@latest
 
 gen-models:
 	@sqlboiler psql -c sqlboiler.toml \
- 		--templates $(GOPATH)/pkg/mod/github.com/volatiletech/sqlboiler/v4@$(BOIL_VER)/templates/main \
+ 		--templates $(GOPATH)/pkg/mod/github.com/aarondl/sqlboiler/v4@$(BOIL_VER)/templates/main \
  		--templates $(GOPATH)/pkg/mod/github.com/tiendc/sqlboiler-extensions@$(BOIL_EXT_VER)/templates/boilv4/postgres

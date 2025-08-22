@@ -3,8 +3,8 @@ package handlers
 import (
 	"net/http"
 
+	"github.com/aarondl/sqlboiler/v4/boil"
 	"github.com/labstack/echo/v4"
-	"github.com/volatiletech/sqlboiler/v4/boil"
 
 	"github.com/cisco-open/sprt/frontend-svc/internal/auth"
 	"github.com/cisco-open/sprt/frontend-svc/internal/policy"

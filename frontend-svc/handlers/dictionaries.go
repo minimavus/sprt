@@ -5,10 +5,10 @@ import (
 	"errors"
 	"net/http"
 
+	"github.com/aarondl/null/v8"
+	"github.com/aarondl/sqlboiler/v4/boil"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
-	"github.com/volatiletech/null/v8"
-	"github.com/volatiletech/sqlboiler/v4/boil"
 
 	"github.com/cisco-open/sprt/frontend-svc/internal/auth"
 	"github.com/cisco-open/sprt/frontend-svc/internal/policy"

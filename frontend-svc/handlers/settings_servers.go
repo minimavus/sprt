@@ -5,9 +5,9 @@ import (
 	"errors"
 	"net/http"
 
+	"github.com/aarondl/null/v8"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
-	"github.com/volatiletech/null/v8"
 
 	"github.com/cisco-open/sprt/frontend-svc/internal/auth"
 
