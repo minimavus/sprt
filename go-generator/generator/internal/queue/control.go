@@ -18,11 +18,15 @@ func (q *QueueClient) SubscribeForControlMessages() error {
 		return err
 	}
 
-	q.subs[q.myControlQueue()] = sub
+	myControlQueue := q.myControlQueue()
 
-	q.m.On(q.myControlQueue(), rpc.RPCMethodGetRunningJobs, q.GetRunningJobs, nil)
-	q.m.On(q.myControlQueue(), rpc.RPCMethodStopJob, q.StopJob, &rpc.RPCStopJobParams{})
-	q.m.On(q.myControlQueue(), rpc.RPCMethodGetIPSources, q.GetIPSources, nil)
+	q.subs[myControlQueue] = sub
+
+	q.m.On(myControlQueue, rpc.RPCMethodGetRunningJobs, q.GetRunningJobs, nil)
+	q.m.On(myControlQueue, rpc.RPCMethodStopJob, q.StopJob, &rpc.RPCStopJobParams{})
+	q.m.On(myControlQueue, rpc.RPCMethodGetIPSources, q.GetIPSources, nil)
+	q.m.On(myControlQueue, rpc.RPCMethodGetScheduledJobs, q.GetScheduledJobs, nil)
+	q.m.On(myControlQueue, rpc.RPCMethodDeleteScheduledJob, q.DeleteScheduledJob, &rpc.RPCDeleteScheduledJobParams{})
 
 	return nil
 }
@@ -51,6 +55,30 @@ func (q *QueueClient) GetRunningJobs(_ context.Context, req *jsonrpc2.Request, _
 	})
 
 	resp := rpc.RPCGetRunningJobsResponseParams{
+		Jobs: jobs,
+	}
+
+	return utils.PtrOf(rpc.Response(req.ID).Result(resp).Build()), nil
+}
+
+func (q *QueueClient) GetScheduledJobs(_ context.Context, req *jsonrpc2.Request, _ any) (*jsonrpc2.Response, error) {
+	q.app.Logger().Debug().Msg("Getting scheduled jobs")
+
+	jobs := make([]rpc.RPCScheduledJob, 0)
+	// TODO: implement getting scheduled jobs
+
+	jobs = append(jobs, rpc.RPCScheduledJob{
+		RPCJob: rpc.RPCJob{
+			ID:          "job1",
+			Status:      "scheduled",
+			GeneratorID: q.app.ID(),
+			Progress:    0.56,
+			User:        "user1",
+		},
+		Schedule: "* * * * *",
+	})
+
+	resp := rpc.RPCGetScheduledJobsResponseParams{
 		Jobs: jobs,
 	}
 
@@ -98,6 +126,21 @@ func (q *QueueClient) PublishNewGeneratorNotification(generatorID string) error 
 	}
 
 	return q.Publish(q.notificationControlQueue(), reqBytes)
+}
+
+func (q *QueueClient) DeleteScheduledJob(_ context.Context, req *jsonrpc2.Request, data any) (*jsonrpc2.Response, error) {
+	params, ok := data.(*rpc.RPCDeleteScheduledJobParams)
+	if !ok {
+		return nil, fmt.Errorf("expected *rpc.RPCDeleteScheduledJobParams, got %T", data)
+	}
+
+	q.app.Logger().Debug().Str("job_id", params.JobID).Str("user", params.User).Msg("TODO: Deleting scheduled job")
+
+	resp := rpc.RPCDeleteScheduledJobResponseParams{
+		Success: true,
+	}
+
+	return utils.PtrOf(rpc.Response(req.ID).Result(resp).Build()), nil
 }
 
 func (q *QueueClient) myControlQueue() string {

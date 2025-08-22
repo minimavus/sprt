@@ -28,6 +28,11 @@ type (
 		User        string  `json:"user"`
 	}
 
+	RPCScheduledJob struct {
+		RPCJob
+		Schedule string `json:"schedule"`
+	}
+
 	RPCGetRunningJobsResponseParams struct {
 		Jobs []RPCJob `json:"jobs"`
 	}
@@ -48,13 +53,28 @@ type (
 	RPCNewGeneratorNotificationParams struct {
 		GeneratorID string `json:"generator_id"`
 	}
+
+	RPCGetScheduledJobsResponseParams struct {
+		Jobs []RPCScheduledJob `json:"jobs"`
+	}
+
+	RPCDeleteScheduledJobParams struct {
+		JobID string `json:"job_id"`
+		User  string `json:"user"`
+	}
+
+	RPCDeleteScheduledJobResponseParams struct {
+		Success bool `json:"success"`
+	}
 )
 
 const (
 	RPCMethodGenerate RPCMethod = "generate"
 
-	RPCMethodGetRunningJobs RPCMethod = "get_running_jobs"
-	RPCMethodStopJob        RPCMethod = "stop_job"
+	RPCMethodGetRunningJobs     RPCMethod = "get_running_jobs"
+	RPCMethodStopJob            RPCMethod = "stop_job"
+	RPCMethodGetScheduledJobs   RPCMethod = "get_scheduled_jobs"
+	RPCMethodDeleteScheduledJob RPCMethod = "delete_scheduled_job"
 
 	RPCMethodGetIPSources RPCMethod = "get_ip_sources"
 

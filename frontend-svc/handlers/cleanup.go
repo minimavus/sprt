@@ -362,9 +362,9 @@ func (m *controller) StopRunningProcess(c echo.Context) error {
 	}
 
 	req := new(struct {
-		GeneratorID string `query:"generator_id" validate:"required"`
-		JobID       string `query:"job_id" validate:"required"`
-		User        string `query:"user" validate:"required"`
+		GeneratorID string `query:"generator_id" json:"generator_id" validate:"required"`
+		JobID       string `query:"job_id" json:"job_id" validate:"required"`
+		User        string `query:"user" json:"user" validate:"required"`
 	})
 	if err = m.bindAndValidate(c, req); err != nil {
 		return err
@@ -382,17 +382,73 @@ func (m *controller) StopRunningProcess(c echo.Context) error {
 		return echo.ErrInternalServerError.WithInternal(err)
 	}
 
-	return c.JSON(http.StatusOK, map[string]any{"stopped": stopped})
+	return c.JSON(http.StatusOK, map[string]any{"ok": stopped})
 }
 
 func (m *controller) GetScheduledJobs(c echo.Context) error {
-	return echo.ErrNotImplemented
+	_, ctx, err := auth.GetUserDataAndContext(c)
+	if err != nil {
+		return err
+	}
+
+	jobs, err := m.App.Queue().GetScheduledJobs(ctx)
+	if err != nil {
+		m.App.Logger().Error().Err(err).Msg("Failed to get scheduled jobs")
+		return echo.ErrInternalServerError.WithInternal(err)
+	}
+
+	m.App.Logger().Debug().Interface("jobs", jobs).Msg("Scheduled jobs")
+
+	return c.JSON(http.StatusOK, map[string]any{"jobs": jobs})
 }
 
 func (m *controller) GetScheduledJobsStatus(c echo.Context) error {
-	return echo.ErrNotImplemented
+	_, ctx, err := auth.GetUserDataAndContext(c)
+	if err != nil {
+		return err
+	}
+
+	jobs, err := m.App.Queue().GetScheduledJobs(ctx)
+	if err != nil {
+		m.App.Logger().Error().Err(err).Msg("Failed to get scheduled jobs")
+		return echo.ErrInternalServerError.WithInternal(err)
+	}
+
+	m.App.Logger().Info().Int("scheduled_jobs_count", len(jobs)).Msg("Scheduled jobs")
+
+	res := StatusResponse{
+		Value: map[string]any{"scheduled": len(jobs)},
+		Type:  StatusValueTypeIcon,
+	}
+	if len(jobs) > 0 {
+		res.Level = StatusLevelInfo
+	} else {
+		res.Level = StatusLevelSuccess
+	}
+
+	return c.JSON(http.StatusOK, res)
 }
 
 func (m *controller) DeleteScheduledJob(c echo.Context) error {
-	return echo.ErrNotImplemented
+	_, ctx, err := auth.GetUserDataAndContext(c)
+	if err != nil {
+		return err
+	}
+
+	req := new(struct {
+		GeneratorID string `query:"generator_id" json:"generator_id" validate:"required"`
+		JobID       string `query:"job_id" json:"job_id" validate:"required"`
+		User        string `query:"user" json:"user" validate:"required"`
+	})
+	if err = m.bindAndValidate(c, req); err != nil {
+		return err
+	}
+
+	deleted, err := m.App.Queue().DeleteScheduledJob(ctx, req.GeneratorID, req.JobID, req.User)
+	if err != nil {
+		m.App.Logger().Error().Err(err).Msg("Failed to delete scheduled job")
+		return echo.ErrInternalServerError.WithInternal(err)
+	}
+
+	return c.JSON(http.StatusOK, map[string]any{"ok": deleted})
 }
