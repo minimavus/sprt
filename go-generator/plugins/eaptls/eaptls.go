@@ -23,7 +23,7 @@ var (
 	prebuiltSchema = eapTLSParams.ToJSONSchema()
 )
 
-func (*eapTLSPlugin) Name() string { return "eap-tls" }
+func (*eapTLSPlugin) Name() string { return "RADIUS - EAP-TLS" }
 
 func (*eapTLSPlugin) JSONSchema() []json.RawMessage {
 	return prebuiltSchema

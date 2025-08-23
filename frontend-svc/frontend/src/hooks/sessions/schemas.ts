@@ -217,7 +217,7 @@ export enum TacacsSessionState {
   REJECTED = "REJECTED",
 }
 
-export const TacacsSessionStateSchema = z.nativeEnum(TacacsSessionState);
+export const TacacsSessionStateSchema = z.enum(TacacsSessionState);
 
 export const TacacsSessionSchema = z.object({
   id: z.coerce.number(),

@@ -66,7 +66,7 @@ export const useCleanerUpdate = () => {
   const qc = useQueryClient();
   return useMutation<unknown, DefaultError, CleanerConfig>({
     mutationFn: async (cfg) => {
-      await axios.put(api.v2`cleanup/cleaner`, {
+      return axios.put(api.v2`cleanup/cleaner`, {
         ...cfg,
         older_than: durationToMilliseconds(cfg.older_than),
       });

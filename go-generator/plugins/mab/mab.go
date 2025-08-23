@@ -19,7 +19,7 @@ var (
 	prebuiltSchema = mabParams.ToJSONSchema()
 )
 
-func (*mabPlugin) Name() string { return "mab" }
+func (*mabPlugin) Name() string { return "RADIUS - MAB" }
 
 func (*mabPlugin) JSONSchema() []json.RawMessage {
 	return prebuiltSchema

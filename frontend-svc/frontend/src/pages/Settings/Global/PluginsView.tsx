@@ -1,19 +1,11 @@
-import {
-  ActionIcon,
-  ButtonGroup,
-  Fieldset,
-  Menu,
-  Stack,
-  Text,
-  Tooltip,
-} from "@mantine/core";
-import { IconBraces, IconPlugOff } from "@tabler/icons-react";
+import { ActionIcon, ButtonGroup, Text, Tooltip } from "@mantine/core";
+import { IconBraces } from "@tabler/icons-react";
 import type { ColumnDef } from "@tanstack/react-table";
+import { isEmpty, isNil } from "rambda";
 import type { FC } from "react";
 import { DisplayError } from "@/components/Error";
 import { DefaultLoaderFallback } from "@/components/Loader";
 import { Table } from "@/components/Table";
-import { RowActionsButton } from "@/components/Table/RowActionsButton";
 import type { Plugin } from "@/hooks/config/schemas";
 import { usePlugins } from "@/hooks/config/usePlugins";
 
@@ -50,10 +42,18 @@ export const columns: ColumnDef<Plugin>[] = [
   },
 ];
 
+function isSchemaPresent(plugin: Plugin): boolean {
+  if (isNil(plugin.schema) || isEmpty(plugin.schema)) {
+    return false;
+  }
+
+  return true;
+}
+
 const DetailsCell: FC<{ row: Plugin }> = ({ row }) => {
   return (
     <ButtonGroup>
-      <Tooltip label="Schema" withArrow>
+      <Tooltip label={isSchemaPresent(row) ? "Schema" : "No schema"} withArrow>
         <ActionIcon
           variant="subtle"
           color="gray"
@@ -62,11 +62,12 @@ const DetailsCell: FC<{ row: Plugin }> = ({ row }) => {
             if (e.defaultPrevented) return;
             console.log("TODO: Show plugin schema", row.name);
           }}
+          disabled={!isSchemaPresent(row)}
         >
           <IconBraces size={18} />
         </ActionIcon>
       </Tooltip>
-      <Menu withArrow>
+      {/* <Menu withArrow>
         <Menu.Target>
           <RowActionsButton />
         </Menu.Target>
@@ -81,7 +82,7 @@ const DetailsCell: FC<{ row: Plugin }> = ({ row }) => {
             Disable
           </Menu.Item>
         </Menu.Dropdown>
-      </Menu>
+      </Menu> */}
     </ButtonGroup>
   );
 };
@@ -89,25 +90,19 @@ const DetailsCell: FC<{ row: Plugin }> = ({ row }) => {
 export const PluginsView: FC = () => {
   const { data: plugins, error, status } = usePlugins();
 
-  return (
-    <Fieldset legend="Plugins">
-      <Stack gap="sm">
-        {status === "pending" ? (
-          <DefaultLoaderFallback />
-        ) : status === "error" ? (
-          <DisplayError error={error} />
-        ) : plugins?.total === 0 ? (
-          <span>No plugins loaded</span>
-        ) : (
-          <Table
-            columns={columns}
-            data={plugins.plugins || []}
-            highlightOnHover
-            itemSingleText="session"
-            itemPluralText="sessions"
-          />
-        )}
-      </Stack>
-    </Fieldset>
+  return status === "pending" ? (
+    <DefaultLoaderFallback />
+  ) : status === "error" ? (
+    <DisplayError error={error} />
+  ) : plugins?.total === 0 ? (
+    <span>No plugins loaded</span>
+  ) : (
+    <Table
+      columns={columns}
+      data={plugins.plugins || []}
+      highlightOnHover
+      itemSingleText="session"
+      itemPluralText="sessions"
+    />
   );
 };

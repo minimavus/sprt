@@ -6,4 +6,6 @@ import (
 	_ "github.com/cisco-open/sprt/go-generator/generator/plugins/pap"
 	_ "github.com/cisco-open/sprt/go-generator/generator/plugins/eaptls"
 	_ "github.com/cisco-open/sprt/go-generator/generator/plugins/peap"
+	_ "github.com/cisco-open/sprt/go-generator/generator/plugins/radacct"
+	_ "github.com/cisco-open/sprt/go-generator/generator/plugins/raddacl"
 )

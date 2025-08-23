@@ -95,7 +95,7 @@ export const TestEnrollmentButton: FC<{ disabled: boolean }> = ({
       ca_certificates: string[];
       challenge: string;
     }) => {
-      await axios.post(api.v2`/scep/test/enroll`, {
+      return await axios.post(api.v2`/scep/test/enroll`, {
         csr_template: template,
         ca_certificates,
         name,

@@ -37,7 +37,6 @@ import { flattenObject } from "@/utils/flattenObject";
 import set from "@/utils/set";
 import { funcButtons } from "./funcButtons";
 import { IPSourcesConfig } from "./IPSourcesConfig";
-import { PluginsView } from "./PluginsView";
 
 const defaultValuesFromInit = (init: GlobalConfig["config"]) => {
   return Object.keys(init).reduce(
@@ -225,7 +224,6 @@ const GlobalSettingsView: FC = () => {
           <RadiusConfig />
           <PatternsConfig />
           <MiscConfigs />
-          <PluginsView />
         </Stack>
         <div
           style={

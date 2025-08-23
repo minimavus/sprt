@@ -7,3 +7,7 @@ dev:
 	(cd ./go-generator && make dev) & \
 	(cd ./frontend-svc && make dev) & \
 	wait
+
+build-plugins:
+	@echo "Building plugins..."
+	(cd ./go-generator && make build-plugins)

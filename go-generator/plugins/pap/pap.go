@@ -19,7 +19,7 @@ var (
 	prebuiltSchema = papParams.ToJSONSchema()
 )
 
-func (*papPlugin) Name() string { return "pap" }
+func (*papPlugin) Name() string { return "RADIUS - PAP" }
 
 func (*papPlugin) JSONSchema() []json.RawMessage {
 	return prebuiltSchema

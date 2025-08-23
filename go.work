@@ -2,11 +2,14 @@ go 1.25.0
 
 use ./go-generator/generator
 use ./go-generator/sdk
+use ./go-generator/specs
+
 use ./go-generator/plugins/mab
 use ./go-generator/plugins/pap
 use ./go-generator/plugins/eaptls
 use ./go-generator/plugins/peap
-use ./go-generator/specs
+use ./go-generator/plugins/radius_accounting
+use ./go-generator/plugins/radius_dacl_download
 
 use ./go-generator/tools/plugin-builder
 

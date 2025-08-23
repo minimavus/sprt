@@ -10,6 +10,11 @@ build:
 	@cd $(WORKSPACE_ROOT)/generator && go build -o $(WORKSPACE_ROOT)/bin/app ./cmd/**.go
 	@echo "✅ Build completed at $(WORKSPACE_ROOT)/bin/app"
 
+.PHONY: build-plugins
+build-plugins:
+	@cd $(WORKSPACE_ROOT)/generator && go run ../tools/plugin-builder
+	@echo "✅ Plugins built"
+
 # Clean build artifacts
 .PHONY: clean
 clean:

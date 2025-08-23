@@ -14,10 +14,7 @@ enum AccessLevel {
 
 export const UserSessionSchema = z
   .object({
-    AccessLevel: z
-      .nativeEnum(AccessLevel)
-      .nullish()
-      .default(AccessLevel.Unknown),
+    AccessLevel: z.enum(AccessLevel).nullish().default(AccessLevel.Unknown),
     Email: z.string().nullish().default(null),
     FirstName: z.string().nullish().default(null),
     LastName: z.string().nullish().default(null),

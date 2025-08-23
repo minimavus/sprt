@@ -2,6 +2,7 @@ import {
   IconAdjustmentsHorizontal,
   IconBook2,
   IconMessages,
+  IconPlug,
   IconPlugConnected,
   IconServer2,
   IconSettingsBolt,
@@ -35,6 +36,13 @@ const GlobalSettings: FC<SubMenuComponentProps> = ({ asMenu }) => {
         prefix={<IconSettingsBolt {...iconProps} />}
       >
         Global Settings
+      </NavSubLink>
+      <NavSubLink
+        asMenu={asMenu}
+        href="/settings/plugins"
+        prefix={<IconPlug {...iconProps} />}
+      >
+        Plugins
       </NavSubLink>
     </>
   );

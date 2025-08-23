@@ -28,7 +28,7 @@ const dnsDetails = z.object({
     ip: z.string(),
     port: z.number(),
   }),
-  strategy: z.nativeEnum(FamilyPreference).optional(),
+  strategy: z.enum(FamilyPreference).optional(),
 });
 
 export enum CredentialsType {
@@ -38,7 +38,7 @@ export enum CredentialsType {
 }
 
 const pxGridCredentials = z.object({
-  type: z.nativeEnum(CredentialsType),
+  type: z.enum(CredentialsType),
   node_name: z.string().optional(),
   Kind: z.union([
     z.object({
@@ -128,7 +128,7 @@ export enum IPFamily {
 
 const ipSchema = z.object({
   ip: z.string(),
-  family: z.nativeEnum(IPFamily),
+  family: z.enum(IPFamily),
 });
 
 export const pxFQDNResponse = z.object({

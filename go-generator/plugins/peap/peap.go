@@ -24,7 +24,7 @@ var (
 	prebuiltSchema = peapParams.ToJSONSchema()
 )
 
-func (*peapPlugin) Name() string { return "peap" }
+func (*peapPlugin) Name() string { return "RADIUS - PEAP" }
 
 func (*peapPlugin) JSONSchema() []json.RawMessage {
 	return prebuiltSchema

@@ -133,7 +133,7 @@ export enum RadiusDictionaryAttributeType {
 const RadiusDictionaryAttributeSchema = z.object({
   Name: z.string(),
   OID: z.array(z.number()).nullable(),
-  Type: z.nativeEnum(RadiusDictionaryAttributeType),
+  Type: z.enum(RadiusDictionaryAttributeType),
   Size: IntFlagSchema,
   FlagEncrypt: IntFlagSchema,
   FlagHasTag: BoolFlagSchema,

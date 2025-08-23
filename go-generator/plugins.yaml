@@ -3,3 +3,5 @@ plugins:
   - module: github.com/cisco-open/sprt/go-generator/generator/plugins/pap
   - module: github.com/cisco-open/sprt/go-generator/generator/plugins/eaptls
   - module: github.com/cisco-open/sprt/go-generator/generator/plugins/peap
+  - module: github.com/cisco-open/sprt/go-generator/generator/plugins/radacct
+  - module: github.com/cisco-open/sprt/go-generator/generator/plugins/raddacl

@@ -6,6 +6,10 @@ import { DictionariesSettings } from "@/pages/Settings/Dictionaries";
 import { DictionariesOfType } from "@/pages/Settings/Dictionaries/DictionariesOfType";
 import { DictionaryByID } from "@/pages/Settings/Dictionaries/DictionaryByID";
 import { GlobalSettings, globalSettingsLoader } from "@/pages/Settings/Global";
+import {
+  PluginsPage,
+  pluginsLoader,
+} from "@/pages/Settings/Global/pluginsPage";
 import { ServersSettings } from "@/pages/Settings/Servers";
 import { Server } from "@/pages/Settings/Servers/Server";
 import { SMSSettings } from "@/pages/Settings/SMSSettings";
@@ -54,6 +58,12 @@ export const settingsRoutes: RouteObject = {
       handle: { title: "Global Settings" },
       element: <GlobalSettings />,
       loader: globalSettingsLoader,
+    },
+    {
+      path: "plugins",
+      handle: { title: "Plugins" },
+      element: <PluginsPage />,
+      loader: pluginsLoader,
     },
   ],
 };

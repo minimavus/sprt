@@ -22,7 +22,7 @@ export enum Family {
 }
 
 const ActSchema = z.object({
-  action: z.nativeEnum(WatchAction),
+  action: z.enum(WatchAction),
   target: z.string(),
   value: z.any().optional(),
 });
@@ -101,7 +101,7 @@ const RadiusAttributeSchema = z.object({
   dictionary: z.string().optional(),
   non_removable: z.boolean().optional().default(false),
   vendor: z.string().optional(),
-  family_specific: z.nativeEnum(Family).optional(),
+  family_specific: z.enum(Family).optional(),
 });
 
 export type ProtoRadiusAttribute = z.infer<typeof RadiusAttributeSchema>;
@@ -347,7 +347,7 @@ const DictionaryParameterSchema = BaseSchema.extend({
   dictionary_types: z.array(z.string()),
   label: z.string().optional(),
   select: z
-    .nativeEnum(SelectFromDictionary)
+    .enum(SelectFromDictionary)
     .optional()
     .default(SelectFromDictionary.Sequential),
   allow_repeats: z.boolean().optional().default(false),
