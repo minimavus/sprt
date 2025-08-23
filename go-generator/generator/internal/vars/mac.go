@@ -41,6 +41,8 @@ type (
 
 	macGeneratorStateRandom struct {
 		Pattern string `mapstructure:"pattern"`
+
+		reggenerator *reggen.Generator
 	}
 )
 
@@ -179,7 +181,6 @@ func (g *MacGenerator) initRangeState() error {
 		return fmt.Errorf("failed to decode range mac generator params: %w", err)
 	}
 
-	// Enable repeats if round-robin is enabled
 	if st.AllowRepeats {
 		g.allowRepeats = true
 	}
@@ -192,7 +193,6 @@ func (g *MacGenerator) initRangeState() error {
 	currentMac := *st.firstMac
 	st.currentMac = &currentMac
 
-	// Validate LastMac format
 	st.lastMac, err = mac.New(st.End)
 	if err != nil {
 		return fmt.Errorf("invalid 'end': %w", err)
@@ -287,6 +287,12 @@ func (g *MacGenerator) initRandomState(variant string) error {
 		return fmt.Errorf("'pattern' parameter is required for pattern variant")
 	}
 
+	var err error
+	st.reggenerator, err = reggen.NewGenerator(st.Pattern)
+	if err != nil {
+		return fmt.Errorf("failed to create MAC generator: %w", err)
+	}
+
 	g.state = st
 	return nil
 }
@@ -295,10 +301,7 @@ func (g *MacGenerator) nextRandom() (string, error) {
 	st := g.state.(*macGeneratorStateRandom)
 
 	for i := 0; i < g.maxTries; i++ {
-		str, err := reggen.Generate(st.Pattern, 100)
-		if err != nil {
-			return "", fmt.Errorf("failed to generate mac from pattern '%s': %w", st.Pattern, err)
-		}
+		str := st.reggenerator.Generate(100)
 
 		if g.isUsable(str) {
 			return str, nil
