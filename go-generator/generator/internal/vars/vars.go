@@ -36,7 +36,7 @@ type Vars struct {
 	maxTries     int
 	stopIfNoMore bool
 	Error        error
-	parent       app.App
+	App          app.App
 	variables    map[string]Generator
 	aliases      map[string]string
 	order        []string
@@ -55,7 +55,7 @@ func New(parent app.App, opts ...varsOption) *Vars {
 
 	return &Vars{
 		logger:       o.logger,
-		parent:       parent,
+		App:          parent,
 		maxTries:     o.maxTries,
 		stopIfNoMore: o.stopIfNoMore,
 
