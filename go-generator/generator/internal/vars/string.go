@@ -26,6 +26,9 @@ type (
 		MinLength int    `mapstructure:"minLength"`
 		MaxLength int    `mapstructure:"maxLength"`
 		Length    int    `mapstructure:"length"`
+
+		reggenerator     *reggen.Generator
+		useDynamicLength bool // true when using min/max length instead of fixed pattern
 	}
 
 	stringGeneratorStateList struct {
@@ -78,7 +81,12 @@ func NewStringGenerator(params map[string]any, logger *zerolog.Logger, allVars *
 
 // Next calls the appropriate next function based on the variant.
 func (g *StringGenerator) Next() (any, error) {
-	return g.nextFunc()
+	val, err := g.nextFunc()
+	if err != nil {
+		return nil, err
+	}
+	g.setLatest(val)
+	return val, nil
 }
 
 func (g *StringGenerator) initListState() error {
@@ -112,12 +120,11 @@ func (g *StringGenerator) initListState() error {
 	case reflect.String:
 		// Split string by newlines
 		lines := strings.Split(v.String(), "\n")
-		st.List = make([]string, len(lines))
-		for i, line := range lines {
-			if line == "" {
-				continue
+		st.List = make([]string, 0, len(lines))
+		for _, line := range lines {
+			if line != "" {
+				st.List = append(st.List, line)
 			}
-			st.List[i] = line
 		}
 	default:
 		return fmt.Errorf("unsupported type for 'list' parameter: %T", listParam)
@@ -150,7 +157,6 @@ func (g *StringGenerator) nextList() (string, error) {
 
 	val := st.List[idx]
 
-	g.setLatest(val)
 	return val, nil
 }
 
@@ -162,42 +168,49 @@ func (g *StringGenerator) initRandomState() error {
 		return fmt.Errorf("failed to decode random string generator params: %w", err)
 	}
 
+	if st.Pattern == "" {
+
+		if st.Length > 0 {
+			// Fixed length - create specific pattern
+			st.Pattern = fmt.Sprintf("\\w{%d}", st.Length)
+		} else {
+			// For dynamic length generation, we'll create the pattern in nextRandom
+			st.useDynamicLength = true
+			st.Pattern = "\\w" // Base pattern for word characters
+		}
+
+		if st.MinLength == 0 && st.MaxLength == 0 && st.Length == 0 {
+			return fmt.Errorf("either 'pattern', 'length', or 'min/max-length' must be provided for random string")
+		}
+	}
+
+	if !st.useDynamicLength {
+		st.reggenerator, err = reggen.NewGenerator(st.Pattern)
+		if err != nil {
+			return fmt.Errorf("failed to create string generator: %w", err)
+		}
+	}
+
 	g.state = st
 	return nil
 }
 
 func (g *StringGenerator) nextRandom() (string, error) {
 	st := g.state.(*stringGeneratorStateRandom)
-	pattern := st.Pattern
 
-	if pattern == "" {
-		minLength := st.MinLength
-		maxLength := st.MaxLength
-
-		if st.Length > 0 {
-			minLength = st.Length
-			maxLength = st.Length
-		}
-
-		if minLength == 0 && maxLength == 0 {
-			return "", fmt.Errorf("either 'pattern', 'length', or 'min/max-length' must be provided for random string")
-		}
-
-		genLen, err := rand.Int(rand.Reader, big.NewInt(int64(maxLength-minLength+1)))
+	if st.useDynamicLength {
+		genLen, err := rand.Int(rand.Reader, big.NewInt(int64(st.MaxLength-st.MinLength+1)))
 		if err != nil {
-			return "", err
+			return "", fmt.Errorf("failed to generate random length: %w", err)
 		}
-		finalLen := int(genLen.Int64()) + minLength
-		pattern = fmt.Sprintf("\\w{%d}", finalLen)
+		finalLen := int(genLen.Int64()) + st.MinLength
+
+		// Create pattern for this specific length
+		pattern := fmt.Sprintf("\\w{%d}", finalLen)
+		return reggen.Generate(pattern, 100)
 	}
 
-	str, err := reggen.Generate(pattern, 100)
-	if err != nil {
-		return "", fmt.Errorf("failed to generate string from pattern '%s': %w", pattern, err)
-	}
-
-	g.setLatest(str)
-	return str, nil
+	return st.reggenerator.Generate(100), nil
 }
 
 func (g *StringGenerator) initStaticState() error {
