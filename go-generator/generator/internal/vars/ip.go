@@ -315,36 +315,12 @@ func (g *IPGenerator) nextList() (string, error) {
 func (g *IPGenerator) parseIPRange(rangeStr string, startIP, endIP *net.IP, ipFamily *iputils.IPFamily, rangeSize **big.Int) error {
 	// Handle CIDR notation
 	if strings.Contains(rangeStr, "/") {
-		_, ipNet, err := net.ParseCIDR(rangeStr)
-		if err != nil {
-			return fmt.Errorf("invalid CIDR: %w", err)
-		}
-
-		*startIP = ipNet.IP
-		*endIP = g.getLastIPInCIDR(ipNet)
-		*ipFamily = getIPFamily((*startIP).To4() != nil)
-		*rangeSize = g.calculateRangeSize(*startIP, *endIP)
-		return nil
+		return g.parseCIDRNotation(rangeStr, startIP, endIP, ipFamily, rangeSize)
 	}
 
 	// Handle range notation (start-end)
 	if strings.Contains(rangeStr, "-") {
-		parts := strings.Split(rangeStr, "-")
-		if len(parts) != 2 {
-			return fmt.Errorf("invalid range format, expected 'start-end'")
-		}
-
-		start := net.ParseIP(strings.TrimSpace(parts[0]))
-		end := net.ParseIP(strings.TrimSpace(parts[1]))
-		if start == nil || end == nil {
-			return fmt.Errorf("invalid IP addresses in range")
-		}
-
-		*startIP = start
-		*endIP = end
-		*ipFamily = getIPFamily(start.To4() != nil && end.To4() != nil)
-		*rangeSize = g.calculateRangeSize(*startIP, *endIP)
-		return nil
+		return g.parseStartEndNotation(rangeStr, startIP, endIP, ipFamily, rangeSize)
 	}
 
 	// Single IP
@@ -357,6 +333,38 @@ func (g *IPGenerator) parseIPRange(rangeStr string, startIP, endIP *net.IP, ipFa
 	*endIP = ip
 	*ipFamily = getIPFamily(ip.To4() != nil)
 	*rangeSize = big.NewInt(1)
+	return nil
+}
+
+func (g *IPGenerator) parseCIDRNotation(rangeStr string, startIP, endIP *net.IP, ipFamily *iputils.IPFamily, rangeSize **big.Int) error {
+	_, ipNet, err := net.ParseCIDR(rangeStr)
+	if err != nil {
+		return fmt.Errorf("invalid CIDR: %w", err)
+	}
+
+	*startIP = ipNet.IP
+	*endIP = g.getLastIPInCIDR(ipNet)
+	*ipFamily = getIPFamily((*startIP).To4() != nil)
+	*rangeSize = g.calculateRangeSize(*startIP, *endIP)
+	return nil
+}
+
+func (g *IPGenerator) parseStartEndNotation(rangeStr string, startIP, endIP *net.IP, ipFamily *iputils.IPFamily, rangeSize **big.Int) error {
+	parts := strings.Split(rangeStr, "-")
+	if len(parts) != 2 {
+		return fmt.Errorf("invalid range format, expected 'start-end'")
+	}
+
+	start := net.ParseIP(strings.TrimSpace(parts[0]))
+	end := net.ParseIP(strings.TrimSpace(parts[1]))
+	if start == nil || end == nil {
+		return fmt.Errorf("invalid IP addresses in range")
+	}
+
+	*startIP = start
+	*endIP = end
+	*ipFamily = getIPFamily(start.To4() != nil && end.To4() != nil)
+	*rangeSize = g.calculateRangeSize(*startIP, *endIP)
 	return nil
 }
 
