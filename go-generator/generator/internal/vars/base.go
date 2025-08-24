@@ -1,8 +1,6 @@
 package vars
 
 import (
-	"reflect"
-
 	"github.com/rs/zerolog"
 )
 
@@ -14,7 +12,7 @@ type baseGenerator struct {
 	logger       *zerolog.Logger
 	allVars      *Vars
 	latest       any
-	used         []any
+	used         map[any]struct{} // Replace slice with map
 	maxTries     int
 	allowRepeats bool
 }
@@ -24,7 +22,7 @@ func (b *baseGenerator) Init(params map[string]any, logger *zerolog.Logger, allV
 	b.params = params
 	b.logger = logger
 	b.allVars = allVars
-	b.used = make([]any, 0)
+	b.used = make(map[any]struct{}) // Initialize used as a map
 
 	maxTries, ok := params["maxTries"].(int)
 	if !ok {
@@ -61,18 +59,13 @@ func (b *baseGenerator) isUsable(value any) bool {
 	if b.allowRepeats {
 		return true
 	}
-	for _, u := range b.used {
-		// This might need reflect.DeepEqual for complex types if they are ever used here
-		if reflect.DeepEqual(u, value) {
-			return false
-		}
-	}
-	return true
+	_, exists := b.used[value]
+	return !exists
 }
 
 // pushToUsed adds a value to the used list if allow_repeats is false.
 func (b *baseGenerator) pushToUsed(value any) {
 	if !b.allowRepeats {
-		b.used = append(b.used, value)
+		b.used[value] = struct{}{}
 	}
 }

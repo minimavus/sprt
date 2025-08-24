@@ -17,8 +17,7 @@ type (
 	StringGenerator struct {
 		baseGenerator
 		nextFunc func() (string, error)
-
-		state any
+		state    any
 	}
 
 	stringGeneratorStateRandom struct {
@@ -99,11 +98,11 @@ func (g *StringGenerator) initListState() error {
 		NextIndex: 0,
 	}
 
-	selectParam, ok := g.params["select"].(string)
-	if !ok || selectParam != "sequential" {
-		st.Select = SelectTypeRandom
-	} else {
+	selectParam, _ := g.params["select"].(string)
+	if selectParam == "sequential" {
 		st.Select = SelectTypeSequential
+	} else {
+		st.Select = SelectTypeRandom
 	}
 
 	switch v := reflect.ValueOf(listParam); v.Kind() {

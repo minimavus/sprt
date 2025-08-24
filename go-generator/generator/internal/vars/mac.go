@@ -28,11 +28,10 @@ type (
 	}
 
 	macGeneratorStateRange struct {
-		Start        string `mapstructure:"start"`
-		End          string `mapstructure:"end"`
-		Step         int64  `mapstructure:"step"`
-		AllowRepeats bool   `mapstructure:"allowRepeats"`
-		Random       bool   `mapstructure:"random"`
+		Start  string `mapstructure:"start"`
+		End    string `mapstructure:"end"`
+		Step   int64  `mapstructure:"step"`
+		Random bool   `mapstructure:"random"`
 
 		currentMac *mac.MAC
 		lastMac    *mac.MAC
@@ -181,10 +180,6 @@ func (g *MacGenerator) initRangeState() error {
 		return fmt.Errorf("failed to decode range mac generator params: %w", err)
 	}
 
-	if st.AllowRepeats {
-		g.allowRepeats = true
-	}
-
 	var err error
 	st.firstMac, err = mac.New(st.Start)
 	if err != nil {
@@ -213,7 +208,7 @@ func (g *MacGenerator) nextRange() (string, error) {
 	// Sequential generation
 	// Check if current MAC is beyond the range
 	if st.currentMac.Compare(st.lastMac) > 0 {
-		if st.AllowRepeats {
+		if g.allowRepeats {
 			// Reset to first MAC - create a proper copy
 			resetMac, err := mac.New(st.Start)
 			if err != nil {
