@@ -127,7 +127,7 @@ func TestMacGenerator_RangeRandom(t *testing.T) {
 		startMac, err := mac.New("00:00:00:00:00:00")
 		require.NoError(t, err)
 
-		endMac, err := mac.New("00:00:00:00:00:ff")
+		endMac, err := mac.New("00:00:00:00:ff:ff")
 		require.NoError(t, err)
 
 		assert.GreaterOrEqual(t, generatedMac.Compare(startMac), 0, "Generated MAC should be >= start")

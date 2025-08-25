@@ -30,6 +30,11 @@ func RegisterGenerator(typeName string, factory GeneratorFactory) {
 	generatorRegistry[typeName] = factory
 }
 
+// UnregisterGenerator removes a generator type from the registry.
+func UnregisterGenerator(typeName string) {
+	delete(generatorRegistry, typeName)
+}
+
 // Vars is the main struct for managing variables and their generation.
 type Vars struct {
 	logger       *zerolog.Logger
